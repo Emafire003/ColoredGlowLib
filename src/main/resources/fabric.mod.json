@@ -1,29 +1,29 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "coloredglowlib",
   "version": "${version}",
 
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "ColoredGlow Lib",
+  "description": "This is a library that enables you to make entities glow different colors (RGB)!",
   "authors": [
-    "Me!"
+    "Emafire003"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://github.com/Emafire003/ColoredGlowLib",
+    "sources": "https://github.com/Emafire003/ColoredGlowLib"
   },
 
-  "license": "CC0-1.0",
+  "license": "MIT",
   "icon": "assets/modid/icon.png",
 
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.fabricmc.example.ExampleMod"
+      "me.emafire003.dev.coloredglowlib.ColoredGlowLib"
     ]
   },
   "mixins": [
-    "modid.mixins.json"
+    "coloredglowlib.mixins.json"
   ],
 
   "depends": {
@@ -33,6 +33,6 @@
     "java": ">=17"
   },
   "suggests": {
-    "another-mod": "*"
+    "another-mod": "FoxGlow"
   }
 }
