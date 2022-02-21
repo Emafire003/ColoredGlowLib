@@ -8,7 +8,7 @@ targetCompatibility = JavaVersion.VERSION_17
 
 archivesBaseName = project.archives_base_name
 version = project.mod_version
-group = 'com.github.emafire003'
+group = project.maven_group
 
 repositories {
 	// Add repositories to retrieve artifacts from in here.
@@ -56,9 +56,6 @@ jar {
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
-			from components.java
-		}
-		maven(MavenPublication) {
 			from components.java
 		}
 	}
