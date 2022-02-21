@@ -15,7 +15,6 @@ public class ColoredGlowLib implements ModInitializer {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
-		//CrowdinTranslate.downloadTranslations(MOD_ID, MOD_ID);
 		//Why do i even have to write this :/
 		System.out.println("[ColoredGlowLib] Hey, if you have downloaded this mod from a site different from CurseForge," +
 				" Modrinth or Github, please remove this mod and download it again from an official source, " +
