@@ -3,7 +3,6 @@
 ![Downloads CurseForge](https://cf.way2muchnoise.eu/full_coloreglowlib_downloads.svg?badge_style=flat)
 ![Modrinth](https://img.shields.io/modrinth/dt/coloredglowlib?color=green&label=Modrinth%20downloads&style=flat-square)
 ![Mc Versions](https://cf.way2muchnoise.eu/versions/Minecraft%20versions_coloredglowlib_all.svg?badge_style=flat)
-[![](https://jitpack.io/v/Emafire003/ColoredGlowLib.svg)](https://jitpack.io/#Emafire003/ColoredGlowLib)
 
 This library enables you to make enities glow different colors other than plain white or based on their team color.
 
@@ -17,21 +16,35 @@ Just drag and drop this mod into your mod folder and enjoy! It will require anot
 Include this library into your `build.gradle` as a dependency
 ```gradle
    repositories {
-        maven { url "https://jitpack.io" }
-   }
-   dependencies {
-         modImplementation 'com.github.emafire003:coloredglowlib:<version>'
-   }
+    maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+        content {
+            includeGroup "maven.modrinth"
+        }
+    }
+}
+
+dependencies {
+    modImplementation "maven.modrinth:coloredglowlib:<version>"
+}
 ```
 If you want you can also `include` this (Jar-in-Jar dependency). To avoid confusion, tell the users of your mod that your mod includes this library already, in case of problems it would make debugging easier.
 ```gradle
    repositories {
-        maven { url "https://jitpack.io" }
-   }
-   dependencies {
-         modImplementation 'com.github.emafire003:coloredglowlib:<version>'
-         include 'com.github.emafire003:coloredglowlib:<version>'
-   }
+    maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+        content {
+            includeGroup "maven.modrinth"
+        }
+    }
+}
+
+dependencies {
+    modImplementation "maven.modrinth:coloredglowlib:<version>"
+    include "maven.modrinth:coloredglowlib:<version>"
+}
 ```
 
 You can find the correct version in the [releases page](https://github.com/Emafire003/ColoredGlowLib/releases).
