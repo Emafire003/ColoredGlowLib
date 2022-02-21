@@ -33,7 +33,7 @@ If you want you can also `include` this (Jar-in-Jar dependency). To avoid confus
    }
 ```
 
-You can find the correct version in the [releases page](https://github.com/Emafire003/ColoredGlowLib).
+You can find the correct version in the [releases page](https://github.com/Emafire003/ColoredGlowLib/releases).
 
 #### How to set the color in the code
 Then, to change the color of the glowing effect of entities use:
