@@ -14,20 +14,24 @@ Just drag and drop this mod into your mod folder and enjoy! It will require anot
 
 ### For developers:
 Include this library into your `build.gradle` as a dependency
-`  repositories {
+```repositories {
         maven { url "https://jitpack.io" }
    }
    dependencies {
-         modImplementation 'com.github.emafire003:coloredglowlib:1.0.0'
-   }`
+         modImplementation 'com.github.emafire003:coloredglowlib:<version>'
+   }
+```
 If you want you can also `include` this (Jar-in-Jar dependency). To avoid confusion, tell the users of your mod that your mod includes this library already, in case of problems it would make debugging easier.
-`  repositories {
+```repositories {
         maven { url "https://jitpack.io" }
    }
    dependencies {
-         modImplementation 'com.github.emafire003:coloredglowlib:1.0.0'
-         include 'com.github.emafire003:coloredglowlib:1.0.0'
-   }`
+         modImplementation 'com.github.emafire003:coloredglowlib:<version>'
+         include 'com.github.emafire003:coloredglowlib:<version>'
+   }
+```
+
+You can find the correct version in the [releases page](https://github.com/Emafire003/ColoredGlowLib).
 
 Then, to change the color of the glowing effect of entities use:
 `ColoredGlowLib.setColor()`
