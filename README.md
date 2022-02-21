@@ -14,7 +14,8 @@ Just drag and drop this mod into your mod folder and enjoy! It will require anot
 
 ### For developers:
 Include this library into your `build.gradle` as a dependency
-```repositories {
+```gradle
+   repositories {
         maven { url "https://jitpack.io" }
    }
    dependencies {
@@ -22,7 +23,8 @@ Include this library into your `build.gradle` as a dependency
    }
 ```
 If you want you can also `include` this (Jar-in-Jar dependency). To avoid confusion, tell the users of your mod that your mod includes this library already, in case of problems it would make debugging easier.
-```repositories {
+```gradle
+   repositories {
         maven { url "https://jitpack.io" }
    }
    dependencies {
@@ -33,8 +35,10 @@ If you want you can also `include` this (Jar-in-Jar dependency). To avoid confus
 
 You can find the correct version in the [releases page](https://github.com/Emafire003/ColoredGlowLib).
 
+#### How to set the color in the code
 Then, to change the color of the glowing effect of entities use:
-`ColoredGlowLib.setColor()`
+`ColoredGlowLib.setColor(parameter)`
+
 You can use a `new Color(r,g,b)` object (Not AWT, the mod's Color object) or set a an rgb color with `setColor(r,g,b)` or set a colorvalue with `.setColorValue()` which is an int that corresponds to an RGB value. You can get it useing `Color.translateToColorValue(r,g,b)` or `RRRRRRGGGGGGBBBBBB`.
 
 There is an example of this in my [FoxGlow](https://github.com/Emafire003/FoxGlow) mod.
