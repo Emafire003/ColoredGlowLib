@@ -3,6 +3,7 @@
 ![Downloads CurseForge](https://cf.way2muchnoise.eu/full_coloreglowlib_downloads.svg?badge_style=flat)
 ![Modrinth](https://img.shields.io/modrinth/dt/coloredglowlib?color=green&label=Modrinth%20downloads&style=flat-square)
 ![Mc Versions](https://cf.way2muchnoise.eu/versions/Minecraft%20versions_coloredglowlib_all.svg?badge_style=flat)
+[![](https://jitpack.io/v/Emafire003/ColoredGlowLib.svg)](https://jitpack.io/#Emafire003/ColoredGlowLib)
 
 This library enables you to make enities glow different colors other than plain white or based on their team color.
 
