@@ -6,7 +6,8 @@
 
 This library enables you to make enities glow different colors other than plain white or based on their team color.
 
-![coloredglowlib](?)
+![coloredglowlib](https://user-images.githubusercontent.com/29462910/154980788-09722978-0594-48b2-a873-3d6b0434295b.png)
+
 
 ## Setup
 ### For normal users:
@@ -57,7 +58,8 @@ You can use a `new Color(r,g,b)` object (Not AWT, the mod's Color object) or set
 
 There is an example of this in my [FoxGlow](https://github.com/Emafire003/FoxGlow) mod.
 
-![fox1](https://user-images.githubusercontent.com/29462910/152815217-8ca8abcf-2dfe-4c20-8235-84013a047c1e.png)
+![coloreglowlib2](https://user-images.githubusercontent.com/29462910/154981142-5f871d46-2f33-46f4-94a4-7885189b01a3.png)
+
 
 ## License
 
