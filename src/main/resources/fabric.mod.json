@@ -14,7 +14,7 @@
   },
 
   "license": "MIT",
-  "icon": "assets/modid/icon.png",
+  "icon": "assets/coloredglowlib/icon.png",
 
   "environment": "*",
   "entrypoints": {
@@ -28,8 +28,8 @@
 
   "depends": {
     "fabricloader": ">=0.12.12",
-    "minecraft": "1.18.x",
-    "java": ">=17"
+    "minecraft": ["1.18.x", "1.17.x"],
+    "java": ">=16"
   },
   "suggests": {
     "another-mod": "*"
