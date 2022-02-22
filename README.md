@@ -1,8 +1,8 @@
 # ColoredGlow Lib
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Emafire003/ColoredGlowLib/build?style=flat-square)
-![Downloads CurseForge](https://cf.way2muchnoise.eu/full_coloreglowlib_downloads.svg?badge_style=flat)
+![Downloads CurseForge](https://cf.way2muchnoise.eu/full_coloreglow-lib_downloads.svg?badge_style=flat)
 ![Modrinth](https://img.shields.io/modrinth/dt/coloredglowlib?color=green&label=Modrinth%20downloads&style=flat-square)
-![Mc Versions](https://cf.way2muchnoise.eu/versions/Minecraft%20versions_coloredglowlib_all.svg?badge_style=flat)
+![Mc Versions](https://cf.way2muchnoise.eu/versions/Minecraft%20versions_coloredglow-lib_all.svg?badge_style=flat)
 
 This library enables you to make enities glow different colors other than plain white or based on their team color.
 
@@ -48,7 +48,7 @@ dependencies {
 }
 ```
 
-You can find the correct version in the [releases page](https://github.com/Emafire003/ColoredGlowLib/releases).
+You can find the correct version in the [versions page](https://modrinth.com/mod/coloredglowlib/versions) on [Modrinth](https://modrinth.com/mod/coloredglowlib).
 
 #### How to set the color in the code
 Then, to change the color of the glowing effect of entities use:
