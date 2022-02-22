@@ -2,6 +2,9 @@ package me.emafire003.dev.coloredglowlib;
 
 import me.emafire003.dev.coloredglowlib.util.Color;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
+import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
+import net.minecraft.world.GameRules;
 
 public class ColoredGlowLib implements ModInitializer {
 	// This logger is used to write text to the console and the log file.
@@ -22,6 +25,8 @@ public class ColoredGlowLib implements ModInitializer {
 				"upload them there (those site also violate the license of the mod, and thus they are NOT LEGAL)");
 
 	}
+	public static final GameRules.Key<GameRules.BooleanRule> OVERRIDE_TEAM_COLORS =
+			GameRuleRegistry.register("overrideTeamColors", GameRules.Category.MISC, GameRuleFactory.createBooleanRule(false));
 
 	/**
 	 * Returns the current Color used for the glowing effect
