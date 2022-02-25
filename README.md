@@ -56,10 +56,9 @@ Then, to change the color of the glowing effect of entities use:
 
 You can use a `new Color(r,g,b)` object (Not AWT, the mod's Color object) or set a an rgb color with `setColor(r,g,b)` or set a colorvalue with `.setColorValue()` which is an int that corresponds to an RGB value. You can get it useing `Color.translateToColorValue(r,g,b)` or `RRRRRRGGGGGGBBBBBB`.
 
-To use a custom color for each diffrent type of entity (called EntityType) you can use the method ```java
-ColoredGlowLib.setColorToEntityType(EntityType type, Color color)```. The `type` parameter is an EntityType, such as `EntityType.PIG`, so it works with modded entities to (like `ModEntitiesType.MYCUSTOMENTITY`). 
-To enable this feature you will need to call the ```java
-ColoredGlowLib.setPerEntityTypeColor(boolean b)``` and set the parameter to `true`.
+To use a custom color for each diffrent type of entity (called EntityType) you can use the method `ColoredGlowLib.setColorToEntityType(EntityType type, Color color)`. 
+The `type` parameter is an EntityType, such as `EntityType.PIG`, so it works with modded entities to (like `ModEntitiesType.MYCUSTOMENTITY`). 
+To enable this feature you will need to call the `ColoredGlowLib.setPerEntityTypeColor(boolean b)` and set the parameter to `true`.
 
 There is an example of this in my [FoxGlow](https://github.com/Emafire003/FoxGlow) mod.
 
