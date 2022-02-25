@@ -23,6 +23,14 @@ public class Color {
         this.b = blue;
     }
 
+    public static Color getWhiteColor(){
+        return new Color(255, 255, 255);
+    }
+
+    public static Color getBlackColor(){
+        return new Color(0, 0, 0);
+    }
+
     public static Color translateFromColorValue(int colorvalue){
         int k = colorvalue >> 16 & 255;
         int l = colorvalue >> 8 & 255;

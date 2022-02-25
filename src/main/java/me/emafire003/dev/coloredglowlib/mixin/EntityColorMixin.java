@@ -2,6 +2,7 @@ package me.emafire003.dev.coloredglowlib.mixin;
 
 import me.emafire003.dev.coloredglowlib.ColoredGlowLib;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.scoreboard.AbstractTeam;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -22,12 +23,16 @@ public abstract class EntityColorMixin {
 
     @Shadow public abstract World getEntityWorld();
 
+    @Shadow public abstract EntityType<?> getType();
+
     @Inject(method = "getTeamColorValue", at = @At("RETURN"), cancellable = true)
     public void injectChangeColorValue(CallbackInfoReturnable<Integer> cir){
-        //Gamerule to ovveride the team color
-        //System.out.println("Color " + this.getColor().getColorValue());
         if(this.getScoreboardTeam() == null || this.getEntityWorld().getGameRules().getBoolean(OVERRIDE_TEAM_COLORS)) {
-            cir.setReturnValue(ColoredGlowLib.getColor().getColorValue());
+            if(ColoredGlowLib.getPerEntityTypeColor()){
+                cir.setReturnValue(ColoredGlowLib.getEntityTypeColor(this.getType()).getColorValue());
+            }else{
+                cir.setReturnValue(ColoredGlowLib.getColor().getColorValue());
+            }
         }
     }
 
