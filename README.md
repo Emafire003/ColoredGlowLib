@@ -1,6 +1,6 @@
 # ColoredGlow Lib
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Emafire003/ColoredGlowLib/build?style=flat-square)
-![Downloads CurseForge](https://cf.way2muchnoise.eu/full_coloreglowlib_downloads.svg?badge_style=flat)
+![Downloads CurseForge](https://cf.way2muchnoise.eu/full_coloredglowlib_downloads.svg?badge_style=flat)
 ![Modrinth](https://img.shields.io/modrinth/dt/coloredglowlib?color=green&label=Modrinth%20downloads&style=flat-square)
 ![Mc Versions](https://cf.way2muchnoise.eu/versions/Minecraft%20versions_coloredglowlib_all.svg?badge_style=flat)
 
@@ -48,13 +48,18 @@ dependencies {
 }
 ```
 
-You can find the correct version in the [releases page](https://github.com/Emafire003/ColoredGlowLib/releases).
+You can find the correct version in the [versions page](https://modrinth.com/mod/coloredglowlib/versions) on [Modrinth](https://modrinth.com/mod/coloredglowlib).
 
 #### How to set the color in the code
 Then, to change the color of the glowing effect of entities use:
 `ColoredGlowLib.setColor(parameter)`
 
 You can use a `new Color(r,g,b)` object (Not AWT, the mod's Color object) or set a an rgb color with `setColor(r,g,b)` or set a colorvalue with `.setColorValue()` which is an int that corresponds to an RGB value. You can get it useing `Color.translateToColorValue(r,g,b)` or `RRRRRRGGGGGGBBBBBB`.
+
+To use a custom color for each diffrent type of entity (called EntityType) you can use the method ```java
+ColoredGlowLib.setColorToEntityType(EntityType type, Color color)```. The `type` parameter is an EntityType, such as `EntityType.PIG`, so it works with modded entities to (like `ModEntitiesType.MYCUSTOMENTITY`). 
+To enable this feature you will need to call the ```java
+ColoredGlowLib.setPerEntityTypeColor(boolean b)``` and set the parameter to `true`.
 
 There is an example of this in my [FoxGlow](https://github.com/Emafire003/FoxGlow) mod.
 
