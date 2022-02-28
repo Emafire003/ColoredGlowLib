@@ -105,10 +105,10 @@ public class Color {
         }
     }
 
-    public void addColorNSC(int red, int green, int blue){
-        this.r = this.r + red;
-        this.g = (int) abs(sin(this.g + green));
-        this.b = (int) abs(cos(this.b + blue));
+    public void removeColor(int red, int green, int blue){
+        this.r = this.r - red;
+        this.g = this.g - green;
+        this.b = this.b - blue;
         if(this.r > 255){
             this.r = 0+red;
         }if(this.g > 255){
@@ -116,12 +116,13 @@ public class Color {
         }if(this.b > 255){
             this.b = 0+blue;
         }
-    }
-
-    public void removeColor(int red, int green, int blue){
-        this.r = this.r - red;
-        this.g = this.g - green;
-        this.b = this.b - blue;
+        if(this.r < 0){
+            this.r = 0;
+        }if(this.g < 0){
+            this.g = 0;
+        }if(this.b < 0){
+            this.b = 0;
+        }
     }
 
     public static Color getWhiteColor(){
