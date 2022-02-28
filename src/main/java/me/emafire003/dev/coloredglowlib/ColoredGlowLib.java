@@ -17,6 +17,8 @@ public class ColoredGlowLib implements ModInitializer {
 	public static Color color = new Color(255, 255, 255);
 	private static HashMap<EntityType, Color> per_entitytype_color_map = new HashMap<>();
 	private static boolean per_entitytype = true;
+	private static boolean overrideTeamColors = false;
+	private static boolean jebthing = false;
 
 	@Override
 	public void onInitialize() {
@@ -28,9 +30,37 @@ public class ColoredGlowLib implements ModInitializer {
 				" Modrinth or Github, please remove this mod and download it again from an official source, " +
 				"such as the ones cited before. Mods on other sites are NOT checked or secure since i did NOT " +
 				"upload them there (those site also violate the license of the mod, and thus they are NOT LEGAL)");
+		setColorToEntityType(EntityType.BAT, new Color(33, 87, 190));
 	}
 	public static final GameRules.Key<GameRules.BooleanRule> OVERRIDE_TEAM_COLORS =
 			GameRuleRegistry.register("overrideTeamColors", GameRules.Category.MISC, GameRuleFactory.createBooleanRule(false));
+
+	/**Set this to true to override the default minecraft team colors
+	 * even of the entity is in a team
+	 *
+	 * @param b The value to assing to overrideTeamColors*/
+	public static void setOverrideTeamColors(boolean b){
+		overrideTeamColors = b;
+	}
+
+	/**Get the value of the overrideTeamColors variable.
+	 * (if true overrides the default minecraft team colors
+	 * even of the entity is in a team)*/
+	public static boolean getOverrideTeamColors(){
+		return overrideTeamColors;
+	}
+
+	/**Set this to true to make every entity change color like
+	 * a jeb sheep aka change color each tick*/
+	public static void setRainbowChangingColor(boolean b){
+		jebthing = true;
+	}
+
+	/**Set this to true to make every entity change color like
+	 * a jeb sheep aka change color each tick*/
+	public static boolean getRainbowChangingColor(){
+		return jebthing;
+	}
 
 	/**
 	 * Sets the EntityType-specifc option for the custom colored
