@@ -60,6 +60,14 @@ To use a custom color for each diffrent type of entity (called EntityType) you c
 The `type` parameter is an EntityType, such as `EntityType.PIG`, so it works with modded entities to (like `ModEntitiesType.MYCUSTOMENTITY`). 
 To enable this feature you will need to call the `ColoredGlowLib.setPerEntityTypeColor(boolean b)` and set the parameter to `true`.
 
+#### How to set a rainbow glowing
+It is possibly to set entities glowing rainbow (for now every entity will glow rainbow, WIP) using the method:
+`ColoredGlowLib.setRainbowChangingColor(int value);`
+The `value` is how many colors to skip. Setting this value to 10 will skip 10 colors each time. Basicly it sets how quick the rainbow is and how many colors does it have. The higher the value, the less colors & time.
+
+#### How to override minecraft default team colors via code
+Just use `setOverrideTeamColors(boolean b);` Set it to `true` if you want to override the default minecraft team colors (if the entity is in a team) `false` if you want them to take priority over the mod's. (recommended since you could have other mods/datapacks/plugins that set entities inside teams with a specific color)
+
 There is an example of this in my [FoxGlow](https://github.com/Emafire003/FoxGlow) mod.
 
 ![coloreglowlib2](https://user-images.githubusercontent.com/29462910/154981142-5f871d46-2f33-46f4-94a4-7885189b01a3.png)
