@@ -34,13 +34,19 @@ public abstract class EntityColorMixin {
     public void injectChangeColorValue(CallbackInfoReturnable<Integer> cir){
         if(this.getScoreboardTeam() == null || ColoredGlowLib.getOverrideTeamColors() || this.getEntityWorld().getGameRules().getBoolean(OVERRIDE_TEAM_COLORS)) {
 
+            //TODO Maybe set that if a specified value outside of 255 is set it equals jeb, also check in Color's methods if it somehow exceeds 255
             if(this.getName().asString().equalsIgnoreCase("jeb_") || ColoredGlowLib.getRainbowChangingColor()){
                 jebcolor.setRainbowColor(10);
                 cir.setReturnValue(jebcolor.getColorValue());
-            }//TODO Maybe set that if a specified value outside of 255 is set it equals jeb, also check in Color's methods if it somehow exceeds 255
+            }
             else{
                 if(ColoredGlowLib.getPerEntityTypeColor()){
-                    cir.setReturnValue(ColoredGlowLib.getEntityTypeColor(this.getType()).getColorValue());
+                    if(ColoredGlowLib.getEntityTypeRainbowColor(this.getType())){
+                        jebcolor.setRainbowColor(10);
+                        cir.setReturnValue(jebcolor.getColorValue());
+                    }else{
+                        cir.setReturnValue(ColoredGlowLib.getEntityTypeColor(this.getType()).getColorValue());
+                    }
                 }else{
                     cir.setReturnValue(ColoredGlowLib.getColor().getColorValue());
                 }

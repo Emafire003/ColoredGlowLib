@@ -1,9 +1,12 @@
 package me.emafire003.dev.coloredglowlib.util;
 
 import net.minecraft.client.render.entity.feature.SheepWoolFeatureRenderer;
+import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static java.lang.Math.*;
 
@@ -170,6 +173,28 @@ public class Color {
 
     public static int translateToColorValue(int r, int g, int b){
         return (r << 16) | (g << 8) | (b);
+    }
+
+    public static String translateToHEX(int red, int green, int blue){
+        return "#"+Integer.toHexString(red)+Integer.toHexString(green)+Integer.toHexString(blue);
+    }
+
+    public static Pattern hexColorPattern = Pattern.compile("#([0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})");
+
+    private static boolean isHexColor(String color){
+        return hexColorPattern.matcher(color).matches();
+    }
+
+    public static Color translateFromHEX(String hex_color){
+        if(isHexColor(hex_color)){
+            hex_color = hex_color.replaceAll("#", "");
+            String red = String.valueOf(hex_color.charAt(0) + +hex_color.charAt(1));
+            String green = String.valueOf(hex_color.charAt(2) + +hex_color.charAt(3));
+            String blue = String.valueOf(hex_color.charAt(4) + +hex_color.charAt(5));
+            return new Color(Integer.parseInt(red, 16), Integer.parseInt(green, 16), Integer.parseInt(blue, 16));
+        }
+        return Color.getWhiteColor();
+
     }
 
     public int getColorValue(){

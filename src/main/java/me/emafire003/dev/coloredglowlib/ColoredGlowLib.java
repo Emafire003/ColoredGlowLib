@@ -7,7 +7,9 @@ import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.world.GameRules;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class ColoredGlowLib implements ModInitializer {
 	// This logger is used to write text to the console and the log file.
@@ -17,6 +19,7 @@ public class ColoredGlowLib implements ModInitializer {
 	public static Color color = new Color(255, 255, 255);
 	private static HashMap<EntityType, Color> per_entitytype_color_map = new HashMap<>();
 	private static boolean per_entitytype = true;
+	private static List<EntityType> entitytype_rainbow_list = new ArrayList<>();
 	private static boolean overrideTeamColors = false;
 	private static boolean jebthing = false;
 
@@ -94,6 +97,18 @@ public class ColoredGlowLib implements ModInitializer {
 	}
 
 	/**
+	 * Removes the EntityType from having a custom color
+	 * for the glowing effect.
+	 *
+	 * @param type The EntityType that will no longer have a custom color
+	 * */
+	public static void removeColorFromEntityType(EntityType type){
+		if(per_entitytype_color_map.containsKey(type)){
+			per_entitytype_color_map.remove(type);
+		}
+	}
+
+	/**
 	 * Returns the current Color used for the glowing effect
 	 * of a specific EntityType. If there is no custom color for
 	 * an EntityType (such as EntityType.CHICKEN) it returns the default one.
@@ -106,6 +121,38 @@ public class ColoredGlowLib implements ModInitializer {
 			return Color.getWhiteColor();
 		}
 		return per_entitytype_color_map.get(type);
+	}
+
+	/**
+	 * Sets a new rainbow Color that changes every tick for the glowing effect
+	 * of a specific EntityType, such as EntityType.CHICKEN
+	 *
+	 * @param type The EntityType to set the rainbow for
+	 * @param enabled Weather or not to enable or disable the rainbow color
+	 * */
+	public static void setRainbowColorToEntityType(EntityType type, boolean enabled){
+		if(enabled){
+			entitytype_rainbow_list.add(type);
+		}else if(entitytype_rainbow_list.contains(type)){
+			entitytype_rainbow_list.remove(type);
+		}
+
+	}
+
+	/**
+	 * Returns the current Color used for the glowing effect
+	 * of a specific EntityType. If there is no custom color for
+	 * an EntityType (such as EntityType.CHICKEN) it returns the default one.
+	 * (default is white, (255,255,255))
+	 *
+	 * @param type The EntityType to check the color for
+	 * */
+	public static boolean getEntityTypeRainbowColor(EntityType type){
+		if(entitytype_rainbow_list.contains(type)){
+			return true;
+		}else{
+			return false;
+		}
 	}
 
 
