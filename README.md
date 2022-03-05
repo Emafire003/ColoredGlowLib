@@ -13,6 +13,23 @@ This library enables you to make entities glow different colors other than plain
 ### For normal users:
 Just drag and drop this mod into your mod folder and enjoy! It will require another mod to be functional (for now, I'll probably add a command to do this later)
 
+#### Gamerules & commands
+You can set weather or not to override the default team colors (the ones minecraft assigns) with the gamerule:
+
+`/gamerule overrideTeamColors true/false`
+
+It is recommended to leave this on false, since you may have some other mod/datapack/modpack that sets a team color to an entity, and it can get confusing.
+
+You can specify a color to use for an entity using the following command:
+
+`/setglowcolor <entity> <color`
+
+The `entity` parameter is the entity you want to target, so @p, Emafire003, the uuid of the entity in front of you etc. It is not recommended to use @e, @a and 
+stuff that targets a lot of entities since I will implement a command to set a color for each **type** of entity that will perform better. If you want you can use it anyway, for ~100ish entities it should run just fine, maybe even a lot more.
+
+The `color` parameter is a hexadecimal color code (like #ff85ab, #750711, #abc, #123, #a7e ecc, search "color picker" online to get them) without the `#` (at least for now, in the future you will be able to include or not without problems)
+
+
 ### For developers:
 Include this library into your `build.gradle` as a dependency
 ```gradle
