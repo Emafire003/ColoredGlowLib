@@ -15,8 +15,6 @@ import net.minecraft.text.TranslatableText;
 
 import java.util.Collection;
 
-import static me.emafire003.dev.coloredglowlib.ColoredGlowLib.per_entity_color_map;
-
 public class SetGlowingColor {
 
 
