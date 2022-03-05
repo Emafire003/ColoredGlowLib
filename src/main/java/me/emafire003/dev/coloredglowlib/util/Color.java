@@ -179,19 +179,33 @@ public class Color {
         return "#"+Integer.toHexString(red)+Integer.toHexString(green)+Integer.toHexString(blue);
     }
 
-    public static Pattern hexColorPattern = Pattern.compile("#([0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})");
+    public static boolean isHexColor(String str)
+    {
+        // Regex to check valid hexadecimal color code.
+        String regex = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
 
-    private static boolean isHexColor(String color){
-        return hexColorPattern.matcher(color).matches();
+        // Compile the ReGex
+        Pattern p = Pattern.compile(regex);
+
+        // If the string is empty
+        // return false
+        if (str == null) {
+            return false;
+        }
+
+        // Pattern class contains matcher() method
+        // to find matching between given string
+        // and regular expression.
+        Matcher m = p.matcher(str);
+
+        // Return if the string
+        // matched the ReGex
+        return m.matches();
     }
 
     public static Color translateFromHEX(String hex_color){
         if(isHexColor(hex_color)){
-            hex_color = hex_color.replaceAll("#", "");
-            String red = String.valueOf(hex_color.charAt(0) + +hex_color.charAt(1));
-            String green = String.valueOf(hex_color.charAt(2) + +hex_color.charAt(3));
-            String blue = String.valueOf(hex_color.charAt(4) + +hex_color.charAt(5));
-            return new Color(Integer.parseInt(red, 16), Integer.parseInt(green, 16), Integer.parseInt(blue, 16));
+            return Color.translateFromColorValue(Integer.decode(hex_color).intValue());
         }
         return Color.getWhiteColor();
 

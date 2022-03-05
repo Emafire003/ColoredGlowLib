@@ -1,25 +1,30 @@
 package me.emafire003.dev.coloredglowlib;
 
+import me.emafire003.dev.coloredglowlib.util.CGLCommandRegister;
 import me.emafire003.dev.coloredglowlib.util.Color;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.world.GameRules;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 public class ColoredGlowLib implements ModInitializer {
-	// This logger is used to write text to the console and the log file.
-	// It is considered best practice to use your mod id as the logger's name.
-	// That way, it's clear which mod wrote info, warnings, and errors.
+
 	public static String MOD_ID = "coloredglowlib";
+
 	public static Color color = new Color(255, 255, 255);
 	private static HashMap<EntityType, Color> per_entitytype_color_map = new HashMap<>();
 	private static boolean per_entitytype = true;
 	private static List<EntityType> entitytype_rainbow_list = new ArrayList<>();
+	private static boolean per_entity = true;
+	public static HashMap<UUID, Color> per_entity_color_map = new HashMap<>();
+	private static List<UUID> entity_rainbow_list = new ArrayList<>();
 	private static boolean overrideTeamColors = false;
 	private static boolean jebthing = false;
 
@@ -33,7 +38,7 @@ public class ColoredGlowLib implements ModInitializer {
 				" Modrinth or Github, please remove this mod and download it again from an official source, " +
 				"such as the ones cited before. Mods on other sites are NOT checked or secure since i did NOT " +
 				"upload them there (those site also violate the license of the mod, and thus they are NOT LEGAL)");
-		setColorToEntityType(EntityType.BAT, new Color(33, 87, 190));
+		CGLCommandRegister.registerCommands();
 	}
 	public static final GameRules.Key<GameRules.BooleanRule> OVERRIDE_TEAM_COLORS =
 			GameRuleRegistry.register("overrideTeamColors", GameRules.Category.MISC, GameRuleFactory.createBooleanRule(false));
@@ -83,6 +88,94 @@ public class ColoredGlowLib implements ModInitializer {
 	 * */
 	public static boolean getPerEntityTypeColor(){
 		return per_entitytype;
+	}
+
+	/**
+	 * Sets the Entity-specifc option for the custom colored
+	 * glow effect.
+	 * If enabled it will check for the UUID of an entity
+	 * and set (if configured) a custom glow color for the specific entity.
+	 * */
+	public static void setPerEntityColor(boolean b){
+		per_entity = b;
+	}
+
+	/**
+	 * Returns true if the option for Entity-specific glow
+	 * color is enabled, returns false if it's disabled.
+	 * If enabled it will check for the UUID of an entity
+	 * and set (if configured) a custom glow color for the specific entity.
+	 * */
+	public static boolean getPerEntityColor(){
+		return per_entity;
+	}
+
+	/**
+	 * Sets a new custom Color value for the glowing effect
+	 * of a specific Entity
+	 *
+	 * @param entity The Entity to set the color for
+	 * @param color The color to set for the EntityType
+	 * */
+	public static void setColorToEntity(Entity entity, Color color){
+		per_entity_color_map.put(entity.getUuid(), color);
+	}
+
+	/**
+	 * Removes the color set to an Entity
+	 * for the glowing effect.
+	 *
+	 * @param entity The Entity that will no longer have a custom color
+	 * */
+	public static void removeColorFromEntity(Entity entity){
+		UUID uuid = entity.getUuid();
+		if(per_entity_color_map.containsKey(uuid)){
+			per_entity_color_map.remove(uuid);
+		}
+	}
+
+	/**
+	 * Returns the current Color used for the glowing effect
+	 * of a specific Entity. If there is no custom color for
+	 * an Entity it returns the default one.
+	 * (default is white, (255,255,255))
+	 *
+	 * @param entity The Entity to check the color for
+	 * */
+	public static Color getEntityColor(Entity entity){
+		UUID uuid = entity.getUuid();
+		if(!per_entity_color_map.containsKey(uuid)){
+			return Color.getWhiteColor();
+		}
+		return per_entity_color_map.get(uuid);
+	}
+
+	/**
+	 * Sets a new rainbow Color that changes every tick for the glowing effect
+	 * of a specific Entity
+	 *
+	 * @param entity The Entity to set the rainbow for
+	 * @param enabled Weather or not to enable or disable the rainbow color
+	 * */
+	public static void setRainbowColorToEntity(Entity entity, boolean enabled){
+		if(enabled){
+			entity_rainbow_list.add(entity.getUuid());
+		}else if(entity_rainbow_list.contains(entity.getUuid())){
+			entity_rainbow_list.remove(entity.getUuid());
+		}
+
+	}
+
+	/**
+	 * Returns the current Color used for the glowing effect
+	 * of a specific Entity. If there is no custom color for
+	 * an Entity it returns the default one.
+	 * (default is white, (255,255,255))
+	 *
+	 * @param entity The Entity to check the color for
+	 * */
+	public static boolean getEntityRainbowColor(Entity entity){
+		return entitytype_rainbow_list.contains(entity.getUuid());
 	}
 
 	/**

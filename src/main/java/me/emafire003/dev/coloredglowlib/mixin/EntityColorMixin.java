@@ -14,7 +14,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.UUID;
+
 import static me.emafire003.dev.coloredglowlib.ColoredGlowLib.OVERRIDE_TEAM_COLORS;
+import static me.emafire003.dev.coloredglowlib.ColoredGlowLib.per_entity_color_map;
 
 
 @Mixin(Entity.class)
@@ -28,18 +31,31 @@ public abstract class EntityColorMixin {
 
     @Shadow public abstract Text getName();
 
+    @Shadow public abstract UUID getUuid();
+
     private Color jebcolor = new Color(255, 0, 0);
 
     @Inject(method = "getTeamColorValue", at = @At("RETURN"), cancellable = true)
     public void injectChangeColorValue(CallbackInfoReturnable<Integer> cir){
         if(this.getScoreboardTeam() == null || ColoredGlowLib.getOverrideTeamColors() || this.getEntityWorld().getGameRules().getBoolean(OVERRIDE_TEAM_COLORS)) {
 
-            //TODO Maybe set that if a specified value outside of 255 is set it equals jeb, also check in Color's methods if it somehow exceeds 255
             if(this.getName().asString().equalsIgnoreCase("jeb_") || ColoredGlowLib.getRainbowChangingColor()){
                 jebcolor.setRainbowColor(10);
                 cir.setReturnValue(jebcolor.getColorValue());
+                return;
             }
             else{
+                //Checks if the entity itself has a glow color if the per-entitycolor is enabled
+                if(ColoredGlowLib.getPerEntityColor()){
+                    if(ColoredGlowLib.getEntityRainbowColor(((Entity)(Object)this))){
+                        jebcolor.setRainbowColor(10);
+                        cir.setReturnValue(jebcolor.getColorValue());
+                    }else{
+                        cir.setReturnValue(ColoredGlowLib.getEntityColor(((Entity)(Object)this)).getColorValue());
+                    }
+                    return;
+                }
+                //Checks for the entitytype (if it's enabled)
                 if(ColoredGlowLib.getPerEntityTypeColor()){
                     if(ColoredGlowLib.getEntityTypeRainbowColor(this.getType())){
                         jebcolor.setRainbowColor(10);
@@ -49,6 +65,7 @@ public abstract class EntityColorMixin {
                     }
                 }else{
                     cir.setReturnValue(ColoredGlowLib.getColor().getColorValue());
+                    return;
                 }
             }
 
