@@ -109,6 +109,8 @@ There is an example of this in my [FoxGlow](https://github.com/Emafire003/FoxGlo
 
 ![coloredglowlib2](https://user-images.githubusercontent.com/29462910/154981142-5f871d46-2f33-46f4-94a4-7885189b01a3.png)
 
+#### Known issues
+Currently, the setted color needs to be setted back manually at every game restart.
 
 ## License
 
