@@ -11,7 +11,7 @@ This library enables you to make entities glow different colors other than plain
 
 ## Setup
 ### For normal users:
-Just drag and drop this mod into your mod folder and enjoy! It will require another mod to be functional (for now, I'll probably add a command to do this later)
+Just drag and drop this mod into your mod folder and enjoy!
 
 #### Gamerules & commands
 You can set weather or not to override the default team colors (the ones minecraft assigns) with the gamerule:
