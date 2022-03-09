@@ -6,8 +6,7 @@
 
 This library enables you to make entities glow different colors other than plain white or based on their team color.
 
-![coloredglowlib](https://user-images.githubusercontent.com/29462910/154980788-09722978-0594-48b2-a873-3d6b0434295b.png)
-
+![coloredglowlib-with-player](https://user-images.githubusercontent.com/29462910/157507551-dfc4ee7e-66fb-4dae-9578-e17ca64e3b44.png)
 
 ## Setup
 ### For normal users:
@@ -33,7 +32,7 @@ The `color` parameter is a hexadecimal color code (like #ff85ab, #750711, #abc, 
 ### For developers:
 Include this library into your `build.gradle` as a dependency
 ```gradle
-   repositories {
+repositories {
     maven {
         name = "Modrinth"
         url = "https://api.modrinth.com/maven"
@@ -49,7 +48,7 @@ dependencies {
 ```
 If you want you can also `include` this (Jar-in-Jar dependency). To avoid confusion, tell the users of your mod that your mod includes this library already, in case of problems it would make debugging easier.
 ```gradle
-   repositories {
+repositories {
     maven {
         name = "Modrinth"
         url = "https://api.modrinth.com/maven"
@@ -124,7 +123,7 @@ Just use `setOverrideTeamColors(boolean b);` Set it to `true` if you want to ove
 
 There is an example of this in my [FoxGlow](https://github.com/Emafire003/FoxGlow) mod.
 
-![coloredglowlib2](https://user-images.githubusercontent.com/29462910/154981142-5f871d46-2f33-46f4-94a4-7885189b01a3.png)
+![luma-shaders-coloredglowlib](https://user-images.githubusercontent.com/29462910/157507676-576d3fb5-e24b-41f7-a7f0-6956d7ae4e29.png)
 
 #### Known issues
 Currently, the setted color needs to be setted back manually at every game restart.
