@@ -4,7 +4,7 @@
 ![Modrinth](https://img.shields.io/modrinth/dt/coloredglowlib?color=green&label=Modrinth%20downloads&style=flat-square)
 ![Mc Versions](https://cf.way2muchnoise.eu/versions/Minecraft%20versions_coloredglowlib_all.svg?badge_style=flat)
 
-This library enables you to make entities glow different colors other than plain white or based on their team color. (CLIENT ONLY FOR NOW)
+This library enables you to make entities glow different colors other than plain white or based on their team color.
 
 ![coloredglowlib-with-player](https://user-images.githubusercontent.com/29462910/157507551-dfc4ee7e-66fb-4dae-9578-e17ca64e3b44.png)
 
@@ -21,12 +21,12 @@ It is recommended to leave this on false, since you may have some other mod/data
 
 You can specify a color to use for an entity using the following command:
 
-`/setglowcolor <entity> <color`
+`/setglowcolor <entity> <color>`
 
 The `entity` parameter is the entity you want to target, so @p, Emafire003, the uuid of the entity in front of you etc. It is not recommended to use @e, @a and 
 stuff that targets a lot of entities since I will implement a command to set a color for each **type** of entity that will perform better. If you want you can use it anyway, for ~100ish entities it should run just fine, maybe even a lot more.
 
-The `color` parameter is a hexadecimal color code (like #ff85ab, #750711, #abc, #123, #a7e ecc, search "color picker" online to get them) without the `#` (at least for now, in the future you will be able to include or not without problems)
+The `color` parameter is a hexadecimal color code (like #ff85ab, #750711, #abc, #123, #a7e ecc, search "color picker" online to get them) without the `#` since minecraft interprets it as a beginning of a tag (which is not what it should be doing in this case). In alternative you can provide the word `rainbow` that will make the entity glow, you guessed it, rainbow.
 
 
 ### For developers:
