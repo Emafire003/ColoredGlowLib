@@ -7,14 +7,18 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.emafire003.dev.coloredglowlib.ColoredGlowLib;
 import me.emafire003.dev.coloredglowlib.util.Color;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 
 import java.util.Collection;
 
+//@Environment(EnvType.SERVER)
 public class SetGlowingColor {
 
 
@@ -38,14 +42,15 @@ public class SetGlowingColor {
                 if(color.equalsIgnoreCase("#rainbow")){
                     ColoredGlowLib.setRainbowColorToEntity(entity, true);
                 }else{
-                    //per_entity_color_map.put(entity.getUuid(), Color.translateFromHEX(color));
                     ColoredGlowLib.setColorToEntity(entity, Color.translateFromHEX(color));
                 }
             }
-            source.sendFeedback(new TranslatableText("commands.setglowcolor.success1").append(color).append(new TranslatableText("commands.setglowcolor.success2")), true);
+            //source.sendFeedback(new TranslatableText("commands.setglowcolor.success1").append(color).append(new TranslatableText("commands.setglowcolor.success2")), true);
+            source.sendFeedback(new LiteralText("Setted color '" + color + "' to the selected entity/entities!"), false);
             return targets.size();
         }else{
-            source.sendError(new TranslatableText("commands.setglowcolor.notcolor"));
+            //source.sendError(new TranslatableText("commands.setglowcolor.notcolor"));
+            source.sendError(new LiteralText("Error! The value you have specified is not valid! It should be RRGGBB (without '#') or 'rainbow'"));
             return 0;
         }
     }

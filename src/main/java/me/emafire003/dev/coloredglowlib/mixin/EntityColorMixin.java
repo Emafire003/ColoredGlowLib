@@ -2,6 +2,8 @@ package me.emafire003.dev.coloredglowlib.mixin;
 
 import me.emafire003.dev.coloredglowlib.ColoredGlowLib;
 import me.emafire003.dev.coloredglowlib.util.Color;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.scoreboard.AbstractTeam;
@@ -14,12 +16,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.UUID;
+import static me.emafire003.dev.coloredglowlib.ColoredGlowLib.*;
 
-import static me.emafire003.dev.coloredglowlib.ColoredGlowLib.OVERRIDE_TEAM_COLORS;
-import static me.emafire003.dev.coloredglowlib.ColoredGlowLib.per_entity_color_map;
-
-
+@Environment(EnvType.CLIENT)
 @Mixin(Entity.class)
 public abstract class EntityColorMixin {
 
@@ -31,43 +30,77 @@ public abstract class EntityColorMixin {
 
     @Shadow public abstract Text getName();
 
-    @Shadow public abstract UUID getUuid();
+    private Entity entity = ((Entity)(Object)this);
 
     private Color jebcolor = new Color(255, 0, 0);
+
+
+    public int entitySpecificColor(Entity entity){
+        if(ColoredGlowLib.getPerEntityColor()){
+            int cvalue = ColoredGlowLib.getEntityColor(entity).getColorValue();
+            if(cvalue == Color.getWhiteColor().getColorValue()){
+                return -1;
+            }else{
+                return cvalue;
+            }
+        }else{
+            return -1;
+        }
+    }
+
+    public int entityTypeSpecificColor(EntityType type){
+        if(ColoredGlowLib.getPerEntityTypeColor()){
+            int cvalue = ColoredGlowLib.getEntityTypeColor(type).getColorValue();
+            if(cvalue == Color.getWhiteColor().getColorValue()){
+                return -1;
+            }else{
+                return cvalue;
+            }
+        }else{
+            return -1;
+        }
+    }
+
+    public int rainbowColor(Entity entity){
+        if(entity.getName().asString().equalsIgnoreCase("jeb_") || ColoredGlowLib.getRainbowChangingColor()){
+            jebcolor.setRainbowColor(10);
+            return jebcolor.getColorValue();
+        }else if(ColoredGlowLib.getEntityRainbowColor(entity)){
+            jebcolor.setRainbowColor(10);
+            return(jebcolor.getColorValue());
+        }else if(ColoredGlowLib.getEntityTypeRainbowColor(this.getType())){
+            jebcolor.setRainbowColor(10);
+            return(jebcolor.getColorValue());
+        }else{
+            return -1;
+        }
+    }
 
     @Inject(method = "getTeamColorValue", at = @At("RETURN"), cancellable = true)
     public void injectChangeColorValue(CallbackInfoReturnable<Integer> cir){
         if(this.getScoreboardTeam() == null || ColoredGlowLib.getOverrideTeamColors() || this.getEntityWorld().getGameRules().getBoolean(OVERRIDE_TEAM_COLORS)) {
-
-            if(this.getName().asString().equalsIgnoreCase("jeb_") || ColoredGlowLib.getRainbowChangingColor()){
-                jebcolor.setRainbowColor(10);
-                cir.setReturnValue(jebcolor.getColorValue());
+            //Checks if it should glow rainbow
+            int rainbow_col = rainbowColor(entity);
+            if(rainbow_col != -1){
+                cir.setReturnValue(rainbow_col);
                 return;
             }
-            else{
-                //Checks if the entity itself has a glow color if the per-entitycolor is enabled
-                if(ColoredGlowLib.getPerEntityColor()){
-                    if(ColoredGlowLib.getEntityRainbowColor(((Entity)(Object)this))){
-                        jebcolor.setRainbowColor(10);
-                        cir.setReturnValue(jebcolor.getColorValue());
-                    }else{
-                        cir.setReturnValue(ColoredGlowLib.getEntityColor(((Entity)(Object)this)).getColorValue());
-                    }
-                    return;
-                }
-                //Checks for the entitytype (if it's enabled)
-                if(ColoredGlowLib.getPerEntityTypeColor()){
-                    if(ColoredGlowLib.getEntityTypeRainbowColor(this.getType())){
-                        jebcolor.setRainbowColor(10);
-                        cir.setReturnValue(jebcolor.getColorValue());
-                    }else{
-                        cir.setReturnValue(ColoredGlowLib.getEntityTypeColor(this.getType()).getColorValue());
-                    }
-                }else{
-                    cir.setReturnValue(ColoredGlowLib.getColor().getColorValue());
-                    return;
-                }
+            //If not, checks if there is a specific color for an entity
+            int entity_col = entitySpecificColor(entity);
+            if(entity_col != -1){
+                cir.setReturnValue(entity_col);
+                return;
             }
+
+            //If not, checks if there is a specific color for an entitytype
+            int type_col = entityTypeSpecificColor(entity.getType());
+            if(type_col != -1){
+                cir.setReturnValue(type_col);
+                return;
+            }
+
+            //If nothing else has been found, set the generalized one.
+            cir.setReturnValue(ColoredGlowLib.getColor().getColorValue());
 
         }
     }

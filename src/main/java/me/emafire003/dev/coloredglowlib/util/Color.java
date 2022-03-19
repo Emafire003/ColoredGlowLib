@@ -1,14 +1,9 @@
 package me.emafire003.dev.coloredglowlib.util;
 
-import net.minecraft.client.render.entity.feature.SheepWoolFeatureRenderer;
-import org.slf4j.Logger;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static java.lang.Math.*;
+import static me.emafire003.dev.coloredglowlib.ColoredGlowLib.LOGGER;
 
 public class Color {
     public int r;
@@ -175,8 +170,29 @@ public class Color {
         return (r << 16) | (g << 8) | (b);
     }
 
+    public int toColorValue(){
+        return translateToColorValue(this.r, this.g, this.b);
+    }
+
+    //TODO for some reason a color like af0fab does not work
+    //TODO also for the per world file save problem i can use a dir and then thorw in there a file for every wiworld
     public static String translateToHEX(int red, int green, int blue){
-        return "#"+Integer.toHexString(red)+Integer.toHexString(green)+Integer.toHexString(blue);
+        String hexcolor;
+        if(red <= 9){
+            hexcolor = "#"+0+Integer.toHexString(red)+Integer.toHexString(green)+Integer.toHexString(blue);
+        }else if(green <= 9){
+            hexcolor = "#"+Integer.toHexString(red)+0+Integer.toHexString(green)+Integer.toHexString(blue);
+        }else if(blue <= 9){
+            hexcolor = "#"+Integer.toHexString(red)+Integer.toHexString(green)+0+Integer.toHexString(blue);
+        }else {
+            hexcolor = "#"+Integer.toHexString(red)+Integer.toHexString(green)+Integer.toHexString(blue);
+        }
+        //LOGGER.debug(hexcolor);
+        return hexcolor;
+    }
+
+    public String toHEX(){
+        return Color.translateToHEX(this.r, this.g, this.b);
     }
 
     public static boolean isHexColor(String str)
