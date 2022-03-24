@@ -10,16 +10,20 @@
   ],
   "contact": {
     "homepage": "https://github.com/Emafire003/ColoredGlowLib",
-    "sources": "https://github.com/Emafire003/ColoredGlowLib"
+    "sources": "https://github.com/Emafire003/ColoredGlowLib",
+    "issues": "https://github.com/Emafire003/ColoredGlowLib/issues"
   },
 
-  "license": "MIT",
+  "license": "GNU GPL3",
   "icon": "assets/coloredglowlib/icon.png",
 
   "environment": "*",
   "entrypoints": {
     "main": [
       "me.emafire003.dev.coloredglowlib.ColoredGlowLib"
+    ],
+    "client": [
+      "me.emafire003.dev.coloredglowlib.client.ColoredGlowLibClient"
     ]
   },
   "mixins": [

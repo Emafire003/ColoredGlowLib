@@ -1,6 +1,7 @@
 package me.emafire003.dev.coloredglowlib.mixin;
 
 import me.emafire003.dev.coloredglowlib.ColoredGlowLib;
+import me.emafire003.dev.coloredglowlib.client.ColoredGlowLibClient;
 import me.emafire003.dev.coloredglowlib.util.Color;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -34,10 +35,22 @@ public abstract class EntityColorMixin {
 
     private Color jebcolor = new Color(255, 0, 0);
 
+    /*public int nameSpecificColor(Entity entity){
+        if(ColoredGlowLibClient.getPerNameColor()){
+            int cvalue = ColoredGlowLibClient.getEntityColor(entity).getColorValue();
+            if(cvalue == Color.getWhiteColor().getColorValue()){
+                return -1;
+            }else{
+                return cvalue;
+            }
+        }else{
+            return -1;
+        }
+    }*/
 
     public int entitySpecificColor(Entity entity){
-        if(ColoredGlowLib.getPerEntityColor()){
-            int cvalue = ColoredGlowLib.getEntityColor(entity).getColorValue();
+        if(ColoredGlowLibClient.getPerEntityColor()){
+            int cvalue = ColoredGlowLibClient.getEntityColor(entity).getColorValue();
             if(cvalue == Color.getWhiteColor().getColorValue()){
                 return -1;
             }else{
@@ -49,8 +62,8 @@ public abstract class EntityColorMixin {
     }
 
     public int entityTypeSpecificColor(EntityType type){
-        if(ColoredGlowLib.getPerEntityTypeColor()){
-            int cvalue = ColoredGlowLib.getEntityTypeColor(type).getColorValue();
+        if(ColoredGlowLibClient.getPerEntityTypeColor()){
+            int cvalue = ColoredGlowLibClient.getEntityTypeColor(type).getColorValue();
             if(cvalue == Color.getWhiteColor().getColorValue()){
                 return -1;
             }else{
@@ -62,13 +75,13 @@ public abstract class EntityColorMixin {
     }
 
     public int rainbowColor(Entity entity){
-        if(entity.getName().asString().equalsIgnoreCase("jeb_") || ColoredGlowLib.getRainbowChangingColor()){
+        if(entity.getName().asString().equalsIgnoreCase("jeb_") || ColoredGlowLibClient.getRainbowChangingColor()){
             jebcolor.setRainbowColor(10);
             return jebcolor.getColorValue();
-        }else if(ColoredGlowLib.getEntityRainbowColor(entity)){
+        }else if(ColoredGlowLibClient.getEntityRainbowColor(entity)){
             jebcolor.setRainbowColor(10);
             return(jebcolor.getColorValue());
-        }else if(ColoredGlowLib.getEntityTypeRainbowColor(this.getType())){
+        }else if(ColoredGlowLibClient.getEntityTypeRainbowColor(this.getType())){
             jebcolor.setRainbowColor(10);
             return(jebcolor.getColorValue());
         }else{

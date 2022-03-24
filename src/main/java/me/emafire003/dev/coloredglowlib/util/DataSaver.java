@@ -53,13 +53,8 @@ public class DataSaver {
         }
     }
 
-    public static List<String> convertFromEntityTypeList(List<EntityType> typelist){
-        List<String> list = new ArrayList<>();
-        for(EntityType type : typelist){
-            list.add(String.valueOf(type));
-        }
-        return list;
-    }
+
+
     public static void write() {
         try {
             FileWriter datafileWriter = new FileWriter(String.valueOf(FabricLoader.getInstance().getConfigDir().resolve(PATH)));
@@ -67,7 +62,7 @@ public class DataSaver {
             String entityColorMap = gson.toJson(ColoredGlowLib.getEntityColorMap()) + "\n";
             String entityTypeColorMap = gson.toJson(ColoredGlowLib.getEntityTypeColorMap()) + "\n";
             String entityRainbowList = gson.toJson(ColoredGlowLib.getRainbowEntityList()) + "\n";
-            String entityTypeRainbowList = gson.toJson(convertFromEntityTypeList(ColoredGlowLib.getRainbowEntityTypeList())) + "\n";
+            String entityTypeRainbowList = gson.toJson(ColoredGlowLib.convertFromEntityTypeList(ColoredGlowLib.getRainbowEntityTypeList())) + "\n";
             String perEntityType = gson.toJson(ColoredGlowLib.getPerEntityTypeColor()) + "\n";
             String perEntity = gson.toJson(ColoredGlowLib.getPerEntityColor()) + "\n";
             String generalRainbow = gson.toJson(ColoredGlowLib.getRainbowChangingColor()) + "\n";

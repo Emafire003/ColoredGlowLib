@@ -9,14 +9,20 @@ import me.emafire003.dev.coloredglowlib.ColoredGlowLib;
 import me.emafire003.dev.coloredglowlib.util.Color;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.Entity;
+import net.minecraft.server.PlayerManager;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 
 import java.util.Collection;
+import java.util.List;
+
+import static me.emafire003.dev.coloredglowlib.ColoredGlowLib.LOGGER;
 
 //@Environment(EnvType.SERVER)
 public class SetGlowingColor {
@@ -37,6 +43,7 @@ public class SetGlowingColor {
     private static int execute(ServerCommandSource source, String color, Collection<? extends Entity> targets) throws CommandSyntaxException {
         //TODO add a regex check to see if the color already has the #
         color = "#"+color;
+
         if(Color.isHexColor(color) || color.equalsIgnoreCase("#rainbow")){
             for (Entity entity : targets) {
                 if(color.equalsIgnoreCase("#rainbow")){
@@ -45,6 +52,14 @@ public class SetGlowingColor {
                     ColoredGlowLib.setColorToEntity(entity, Color.translateFromHEX(color));
                 }
             }
+
+            if(!source.getWorld().isClient){
+                List<ServerPlayerEntity> players = source.getServer().getPlayerManager().getPlayerList();
+                for (ServerPlayerEntity player : players) {
+                    ColoredGlowLib.sendDataPackets(player);
+                }
+            }
+
             //source.sendFeedback(new TranslatableText("commands.setglowcolor.success1").append(color).append(new TranslatableText("commands.setglowcolor.success2")), true);
             source.sendFeedback(new LiteralText("Setted color '" + color + "' to the selected entity/entities!"), false);
             return targets.size();
