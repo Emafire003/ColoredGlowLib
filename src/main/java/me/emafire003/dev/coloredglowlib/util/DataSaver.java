@@ -48,7 +48,7 @@ public class DataSaver {
     public static void write() {
         try {
             FileWriter datafileWriter = new FileWriter(PATH);
-            String head = gson.toJson("/*ColoredGlowLib data. DO NOT TOUCH IF YOU DON'T KNOW WHAT YOU ARE DOING*/\n");
+            String head = gson.toJson("/*ColoredGlowLib data. DO NOT TOUCH IF YOU DO NOT KNOW WHAT YOU ARE DOING*/") +"\n";
             String entityColorMap = gson.toJson(ColoredGlowLib.getEntityColorMap()) + "\n";
             String entityTypeColorMap = gson.toJson(ColoredGlowLib.getEntityTypeColorMap()) + "\n";
             String entityRainbowList = gson.toJson(ColoredGlowLib.getRainbowEntityList()) + "\n";

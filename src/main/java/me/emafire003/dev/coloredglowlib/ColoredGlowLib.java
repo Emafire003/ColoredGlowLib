@@ -69,15 +69,15 @@ public class ColoredGlowLib implements ModInitializer {
 				"such as the ones cited before. Mods on other sites are NOT checked or secure since i did NOT \n" +
 				"upload them there");
 
-		CGLCommandRegister.registerCommands();
 		LOGGER.info("Initializing...");
+
+		CGLCommandRegister.registerCommands();
 		ServerTickEvents.END_SERVER_TICK.register(minecraftServer -> {
 			if(!server_registered){
 				server = minecraftServer;
 				getValuesFromFile();
 				server_registered = true;
 			}
-			LOGGER.info("Is this working? Ticks: " + tickCounter);
 			if(tickCounter != -1){
 				tickCounter++;
 			}
@@ -173,6 +173,9 @@ public class ColoredGlowLib implements ModInitializer {
 		return server;
 	}
 
+	/**This method sends updated data to all players on the server
+	 *
+	 * @param server The server the players are on. And also where the mod runs most likely.*/
 	public static void sendDataPacketsToPlayers(MinecraftServer server){
 		List<ServerPlayerEntity> players = server.getPlayerManager().getPlayerList();
 		for (ServerPlayerEntity player : players) {

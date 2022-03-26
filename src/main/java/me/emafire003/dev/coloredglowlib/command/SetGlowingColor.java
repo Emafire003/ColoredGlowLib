@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static me.emafire003.dev.coloredglowlib.ColoredGlowLib.LOGGER;
+import static me.emafire003.dev.coloredglowlib.ColoredGlowLib.updateData;
 
 //@Environment(EnvType.SERVER)
 public class SetGlowingColor {
@@ -54,10 +55,7 @@ public class SetGlowingColor {
             }
 
             if(!source.getWorld().isClient){
-                List<ServerPlayerEntity> players = source.getServer().getPlayerManager().getPlayerList();
-                for (ServerPlayerEntity player : players) {
-                    ColoredGlowLib.sendDataPackets(player);
-                }
+                updateData(source.getServer());
             }
 
             //source.sendFeedback(new TranslatableText("commands.setglowcolor.success1").append(color).append(new TranslatableText("commands.setglowcolor.success2")), true);
