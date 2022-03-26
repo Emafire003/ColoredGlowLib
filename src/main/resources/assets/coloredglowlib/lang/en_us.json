@@ -1,6 +1,3 @@
 {
-  "gamerule.overrideTeamColors": "[ColoredGlowLib] Use the color of the library instead of of the team",
-  "commands.setglowcolor.notcolor": "Error! The value you have specified is not valid! It should be RRGGBB (without '#') or 'rainbow'",
-  "commands.setglowcolor.success1": "Setted color '",
-  "commands.setglowcolor.success2": "' to the selected entity/entities!"
+  "gamerule.overrideTeamColors": "[ColoredGlowLib] Use the color of the library instead of of the team"
 }

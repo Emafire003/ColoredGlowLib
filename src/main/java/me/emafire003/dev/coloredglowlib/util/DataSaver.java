@@ -31,16 +31,6 @@ public class DataSaver {
 
     static Gson gson = new Gson();
 
-    /**Use this method to change the path of the
-     * data file to your configuration file, otherwise
-     * it might get in conflict with other instances
-     * such as FabricLoader.getInstance().getConfigDir().resolve("yourmodfolder/yourmodconfig.json")
-     *
-     * @param path The path to set for the new config.*/
-    public static void changePathTo(String path){
-        PATH = path;
-    }
-
     public static void createFile() {
         try {
             File datafile = new File(PATH);
@@ -57,8 +47,8 @@ public class DataSaver {
 
     public static void write() {
         try {
-            FileWriter datafileWriter = new FileWriter(String.valueOf(FabricLoader.getInstance().getConfigDir().resolve(PATH)));
-            datafileWriter.write("/*ColoredGlowLib data. DO NOT TOUCH IF YOU DON'T KNOW WHAT YOU ARE DOING*/\n");
+            FileWriter datafileWriter = new FileWriter(PATH);
+            String head = gson.toJson("/*ColoredGlowLib data. DO NOT TOUCH IF YOU DON'T KNOW WHAT YOU ARE DOING*/\n");
             String entityColorMap = gson.toJson(ColoredGlowLib.getEntityColorMap()) + "\n";
             String entityTypeColorMap = gson.toJson(ColoredGlowLib.getEntityTypeColorMap()) + "\n";
             String entityRainbowList = gson.toJson(ColoredGlowLib.getRainbowEntityList()) + "\n";
@@ -69,6 +59,7 @@ public class DataSaver {
             String overrideTeamColors = gson.toJson(ColoredGlowLib.getOverrideTeamColors()) + "\n";
             String defaultColor = gson.toJson(ColoredGlowLib.getColor().toHEX()) + "\n";
 
+            datafileWriter.write(head);
             datafileWriter.append(entityColorMap);
             datafileWriter.append(entityTypeColorMap);
             datafileWriter.append(entityRainbowList);
@@ -106,7 +97,7 @@ public class DataSaver {
 
     public static @Nullable HashMap<UUID, String> getEntityMap(){
         try {
-            FileReader file = new FileReader(String.valueOf(FabricLoader.getInstance().getConfigDir().resolve(PATH)));
+            FileReader file = new FileReader(PATH);
             String line = getFileLine(2, file);
             if(line.equalsIgnoreCase("ERROR001-NOLINEFOUND")){
                 return gson.fromJson("{}", entityColorMapToken);
@@ -125,7 +116,7 @@ public class DataSaver {
 
     public static @Nullable HashMap<EntityType, String> getEntityTypeMap(){
         try {
-            FileReader file = new FileReader(String.valueOf(FabricLoader.getInstance().getConfigDir().resolve(PATH)));
+            FileReader file = new FileReader(PATH);
             String line = getFileLine(3, file);
             if(line.equalsIgnoreCase("ERROR001-NOLINEFOUND")){
                 return gson.fromJson("{}", entityTypeColorMapToken);
@@ -150,7 +141,7 @@ public class DataSaver {
 
     public static @Nullable List<UUID> getEntityRainbowList(){
         try {
-            FileReader file = new FileReader(String.valueOf(FabricLoader.getInstance().getConfigDir().resolve(PATH)));
+            FileReader file = new FileReader(PATH);
 
             String line = getFileLine(4, file);
             if(line.equalsIgnoreCase("ERROR001-NOLINEFOUND")){
@@ -170,7 +161,7 @@ public class DataSaver {
 
     public static @Nullable List<EntityType> getEntityTypeRainbowList(){
         try {
-            FileReader file = new FileReader(String.valueOf(FabricLoader.getInstance().getConfigDir().resolve(PATH)));
+            FileReader file = new FileReader(PATH);
             String line = getFileLine(5, file);
             if(line.equalsIgnoreCase("ERROR001-NOLINEFOUND")){
                 return gson.fromJson("{}", entityTypeRainbowListToken);
@@ -194,7 +185,7 @@ public class DataSaver {
 
     public static boolean getPerEntityColor(){
         try {
-            FileReader file = new FileReader(String.valueOf(FabricLoader.getInstance().getConfigDir().resolve(PATH)));
+            FileReader file = new FileReader(PATH);
             String line = getFileLine(6, file);
             if(line.equalsIgnoreCase("ERROR001-NOLINEFOUND")){
                 return gson.fromJson("{}", perEntityToken);
@@ -213,7 +204,7 @@ public class DataSaver {
 
     public static boolean getPerEntityTypeColor(){
         try {
-            FileReader file = new FileReader(String.valueOf(FabricLoader.getInstance().getConfigDir().resolve(PATH)));
+            FileReader file = new FileReader(PATH);
             String line = getFileLine(7, file);
             if(line.equalsIgnoreCase("ERROR001-NOLINEFOUND")){
                 return gson.fromJson("{}", perEntityTypeToken);
@@ -232,7 +223,7 @@ public class DataSaver {
 
     public static boolean getRainbowEnabled(){
         try {
-            FileReader file = new FileReader(String.valueOf(FabricLoader.getInstance().getConfigDir().resolve(PATH)));
+            FileReader file = new FileReader(PATH);
             String line = getFileLine(8, file);
             if(line.equalsIgnoreCase("ERROR001-NOLINEFOUND")){
                 return gson.fromJson("{}", generalRainbowEnabledToken);
@@ -251,7 +242,7 @@ public class DataSaver {
 
     public static boolean getOverrideTeams(){
         try {
-            FileReader file = new FileReader(String.valueOf(FabricLoader.getInstance().getConfigDir().resolve(PATH)));
+            FileReader file = new FileReader(PATH);
             String line = getFileLine(9, file);
             if(line.equalsIgnoreCase("ERROR001-NOLINEFOUND")){
                 return gson.fromJson("{}", overrideTeamsToken);
@@ -270,7 +261,7 @@ public class DataSaver {
 
     public static Color getDefaultColor(){
         try {
-            FileReader file = new FileReader(String.valueOf(FabricLoader.getInstance().getConfigDir().resolve(PATH)));
+            FileReader file = new FileReader(PATH);
             String line = getFileLine(10, file);
             if(line.equalsIgnoreCase("ERROR001-NOLINEFOUND")){
                 return Color.translateFromHEX(gson.fromJson("{}", defaultColorToken));

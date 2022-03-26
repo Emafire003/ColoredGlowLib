@@ -1,9 +1,6 @@
 package me.emafire003.dev.coloredglowlib.client;
 
-import me.emafire003.dev.coloredglowlib.networking.EntityListPacketS2C;
-import me.emafire003.dev.coloredglowlib.networking.EntityMapPacketS2C;
-import me.emafire003.dev.coloredglowlib.networking.EntityTypeListPacketS2C;
-import me.emafire003.dev.coloredglowlib.networking.EntityTypeMapPacketS2C;
+import me.emafire003.dev.coloredglowlib.networking.*;
 import me.emafire003.dev.coloredglowlib.util.Color;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -11,32 +8,29 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.World;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static me.emafire003.dev.coloredglowlib.ColoredGlowLib.LOGGER;
 
 public class ColoredGlowLibClient implements ClientModInitializer {
 
     public static Color color = new Color(255, 255, 255);
-    public static HashMap<EntityType, String> per_entitytype_color_map = new HashMap<>();
-    private static boolean per_entitytype = true;
-    public static List<EntityType> entitytype_rainbow_list = new ArrayList<>();
-    private static boolean per_entity = true;
+
     public static HashMap<UUID, String> per_entity_color_map = new HashMap<>();
     public static List<UUID> entity_rainbow_list = new ArrayList<>();
-    private static boolean overrideTeamColors = false;
+
+    public static HashMap<EntityType, String> per_entitytype_color_map = new HashMap<>();
+    public static List<EntityType> entitytype_rainbow_list = new ArrayList<>();
+
+    private static boolean per_entity = true;
+    private static boolean per_entitytype = true;
     private static boolean generalized_rainbow = false;
-    private static boolean debug = true;
+    private static boolean overrideTeamColors = false;
+    private static boolean debug = false;
 
     @Override
     @Environment(EnvType.CLIENT)
@@ -62,6 +56,8 @@ public class ColoredGlowLibClient implements ClientModInitializer {
         registerEntityListPacket();
         registerEntityTypeMapPacket();
         registerEntityTypeListPacket();
+        registerBooleanValuesMapPacket();
+        registerColorPacket();
     }
 
     private void registerEntityMapPacket(){
@@ -112,6 +108,33 @@ public class ColoredGlowLibClient implements ClientModInitializer {
         }));
     }
 
+    private void registerBooleanValuesMapPacket(){
+        ClientPlayNetworking.registerGlobalReceiver(BooleanValuesPacketS2C.ID, ((client, handler, buf, responseSender) -> {
+            var results = BooleanValuesPacketS2C.read(buf);
+
+            client.execute(() -> {
+                unPackBooleanValuesPackets(results);
+            });
+        }));
+    }
+
+    private void registerColorPacket(){
+        ClientPlayNetworking.registerGlobalReceiver(ColorPacketS2C.ID, ((client, handler, buf, responseSender) -> {
+            var results = ColorPacketS2C.read(buf);
+
+            client.execute(() -> {
+                color = results;
+            });
+        }));
+    }
+
+    private static void unPackBooleanValuesPackets(List<Boolean> list){
+        per_entity = list.get(0);
+        per_entitytype = list.get(1);
+        generalized_rainbow = list.get(2);
+        overrideTeamColors = list.get(3);
+    }
+
     //Get values part
 
     /**Set this to true to make every entity change color like
@@ -119,7 +142,8 @@ public class ColoredGlowLibClient implements ClientModInitializer {
      *
      * WARNING! This returns the value saved on the server!
      * Use the same method in the ColoredGlowLibClient class to
-     * get the value saved on the client!*/
+     * get the value saved on the client!
+     * */
     public static boolean getRainbowChangingColor(){
         return generalized_rainbow;
     }
@@ -199,8 +223,20 @@ public class ColoredGlowLibClient implements ClientModInitializer {
         return Color.translateFromHEX(per_entity_color_map.get(uuid));
     }
 
-    /*WARNING! This returns the value saved on the server
-    Use the same method in the ColoredGlowLibClient class to
-	get the value saved on the client*/
+    /**Get the value of the overrideTeamColors variable.
+     * (if true overrides the default minecraft team colors
+     * even of the entity is in a team)*/
+    public static boolean getOverrideTeamColors(){
+        return overrideTeamColors;
+    }
+
+    /**
+     * Returns the current Color used for the glowing effect
+     * (default is white, (255,255,255))
+     * */
+    public static Color getColor(){
+        return color;
+    }
+
 
 }
