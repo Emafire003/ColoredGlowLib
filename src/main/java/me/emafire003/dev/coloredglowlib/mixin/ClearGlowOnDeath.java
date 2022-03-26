@@ -21,11 +21,11 @@ public abstract class ClearGlowOnDeath {
     public void injectRemoveGlow(CallbackInfo ci) {
         if(ColoredGlowLib.getEntityRainbowColor(((Entity)(Object)this))){
             ColoredGlowLib.setRainbowColorToEntity(((Entity)(Object)this), false);
-            DataSaver.write();
         }
         if(ColoredGlowLib.hasEntityColor(((Entity)(Object)this))){
             ColoredGlowLib.removeColorFromEntity(((Entity)(Object)this));
-            DataSaver.write();
+
         }
+        DataSaver.write();
     }
 }
