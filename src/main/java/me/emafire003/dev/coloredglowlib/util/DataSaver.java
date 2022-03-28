@@ -2,6 +2,7 @@ package me.emafire003.dev.coloredglowlib.util;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import me.emafire003.dev.coloredglowlib.ColoredGlowLib;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.EntityType;
@@ -9,10 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static me.emafire003.dev.coloredglowlib.ColoredGlowLib.LOGGER;
 
@@ -48,7 +46,7 @@ public class DataSaver {
     public static void write() {
         try {
             FileWriter datafileWriter = new FileWriter(PATH);
-            String head = gson.toJson("/*ColoredGlowLib data. DO NOT TOUCH IF YOU DO NOT KNOW WHAT YOU ARE DOING*/") +"\n";
+            String head = gson.toJson("ColoredGlowLib data. DO NOT TOUCH IF YOU DO NOT KNOW WHAT YOU ARE DOING") +"\n";
             String entityColorMap = gson.toJson(ColoredGlowLib.getEntityColorMap()) + "\n";
             String entityTypeColorMap = gson.toJson(ColoredGlowLib.getEntityTypeColorMap()) + "\n";
             String entityRainbowList = gson.toJson(ColoredGlowLib.getRainbowEntityList()) + "\n";
@@ -57,7 +55,7 @@ public class DataSaver {
             String perEntity = gson.toJson(ColoredGlowLib.getPerEntityColor()) + "\n";
             String generalRainbow = gson.toJson(ColoredGlowLib.getRainbowChangingColor()) + "\n";
             String overrideTeamColors = gson.toJson(ColoredGlowLib.getOverrideTeamColors()) + "\n";
-            String defaultColor = gson.toJson(ColoredGlowLib.getColor().toHEX()) + "\n";
+            String defaultColor = "{" + gson.toJson(ColoredGlowLib.getColor().toHEX()) + "}" + "\n";
 
             datafileWriter.write(head);
             datafileWriter.append(entityColorMap);
@@ -100,12 +98,14 @@ public class DataSaver {
             FileReader file = new FileReader(PATH);
             String line = getFileLine(2, file);
             if(line.equalsIgnoreCase("ERROR001-NOLINEFOUND")){
-                return gson.fromJson("{}", entityColorMapToken);
+                return null;
             }
             return gson.fromJson(line, entityColorMapToken);
         } catch (IOException e) {
             LOGGER.error("There was an error trying to read the data on the file!");
             e.printStackTrace();
+            return null;
+        } catch (NoSuchElementException e){
             return null;
         } catch (Exception e){
             LOGGER.error("There was an error while reading on the file");
@@ -119,7 +119,7 @@ public class DataSaver {
             FileReader file = new FileReader(PATH);
             String line = getFileLine(3, file);
             if(line.equalsIgnoreCase("ERROR001-NOLINEFOUND")){
-                return gson.fromJson("{}", entityTypeColorMapToken);
+                return null;
             }
             HashMap<String, String> map = gson.fromJson(line, entityTypeColorMapToken);
             HashMap<EntityType, String> return_map = new HashMap<>();
@@ -131,6 +131,9 @@ public class DataSaver {
         } catch (IOException e) {
             LOGGER.error("There was an error trying to read the data on the file!");
             e.printStackTrace();
+            return null;
+        } catch (NoSuchElementException e){
+            LOGGER.info("Nop, empty.");
             return null;
         } catch (Exception e){
             LOGGER.error("There was an error while reading on the file");
@@ -145,12 +148,14 @@ public class DataSaver {
 
             String line = getFileLine(4, file);
             if(line.equalsIgnoreCase("ERROR001-NOLINEFOUND")){
-                return gson.fromJson("{}", entityRainbowListToken);
+                return null;
             }
             return gson.fromJson(line, entityRainbowListToken);
         } catch (IOException e) {
             LOGGER.error("There was an error trying to read the data on the file!");
             e.printStackTrace();
+            return null;
+        } catch (NoSuchElementException e){
             return null;
         } catch (Exception e){
             LOGGER.error("There was an error while reading on the file");
@@ -164,7 +169,7 @@ public class DataSaver {
             FileReader file = new FileReader(PATH);
             String line = getFileLine(5, file);
             if(line.equalsIgnoreCase("ERROR001-NOLINEFOUND")){
-                return gson.fromJson("{}", entityTypeRainbowListToken);
+                return null;
             }
             List<String> list = gson.fromJson(line, entityTypeRainbowListToken);
             List<EntityType> return_list = new ArrayList<>();
@@ -172,6 +177,8 @@ public class DataSaver {
                 return_list.add(EntityType.get(element).get());
             }
             return return_list;
+        } catch (NoSuchElementException e){
+            return null;
         } catch (IOException e) {
             LOGGER.error("There was an error trying to read the data on the file!");
             e.printStackTrace();
@@ -188,7 +195,7 @@ public class DataSaver {
             FileReader file = new FileReader(PATH);
             String line = getFileLine(6, file);
             if(line.equalsIgnoreCase("ERROR001-NOLINEFOUND")){
-                return gson.fromJson("{}", perEntityToken);
+                return ColoredGlowLib.getPerEntityColor();
             }
             return gson.fromJson(line, perEntityToken);
         } catch (IOException e) {
@@ -207,7 +214,7 @@ public class DataSaver {
             FileReader file = new FileReader(PATH);
             String line = getFileLine(7, file);
             if(line.equalsIgnoreCase("ERROR001-NOLINEFOUND")){
-                return gson.fromJson("{}", perEntityTypeToken);
+                return ColoredGlowLib.getPerEntityTypeColor();
             }
             return gson.fromJson(line, perEntityTypeToken);
         } catch (IOException e) {
@@ -226,7 +233,7 @@ public class DataSaver {
             FileReader file = new FileReader(PATH);
             String line = getFileLine(8, file);
             if(line.equalsIgnoreCase("ERROR001-NOLINEFOUND")){
-                return gson.fromJson("{}", generalRainbowEnabledToken);
+                return ColoredGlowLib.getRainbowChangingColor();
             }
             return gson.fromJson(line, generalRainbowEnabledToken);
         } catch (IOException e) {
@@ -245,7 +252,7 @@ public class DataSaver {
             FileReader file = new FileReader(PATH);
             String line = getFileLine(9, file);
             if(line.equalsIgnoreCase("ERROR001-NOLINEFOUND")){
-                return gson.fromJson("{}", overrideTeamsToken);
+                return ColoredGlowLib.getOverrideTeamColors();
             }
             return gson.fromJson(line, overrideTeamsToken);
         } catch (IOException e) {
@@ -264,7 +271,7 @@ public class DataSaver {
             FileReader file = new FileReader(PATH);
             String line = getFileLine(10, file);
             if(line.equalsIgnoreCase("ERROR001-NOLINEFOUND")){
-                return Color.translateFromHEX(gson.fromJson("{}", defaultColorToken));
+                return Color.getWhiteColor();
             }
             return Color.translateFromHEX(gson.fromJson(line, defaultColorToken));
         } catch (IOException e) {

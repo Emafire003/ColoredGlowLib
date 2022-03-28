@@ -6,6 +6,8 @@ import me.emafire003.dev.coloredglowlib.util.Color;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
+import java.util.NoSuchElementException;
+
 import static me.emafire003.dev.coloredglowlib.ColoredGlowLib.LOGGER;
 
 public class ColorPacketS2C extends PacketByteBuf {
@@ -18,6 +20,16 @@ public class ColorPacketS2C extends PacketByteBuf {
     }
 
     public static Color read(PacketByteBuf buf) {
-        return Color.translateFromHEX(buf.readString());
+        try{
+            return Color.translateFromHEX(buf.readString());
+        }catch (NoSuchElementException e){
+            LOGGER.warn("No value in the packet while reading, probably not a big problem");
+            return Color.getWhiteColor();
+        }catch (Exception e){
+            LOGGER.error("There was an error while reading the packet!");
+            e.printStackTrace();
+            return Color.getWhiteColor();
+        }
+
     }
 }

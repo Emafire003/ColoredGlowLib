@@ -7,25 +7,15 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.emafire003.dev.coloredglowlib.ColoredGlowLib;
 import me.emafire003.dev.coloredglowlib.util.Color;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.Entity;
-import net.minecraft.server.PlayerManager;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.TranslatableText;
 
 import java.util.Collection;
-import java.util.List;
-
-import static me.emafire003.dev.coloredglowlib.ColoredGlowLib.LOGGER;
 import static me.emafire003.dev.coloredglowlib.ColoredGlowLib.updateData;
 
-//@Environment(EnvType.SERVER)
 public class SetGlowingColor {
 
 
@@ -42,7 +32,6 @@ public class SetGlowingColor {
 
 
     private static int execute(ServerCommandSource source, String color, Collection<? extends Entity> targets) throws CommandSyntaxException {
-        //TODO add a regex check to see if the color already has the #
         color = "#"+color;
 
         if(Color.isHexColor(color) || color.equalsIgnoreCase("#rainbow")){

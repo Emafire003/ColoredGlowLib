@@ -2,21 +2,15 @@ package me.emafire003.dev.coloredglowlib;
 
 import me.emafire003.dev.coloredglowlib.networking.*;
 import me.emafire003.dev.coloredglowlib.util.*;
-import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.event.Event;
-import net.fabricmc.fabric.api.event.EventFactory;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.dedicated.DedicatedServer;
-import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.GameRules;
 import org.jetbrains.annotations.Nullable;
@@ -73,19 +67,23 @@ public class ColoredGlowLib implements ModInitializer {
 
 		CGLCommandRegister.registerCommands();
 		ServerTickEvents.END_SERVER_TICK.register(minecraftServer -> {
+			if(tickCounter != -1){
+				tickCounter++;
+			}
+			if(tickCounter==20*seconds){
+				updateData(minecraftServer);
+				tickCounter = 0;
+			}
+		});
+
+		ServerLifecycleEvents.SERVER_STARTED.register(minecraftServer -> {
 			if(!server_registered){
 				server = minecraftServer;
 				getValuesFromFile();
 				server_registered = true;
 			}
-			if(tickCounter != -1){
-				tickCounter++;
-			}
-			if(tickCounter==20*seconds){
-				sendDataPacketsToPlayers(minecraftServer);
-				tickCounter = 0;
-			}
 		});
+		ColoredGlowLib.setColorToEntityType(EntityType.AXOLOTL, new Color(55, 99, 127));
 
 		LOGGER.info("Complete!");
 	}
@@ -97,6 +95,9 @@ public class ColoredGlowLib implements ModInitializer {
 	 * @param server The server object needed to send packets to players
 	 * */
 	public static void updateData(MinecraftServer server){
+		if(server == null){
+			LOGGER.warn("The provided server variable in ColoredGlowLib.updateData(server); is null, skipping update");
+		}
 		if(isOnServer()){
 			DataSaver.write();
 			sendDataPacketsToPlayers(server);	
@@ -104,26 +105,36 @@ public class ColoredGlowLib implements ModInitializer {
 	}
 
 	private static void getValuesFromFile(){
-		DataSaver.createFile();
-		LOGGER.info("Getting variables values from the data file...");
-		if(DataSaver.getEntityMap() != null){
-			per_entity_color_map = DataSaver.getEntityMap();
+		try{
+			DataSaver.createFile();
+			LOGGER.info("Getting variables values from the data file...");
+
+			if(DataSaver.getEntityMap() != null && !DataSaver.getEntityMap().isEmpty()){
+				per_entity_color_map = DataSaver.getEntityMap();
+			}
+
+			if(DataSaver.getEntityTypeMap() != null && !DataSaver.getEntityTypeMap().isEmpty()){
+				per_entitytype_color_map = DataSaver.getEntityTypeMap();
+			}
+
+			if(DataSaver.getEntityRainbowList() != null && !DataSaver.getEntityRainbowList().isEmpty()){
+				entity_rainbow_list = DataSaver.getEntityRainbowList();
+			}
+
+			if(DataSaver.getEntityTypeRainbowList() != null && !DataSaver.getEntityTypeRainbowList().isEmpty()){
+				entitytype_rainbow_list = DataSaver.getEntityTypeRainbowList();
+			}
+
+			per_entitytype = DataSaver.getPerEntityTypeColor();
+			per_entity = DataSaver.getPerEntityColor();
+			overrideTeamColors = DataSaver.getOverrideTeams();
+			generalized_rainbow = DataSaver.getRainbowEnabled();
+			color = DataSaver.getDefaultColor();
+			LOGGER.info("Done!");
+		}catch (Exception e){
+			LOGGER.error("There was an error while getting the values from the file onto the mod");
+			e.printStackTrace();
 		}
-		if(DataSaver.getEntityTypeMap() != null){
-			per_entitytype_color_map = DataSaver.getEntityTypeMap();
-		}
-		if(DataSaver.getEntityRainbowList() != null){
-			entity_rainbow_list = DataSaver.getEntityRainbowList();
-		}
-		if(DataSaver.getEntityTypeRainbowList() != null){
-			entitytype_rainbow_list = DataSaver.getEntityTypeRainbowList();
-		}
-		per_entitytype = DataSaver.getPerEntityTypeColor();
-		per_entity = DataSaver.getPerEntityColor();
-		overrideTeamColors = DataSaver.getOverrideTeams();
-		generalized_rainbow = DataSaver.getRainbowEnabled();
-		color = DataSaver.getDefaultColor();
-		LOGGER.info("Done!");
 	}
 
 	/**
@@ -250,12 +261,17 @@ public class ColoredGlowLib implements ModInitializer {
 	}
 
 	/**Set this to true to override the default minecraft team colors
-	 * even of the entity is in a team
+	 * even of the entity is in a team.
+	 * To update the data for the client && to save it on file
+	 * use ColoredGlowLib.updateData(MinecraftServer server);
+	 *
+	 * WARNING! You will be able to set this only AFTER the server has started & loaded the world.
+	 * Aka, you will be able to set this after its first tick
 	 *
 	 * @param b The value to assing to overrideTeamColors*/
 	public static void setOverrideTeamColors(boolean b){
 		overrideTeamColors = b;
-		saveDataOnFile();
+
 	}
 
 	/**Get the value of the overrideTeamColors variable.
@@ -264,16 +280,25 @@ public class ColoredGlowLib implements ModInitializer {
 	 *
 	 * WARNING! This returns the value saved on the server
 	 * Use the same method in the ColoredGlowLibClient class to
-	 * get the value saved on the client*/
+	 * get the value saved on the client
+	 * */
 	public static boolean getOverrideTeamColors(){
 		return overrideTeamColors;
 	}
 
 	/**Set this to true to make every entity change color like
-	 * a jeb sheep aka change color each tick*/
+	 * a jeb sheep aka change color each tick
+	 *
+	 * To update the data for the client && to save it on file
+	 * use ColoredGlowLib.updateData(MinecraftServer server);
+	 *
+	 * WARNING! You will be able to set this only AFTER the server has started & loaded the world.
+	 * Aka, you will be able to set this after its first tick
+	 *
+	 * */
 	public static void setRainbowChangingColor(boolean b){
 		generalized_rainbow = true;
-		saveDataOnFile();
+
 	}
 
 	/**Set this to true to make every entity change color like
@@ -291,10 +316,17 @@ public class ColoredGlowLib implements ModInitializer {
 	 * glow effect.
 	 * If enabled it will check for the EntityType of an entity
 	 * and set (if configured) a custom glow color for the entity.
+	 *
+	 * WARNING! You will be able to set this only AFTER the server has started & loaded the world.
+	 * Aka, you will be able to set this after its first tick
+	 *
+	 * To update the data for the client && to save it on file
+	 * use ColoredGlowLib.updateData(MinecraftServer server);
+	 *
 	 * */
 	public static void setPerEntityTypeColor(boolean b){
 		per_entitytype = b;
-		saveDataOnFile();
+
 	}
 
 	/**
@@ -316,10 +348,17 @@ public class ColoredGlowLib implements ModInitializer {
 	 * glow effect.
 	 * If enabled it will check for the UUID of an entity
 	 * and set (if configured) a custom glow color for the specific entity.
+	 *
+	 * WARNING! You will be able to set this only AFTER the server has started & loaded the world.
+	 * Aka, you will be able to set this after its first tick
+	 *
+	 * To update the data for the client && to save it on file
+	 * use ColoredGlowLib.updateData(MinecraftServer server);
+	 *
 	 * */
 	public static void setPerEntityColor(boolean b){
 		per_entity = b;
-		saveDataOnFile();
+
 	}
 
 	/**
@@ -341,12 +380,18 @@ public class ColoredGlowLib implements ModInitializer {
 	 * Sets a new custom Color value for the glowing effect
 	 * of a specific Entity
 	 *
+	 * WARNING! You will be able to set this only AFTER the server has started & loaded the world.
+	 * Aka, you will be able to set this after its first tick
+	 *
+	 * To update the data for the client && to save it on file
+	 * use ColoredGlowLib.updateData(MinecraftServer server);
+	 *
 	 * @param entity The Entity to set the color for
 	 * @param color The color to set for the EntityType
 	 * */
 	public static void setColorToEntity(Entity entity, Color color){
 		per_entity_color_map.put(entity.getUuid(), color.toHEX());
-		saveDataOnFile();
+
 	}
 
 	/**
@@ -429,6 +474,9 @@ public class ColoredGlowLib implements ModInitializer {
 	 * Sets a new rainbow Color that changes every tick for the glowing effect
 	 * of a specific Entity
 	 *
+	 * To update the data for the client && to save it on file
+	 * use ColoredGlowLib.updateData(MinecraftServer server);
+	 *
 	 * @param entity The Entity to set the rainbow for
 	 * @param enabled Weather or not to enable or disable the rainbow color
 	 * */
@@ -438,19 +486,22 @@ public class ColoredGlowLib implements ModInitializer {
 		}else if(entity_rainbow_list.contains(entity.getUuid())){
 			entity_rainbow_list.remove(entity.getUuid());
 		}
-		saveDataOnFile();
+
 	}
 
 	/**
 	 * Removes the rainbow coloring from an Entity
 	 * (you can also use @<code>setEntityRainbowColor(entity, false)</code>)
 	 *
+	 * To update the data for the client && to save it on file
+	 * use ColoredGlowLib.updateData(MinecraftServer server);
+	 *
 	 * @param entity The Entity to remove the rainbow color from
 	 * */
 	public static void removeRainbowColorFromEntity(Entity entity){
 		if(getEntityRainbowColor(entity)){
 			entity_rainbow_list.remove(entity.getUuid());
-			saveDataOnFile();
+
 		}
 	}
 
@@ -458,12 +509,15 @@ public class ColoredGlowLib implements ModInitializer {
 	 * Removes the rainbow coloring from an EntityType
 	 * (you can also use @<code>setEntityTypeRainbowColor(type, false)</code>)
 	 *
+	 * To update the data for the client && to save it on file
+	 * use ColoredGlowLib.updateData(MinecraftServer server);
+	 *
 	 * @param type The EntityType to remove the rainbow color from
 	 * */
 	public static void removeRainbowColorFromEntityType(EntityType type){
 		if(getEntityTypeRainbowColor(type)){
 			entitytype_rainbow_list.remove(type);
-			saveDataOnFile();
+
 		}
 	}
 
@@ -487,12 +541,15 @@ public class ColoredGlowLib implements ModInitializer {
 	 * Sets a new custom Color value for the glowing effect
 	 * of a specific EntityType, such as EntityType.CHICKEN
 	 *
+	 * To update the data for the client && to save it on file
+	 * use ColoredGlowLib.updateData(MinecraftServer server);
+	 *
 	 * @param type The EntityType to set the color for
 	 * @param color The color to set for the EntityType
 	 * */
 	public static void setColorToEntityType(EntityType type, Color color){
 		per_entitytype_color_map.put(type, color.toHEX());
-		saveDataOnFile();
+
 	}
 
 	/**
@@ -530,6 +587,9 @@ public class ColoredGlowLib implements ModInitializer {
 	 * Sets a new rainbow Color that changes every tick for the glowing effect
 	 * of a specific EntityType, such as EntityType.CHICKEN
 	 *
+	 * To update the data for the client && to save it on file
+	 * use ColoredGlowLib.updateData(MinecraftServer server);
+	 *
 	 * @param type The EntityType to set the rainbow for
 	 * @param enabled Weather or not to enable or disable the rainbow color
 	 * */
@@ -539,7 +599,7 @@ public class ColoredGlowLib implements ModInitializer {
 		}else if(entitytype_rainbow_list.contains(type)){
 			entitytype_rainbow_list.remove(type);
 		}
-		saveDataOnFile();
+
 	}
 
 	/**

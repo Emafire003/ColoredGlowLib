@@ -177,18 +177,26 @@ public class Color {
     //TODO for some reason a color like af0fab does not work
     //TODO also for the per world file save problem i can use a dir and then thorw in there a file for every wiworld
     public static String translateToHEX(int red, int green, int blue){
-        String hexcolor;
+        String red_hex;
+        String green_hex;
+        String blue_hex;
         if(red <= 9){
-            hexcolor = "#"+0+Integer.toHexString(red)+Integer.toHexString(green)+Integer.toHexString(blue);
-        }else if(green <= 9){
-            hexcolor = "#"+Integer.toHexString(red)+0+Integer.toHexString(green)+Integer.toHexString(blue);
-        }else if(blue <= 9){
-            hexcolor = "#"+Integer.toHexString(red)+Integer.toHexString(green)+0+Integer.toHexString(blue);
-        }else {
-            hexcolor = "#"+Integer.toHexString(red)+Integer.toHexString(green)+Integer.toHexString(blue);
+            red_hex = "0" + Integer.toHexString(red);
+            //hexcolor = "#"+0+Integer.toHexString(red)+Integer.toHexString(green)+Integer.toHexString(blue);
+        }else{
+            red_hex = Integer.toHexString(red);
         }
-        //LOGGER.debug(hexcolor);
-        return hexcolor;
+        if(green <= 9){
+            green_hex = "0" + Integer.toHexString(green);
+        }else{
+            green_hex = Integer.toHexString(green);
+        }
+        if(blue <= 9){
+            blue_hex = "0" + Integer.toHexString(blue);
+        }else{
+            blue_hex = Integer.toHexString(blue);
+        }
+        return "#"+red_hex+green_hex+blue_hex;
     }
 
     public String toHEX(){

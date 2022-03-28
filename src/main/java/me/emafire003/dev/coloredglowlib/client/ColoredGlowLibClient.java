@@ -9,10 +9,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static me.emafire003.dev.coloredglowlib.ColoredGlowLib.LOGGER;
 
@@ -65,15 +62,24 @@ public class ColoredGlowLibClient implements ClientModInitializer {
             var results = EntityMapPacketS2C.read(buf);
 
             client.execute(() -> {
-                if(debug){
-                    LOGGER.info("Getting new data from the server");
+                try{
+                    if(debug){
+                        LOGGER.info("Getting new data from the server");
+                    }
+                    if(results != null && !results.isEmpty()){
+                        per_entity_color_map = results;
+                    }else{
+                        LOGGER.warn("The packet 'EntityMap' was null or empty, probably not a problem");
+                    }
+                    if(debug){
+                        LOGGER.info("Got new data! Like: " + results);
+                    }
+                }catch (NoSuchElementException e){
+                    LOGGER.warn("No value in the packet, probably not a big problem");
+                }catch (Exception e){
+                    LOGGER.error("There was an error while getting the packet!");
+                    e.printStackTrace();
                 }
-                per_entity_color_map = results;
-
-                if(debug){
-                    LOGGER.info("Got new data! Like: " + results);
-                }
-
             });
         }));
     }
@@ -83,7 +89,20 @@ public class ColoredGlowLibClient implements ClientModInitializer {
             var results = EntityTypeMapPacketS2C.read(buf);
 
             client.execute(() -> {
-                per_entitytype_color_map = results;
+                try{
+                    if(results != null && !results.isEmpty()){
+                        per_entitytype_color_map = results;
+                    }else{
+                        LOGGER.warn("The packet 'EntityTypeMap' was null or empty, probably not a problem");
+                    }
+                    
+                }catch (NoSuchElementException e){
+                    LOGGER.warn("No value in the packet, probably not a big problem");
+                }catch (Exception e){
+                    LOGGER.error("There was an error while getting the packet!");
+                    e.printStackTrace();
+                }
+
             });
         }));
     }
@@ -93,7 +112,19 @@ public class ColoredGlowLibClient implements ClientModInitializer {
             var results = EntityListPacketS2C.read(buf);
 
             client.execute(() -> {
-                entity_rainbow_list = results;
+                try {
+                    if(results != null && !results.isEmpty()){
+                        entity_rainbow_list = results;
+                    }else{
+                        LOGGER.warn("The packet 'EntityList' was null or empty, probably not a problem");
+                    }
+                    
+                }catch (NoSuchElementException e){
+                    LOGGER.warn("No value in the packet, probably not a big problem");
+                }catch (Exception e){
+                    LOGGER.error("There was an error while getting the packet!");
+                    e.printStackTrace();
+                }
             });
         }));
     }
@@ -103,7 +134,18 @@ public class ColoredGlowLibClient implements ClientModInitializer {
             var results = EntityTypeListPacketS2C.read(buf);
 
             client.execute(() -> {
-                entitytype_rainbow_list = results;
+                try{
+                    if(results != null && !results.isEmpty()){
+                        entitytype_rainbow_list = results;
+                    }else{
+                        LOGGER.warn("The packet 'EntityTypeList' was null or empty, probably not a problem");
+                    }
+                }catch (NoSuchElementException e){
+                    LOGGER.warn("No value in the packet, probably not a big problem");
+                }catch (Exception e){
+                    LOGGER.error("There was an error while getting the packet!");
+                    e.printStackTrace();
+                }
             });
         }));
     }
@@ -113,7 +155,18 @@ public class ColoredGlowLibClient implements ClientModInitializer {
             var results = BooleanValuesPacketS2C.read(buf);
 
             client.execute(() -> {
-                unPackBooleanValuesPackets(results);
+                try{
+                    if(results != null && !results.isEmpty()){
+                        unPackBooleanValuesPackets(results);
+                    }else{
+                        LOGGER.warn("The packet 'Booleans' was null or empty, probably not a problem");
+                    }
+                }catch (NoSuchElementException e){
+                    LOGGER.warn("No value in the packet, probably not a big problem");
+                }catch (Exception e){
+                    LOGGER.error("There was an error while getting the packet!");
+                    e.printStackTrace();
+                }
             });
         }));
     }
@@ -123,7 +176,14 @@ public class ColoredGlowLibClient implements ClientModInitializer {
             var results = ColorPacketS2C.read(buf);
 
             client.execute(() -> {
-                color = results;
+                try{
+                    color = results;
+                }catch (NoSuchElementException e){
+                    LOGGER.warn("No value in the packet 'color' , probably not a big problem");
+                }catch (Exception e){
+                    LOGGER.error("There was an error while getting the packet!");
+                    e.printStackTrace();
+                }
             });
         }));
     }
