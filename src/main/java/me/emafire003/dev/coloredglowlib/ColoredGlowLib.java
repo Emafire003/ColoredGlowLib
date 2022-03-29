@@ -51,7 +51,6 @@ public class ColoredGlowLib implements ModInitializer {
 	public static final GameRules.Key<GameRules.BooleanRule> OVERRIDE_TEAM_COLORS =
 			GameRuleRegistry.register("overrideTeamColors", GameRules.Category.MISC, GameRuleFactory.createBooleanRule(false));
 
-
 	@Override
 	public void onInitialize() {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
@@ -83,7 +82,6 @@ public class ColoredGlowLib implements ModInitializer {
 				server_registered = true;
 			}
 		});
-		ColoredGlowLib.setColorToEntityType(EntityType.AXOLOTL, new Color(55, 99, 127));
 
 		LOGGER.info("Complete!");
 	}
@@ -158,9 +156,18 @@ public class ColoredGlowLib implements ModInitializer {
 	/**This will return true if the mod is run on a dedicated
 	 * or integrated server, false if it's just the client
 	 * 
-	 * It gets this in a bit of hacky way, aka after the first
-	 * tick of the server so use it carefully*/
+	 * It gets this after the first tick of the server. So use it wisely*/
 	public static boolean isOnServer(){
+		return server_registered;
+	}
+
+	/**Use this to check if you can submit new stuff to the mod or not.
+	 *
+	 * This will return true if the mod has loaded the config & is ready to
+	 * accept values
+	 *
+	 * It gets this after the first tick of the server*/
+	public static boolean isReady(){
 		return server_registered;
 	}
 
