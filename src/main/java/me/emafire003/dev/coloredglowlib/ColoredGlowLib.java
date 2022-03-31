@@ -17,10 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class ColoredGlowLib implements ModInitializer {
 
@@ -42,7 +39,7 @@ public class ColoredGlowLib implements ModInitializer {
 	private static boolean debug = false;
 	private static int tickCounter = 0;
 	//How many seconds should pass between updating the data and sending packets to the client?
-	private static int seconds = 30;
+	private static int seconds = 10;
 	private static MinecraftServer server = null;
 	private static boolean server_registered = false;
 
@@ -63,8 +60,9 @@ public class ColoredGlowLib implements ModInitializer {
 				"upload them there");
 
 		LOGGER.info("Initializing...");
-
 		CGLCommandRegister.registerCommands();
+		ColoredGlowLib.setRainbowColorToEntityType(EntityType.PARROT, true);
+		ColoredGlowLib.setColorToEntityType(EntityType.VINDICATOR, new Color(237, 195, 5));
 		ServerTickEvents.END_SERVER_TICK.register(minecraftServer -> {
 			if(tickCounter != -1){
 				tickCounter++;
@@ -80,6 +78,7 @@ public class ColoredGlowLib implements ModInitializer {
 				server = minecraftServer;
 				getValuesFromFile();
 				server_registered = true;
+				updateData(minecraftServer);
 			}
 		});
 
@@ -99,7 +98,20 @@ public class ColoredGlowLib implements ModInitializer {
 		if(isOnServer()){
 			DataSaver.write();
 			sendDataPacketsToPlayers(server);	
+		}else{
+			DataSaver.write();
+			LOGGER.warn("Server not ready yet, only saving the data without sending packets");
 		}
+		if(debug){
+			LOGGER.info("Updating data...");
+		}
+	}
+
+	/**This method removes every color from an entity, restoring it
+	 * to the default one. (both rainbow & non rainbow)*/
+	public static void removeColor(Entity entity){
+		ColoredGlowLib.setRainbowColorToEntity(entity, false);
+		ColoredGlowLib.removeColorFromEntity(entity);
 	}
 
 	private static void getValuesFromFile(){
@@ -108,11 +120,19 @@ public class ColoredGlowLib implements ModInitializer {
 			LOGGER.info("Getting variables values from the data file...");
 
 			if(DataSaver.getEntityMap() != null && !DataSaver.getEntityMap().isEmpty()){
-				per_entity_color_map = DataSaver.getEntityMap();
+				if(!per_entity_color_map.isEmpty()){
+					per_entity_color_map.putAll(DataSaver.getEntityMap());
+				}else{
+					per_entity_color_map = DataSaver.getEntityMap();
+				}
 			}
 
 			if(DataSaver.getEntityTypeMap() != null && !DataSaver.getEntityTypeMap().isEmpty()){
-				per_entitytype_color_map = DataSaver.getEntityTypeMap();
+				if(!per_entitytype_color_map.isEmpty()){
+					per_entitytype_color_map.putAll(DataSaver.getEntityTypeMap());
+				}else{
+					per_entitytype_color_map = DataSaver.getEntityTypeMap();
+				}
 			}
 
 			if(DataSaver.getEntityRainbowList() != null && !DataSaver.getEntityRainbowList().isEmpty()){
@@ -145,7 +165,7 @@ public class ColoredGlowLib implements ModInitializer {
 	 * the lower the value, the more frequently the client will get updated data,
 	 * but worse performance.
 	 *
-	 * Default value: 30 seconds
+	 * Default value: 10 seconds
 	 *
 	 * @param delay The delay in SECONDS between one packet being sent after another one
 	 * */
@@ -163,8 +183,7 @@ public class ColoredGlowLib implements ModInitializer {
 
 	/**Use this to check if you can submit new stuff to the mod or not.
 	 *
-	 * This will return true if the mod has loaded the config & is ready to
-	 * accept values
+	 * This will return true if the mod has loaded the config
 	 *
 	 * It gets this after the first tick of the server*/
 	public static boolean isReady(){
@@ -673,7 +692,7 @@ public class ColoredGlowLib implements ModInitializer {
 	public static List<String> convertFromEntityTypeList(List<EntityType> typelist){
 		List<String> list = new ArrayList<>();
 		for(EntityType type : typelist){
-			list.add(String.valueOf(type));
+			list.add(EntityType.getId(type).toString());
 		}
 		return list;
 	}
@@ -682,12 +701,33 @@ public class ColoredGlowLib implements ModInitializer {
 	 * Used to convert EntityType values to string (those in a hashmap)
 	 * */
 	public static HashMap<String, String> convertFromEntityTypeMap(HashMap<EntityType, String> typemap){
-		List<String> list = new ArrayList<>();
 		HashMap<String, String> stringmap = new HashMap<>();
 		for(EntityType type : typemap.keySet()){
-			stringmap.put(type.toString(), typemap.get(type));
+			stringmap.put(EntityType.getId(type).toString(), typemap.get(type));
 		}
 		return stringmap;
+	}
+
+	/**
+	 * Used to convert String values to EntityType (those in a hashmap)
+	 * */
+	public static HashMap<EntityType, String> convertToEntityTypeMap(HashMap<String, String> typemap){
+		HashMap<EntityType, String> enmap = new HashMap<>();
+		for(String type : typemap.keySet()){
+			enmap.put(EntityType.get(type).get(), typemap.get(type));
+		}
+		return enmap;
+	}
+
+	/**
+	 * Used to convert String values to EntityType (those in a list)
+	 * */
+	public static List<EntityType> convertToEntityTypeList(List<String> typelist){
+		List<EntityType> list = new ArrayList<>();
+		for(String type : typelist){
+			list.add(EntityType.get(type).get());
+		}
+		return list;
 	}
 
 }

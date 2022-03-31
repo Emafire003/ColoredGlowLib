@@ -122,18 +122,13 @@ public class DataSaver {
                 return null;
             }
             HashMap<String, String> map = gson.fromJson(line, entityTypeColorMapToken);
-            HashMap<EntityType, String> return_map = new HashMap<>();
-            for ( String key : map.keySet() ) {
-                return_map.put(EntityType.get(key).get(), map.get(key));
-            }
-            return return_map;
+            return ColoredGlowLib.convertToEntityTypeMap(map);
 
         } catch (IOException e) {
             LOGGER.error("There was an error trying to read the data on the file!");
             e.printStackTrace();
             return null;
         } catch (NoSuchElementException e){
-            LOGGER.info("Nop, empty.");
             return null;
         } catch (Exception e){
             LOGGER.error("There was an error while reading on the file");
@@ -172,11 +167,7 @@ public class DataSaver {
                 return null;
             }
             List<String> list = gson.fromJson(line, entityTypeRainbowListToken);
-            List<EntityType> return_list = new ArrayList<>();
-            for ( String element : list ) {
-                return_list.add(EntityType.get(element).get());
-            }
-            return return_list;
+            return ColoredGlowLib.convertToEntityTypeList(list);
         } catch (NoSuchElementException e){
             return null;
         } catch (IOException e) {

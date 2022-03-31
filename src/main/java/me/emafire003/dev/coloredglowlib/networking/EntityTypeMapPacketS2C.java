@@ -26,12 +26,12 @@ public class EntityTypeMapPacketS2C extends PacketByteBuf {
         }
     }
 
-    public static @Nullable HashMap<EntityType, String> read(PacketByteBuf buf) {
+    public static @Nullable HashMap<String, String> read(PacketByteBuf buf) {
         try{
-            HashMap<EntityType, String> results = new LinkedHashMap<>();
+            HashMap<String, String> results = new LinkedHashMap<>();
             int max = buf.readInt();
             for (int i = 0; i < max; i++) {
-                results.put(EntityType.get(buf.readString()).get(), buf.readString());
+                results.put(buf.readString(), buf.readString());
             }
             return results;
         }catch (NoSuchElementException e){

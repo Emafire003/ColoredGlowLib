@@ -25,12 +25,12 @@ public class EntityTypeListPacketS2C extends PacketByteBuf {
         }
     }
 
-    public static @Nullable List<EntityType> read(PacketByteBuf buf) {
+    public static @Nullable List<String> read(PacketByteBuf buf) {
         try{
-            List<EntityType> results = new LinkedList<>();
+            List<String> results = new LinkedList<>();
             int max = buf.readInt();
             for (int i = 0; i < max; i++) {
-                results.add(EntityType.get(buf.readString()).get());
+                results.add(buf.readString());
             }
             return results;
         }catch (NoSuchElementException e){

@@ -36,6 +36,7 @@ public class SetGlowingColor {
 
         if(Color.isHexColor(color) || color.equalsIgnoreCase("#rainbow")){
             for (Entity entity : targets) {
+                ColoredGlowLib.removeColor(entity);
                 if(color.equalsIgnoreCase("#rainbow")){
                     ColoredGlowLib.setRainbowColorToEntity(entity, true);
                 }else{
