@@ -17,6 +17,8 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.*;
 
 public class ColoredGlowLib implements ModInitializer {
@@ -43,7 +45,7 @@ public class ColoredGlowLib implements ModInitializer {
 	private static MinecraftServer server = null;
 	private static boolean server_registered = false;
 
-	public static Logger LOGGER = LoggerFactory.getLogger("ColoredGlowLib");
+	public static Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
 	public static final GameRules.Key<GameRules.BooleanRule> OVERRIDE_TEAM_COLORS =
 			GameRuleRegistry.register("overrideTeamColors", GameRules.Category.MISC, GameRuleFactory.createBooleanRule(false));
@@ -61,8 +63,6 @@ public class ColoredGlowLib implements ModInitializer {
 
 		LOGGER.info("Initializing...");
 		CGLCommandRegister.registerCommands();
-		ColoredGlowLib.setRainbowColorToEntityType(EntityType.PARROT, true);
-		ColoredGlowLib.setColorToEntityType(EntityType.VINDICATOR, new Color(237, 195, 5));
 		ServerTickEvents.END_SERVER_TICK.register(minecraftServer -> {
 			if(tickCounter != -1){
 				tickCounter++;

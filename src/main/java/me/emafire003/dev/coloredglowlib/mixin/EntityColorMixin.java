@@ -92,6 +92,11 @@ public abstract class EntityColorMixin {
     @Inject(method = "getTeamColorValue", at = @At("RETURN"), cancellable = true)
     public void injectChangeColorValue(CallbackInfoReturnable<Integer> cir){
         if(this.getScoreboardTeam() == null || ColoredGlowLibClient.getOverrideTeamColors() || this.getEntityWorld().getGameRules().getBoolean(OVERRIDE_TEAM_COLORS)) {
+
+            if(ColoredGlowLibClient.isAp1()){
+                cir.setReturnValue(new Color(255, 0, 174).getColorValue());
+                return;
+            }
             //Checks if it should glow rainbow
             int rainbow_col = rainbowColor(entity);
             if(rainbow_col != -1){
