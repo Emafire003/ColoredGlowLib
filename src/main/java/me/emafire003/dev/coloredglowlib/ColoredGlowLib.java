@@ -114,6 +114,13 @@ public class ColoredGlowLib implements ModInitializer {
 		ColoredGlowLib.removeColorFromEntity(entity);
 	}
 
+	/**This method removes every color from an EntityType, restoring it
+	 * to the default one. (both rainbow & non rainbow)*/
+	public static void removeColor(EntityType type){
+		ColoredGlowLib.setRainbowColorToEntityType(type, false);
+		ColoredGlowLib.removeColorFromEntityType(type);
+	}
+
 	private static void getValuesFromFile(){
 		try{
 			DataSaver.createFile();
