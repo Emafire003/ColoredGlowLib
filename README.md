@@ -46,91 +46,19 @@ dependencies {
     modImplementation "maven.modrinth:coloredglowlib:<version>"
 }
 ```
-If you want you can also `include` this (Jar-in-Jar dependency). To avoid confusion, tell the users of your mod that your mod includes this library already, in case of problems it would make debugging easier.
-```gradle
-repositories {
-    maven {
-        name = "Modrinth"
-        url = "https://api.modrinth.com/maven"
-        content {
-            includeGroup "maven.modrinth"
-        }
-    }
-}
-
-dependencies {
-    modImplementation "maven.modrinth:coloredglowlib:<version>"
-    include "maven.modrinth:coloredglowlib:<version>"
-}
-```
 
 You can find the correct version in the [versions page](https://modrinth.com/mod/coloredglowlib/versions) on [Modrinth](https://modrinth.com/mod/coloredglowlib).
 
 
-#### How to set the color in the code
-To change the color of the glowing effect of entities use:
-`ColoredGlowLib.setColor(Color color)`
-(This will change the color of the effect itself, so for every entity. Scrolling down you will find how to do this specific EntityTypes and Entities)
+#### You can find more information on the [wiki](https://github.com/Emafire003/ColoredGlowLib/wiki)! 
 
-You can use a `new Color(r,g,b)` object (Not AWT, the mod's Color object) or set a rgb color with `setColor(r,g,b)` or set a colorvalue with `.setColorValue()` which is an int that corresponds to an RGB value. You can get it using `Color.translateToColorValue(r,g,b)` or `RRRRRRGGGGGGBBBBBB`.
-
-**WARNING!** The `Color` class is the mod's color class, `me.emafire003.dev.coloredglowlib.util.Color` and **NOT** `java.awt` 
-or similar. This is because in some environments the awt package does not work. This applies to the rest 
-of this guide too.
-
-#### How to set a specific color for each EntityType
-To use a custom color for each different type of entity (called EntityType) you can use the method 
-
-`ColoredGlowLib.setColorToEntityType(EntityType type, Color color)`.
-
-The `type` parameter is an EntityType, such as `EntityType.PIG`, so it works with modded entities to (like `ModEntitiesType.MYCUSTOMENTITY`).
-
-To remove the custom color, call `removeColorFromEntity(EntityType type)`.
-
-To disable this feature you will need to call the `ColoredGlowLib.setPerEntityTypeColor(boolean b)` and set the parameter to `false`. (It is enabled by default)
-
-
-#### How to set a specific color for each Entity
-To use a custom color for each different type of entity (called EntityType) you can use the method `ColoredGlowLib.setColorToEntity(Entity entity, Color color)`.
-
-The `entity` parameter is the entity you want to target, such as a pig you are making shoot rockets from its rear-end. This works for every type of entity, even modded ones. (Internally, only their UUID is used).
-
-To remove the custom color, call `removeColorFromEntity(Entity entity)`.
-
-To disable this feature you will need to call the `ColoredGlowLib.setPerEntityColor(boolean b)` and set the parameter to `false`.
-
-#### Color hierarchy
-The mod first checks for any **easter-egg like names** and similar things, and it applies that without checking other things, then it checks to see if the **entity** has a color and does the same, then for its **EntityType** and finally if nothing else has been found it applies the "default" color common to all entities.
-The one you set with `ColoredGlowLib.setColor(Color color)`.
-
-**`easter-egg like names > entity > EntityType > default custom color`**
-
-#### How to set a rainbow glowing
-It is possible to set entities glowing rainbow using the method:
-`ColoredGlowLib.setRainbowColor(boolean enabled);`
-
-This will enable the effect for every entity. If you want, there are also entity/entitytype-specific methods.
-`ColoredGlowLib.setRainbowColorToEntity(Entity entity, boolean enabled);`
-
-`ColoredGlowLib.setRainbowColorToEntityType(EntityType type, boolean enabled)`
-
-To disable the rainbow color, just use `false` as the parameter instead of `true`.
-
-
-
-#### How to override minecraft default team colors via code
-Just use `setOverrideTeamColors(boolean b);` Set it to `true` if you want to override the default minecraft team colors (if the entity is in a team) `false` if you want them to take priority over the mod's. (recommended since you could have other mods/datapacks/plugins that set entities inside teams with a specific color)
-
-There is an example of this in my [FoxGlow](https://github.com/Emafire003/FoxGlow) mod.
+You can find examples of this lib being used in my [FoxGlow](https://github.com/Emafire003/FoxGlow) and [Glowful World](https://github.com/Emafire003/GlowfulWorld) mod.
 
 ![luma-shaders-coloredglowlib](https://user-images.githubusercontent.com/29462910/157507676-576d3fb5-e24b-41f7-a7f0-6956d7ae4e29.png)
 
-#### Known issues
-It works only on client side
-
 ## License
 
-This mod is available under the MIT License.
+This mod is available under the GNU GPL3 License.
 
 ## Support me
 If you would like to offer me a coffee, here you go.
