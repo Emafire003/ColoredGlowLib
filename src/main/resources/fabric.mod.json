@@ -32,7 +32,7 @@
 
   "depends": {
     "fabricloader": ">=0.13.3",
-    "minecraft": ["1.18.x", "1.17.x"],
+    "minecraft": ">=1.17-",
     "java": ">=16"
   },
   "suggests": {
