@@ -7,11 +7,12 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.emafire003.dev.coloredglowlib.ColoredGlowLib;
 import me.emafire003.dev.coloredglowlib.util.Color;
+import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 
 import java.util.Collection;
 import static me.emafire003.dev.coloredglowlib.ColoredGlowLib.updateData;
@@ -20,7 +21,7 @@ public class SetGlowingColor {
 
 
     @SuppressWarnings("all")
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher, boolean b) {
+    public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess, CommandManager.RegistrationEnvironment registrationEnvironment) {
         dispatcher.register((LiteralArgumentBuilder)((LiteralArgumentBuilder)CommandManager.literal("setglowcolor").requires((source) -> {
             return source.hasPermissionLevel(2);
         })).then(CommandManager.argument("targets", EntityArgumentType.entities()).then(((RequiredArgumentBuilder)CommandManager.argument("color", StringArgumentType.string()).executes((context) -> {
@@ -49,13 +50,12 @@ public class SetGlowingColor {
             }
 
             //source.sendFeedback(new TranslatableText("commands.setglowcolor.success1").append(color).append(new TranslatableText("commands.setglowcolor.success2")), true);
-            source.sendFeedback(new LiteralText("Setted color '" + color + "' to the selected entity/entities!"), false);
+            source.sendFeedback(Text.literal("Setted color '" + color + "' to the selected entity/entities!"), false);
             return targets.size();
         }else{
             //source.sendError(new TranslatableText("commands.setglowcolor.notcolor"));
-            source.sendError(new LiteralText("Error! The value you have specified is not valid! It should be RRGGBB (without '#') or 'rainbow'"));
+            source.sendError(Text.literal("Error! The value you have specified is not valid! It should be RRGGBB (without '#') or 'rainbow'"));
             return 0;
         }
     }
-
 }

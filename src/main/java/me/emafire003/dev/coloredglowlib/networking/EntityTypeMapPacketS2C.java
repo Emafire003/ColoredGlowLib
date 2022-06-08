@@ -2,7 +2,6 @@ package me.emafire003.dev.coloredglowlib.networking;
 
 import io.netty.buffer.Unpooled;
 import me.emafire003.dev.coloredglowlib.ColoredGlowLib;
-import net.minecraft.entity.EntityType;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
@@ -10,7 +9,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.NoSuchElementException;
-import java.util.UUID;
 
 import static me.emafire003.dev.coloredglowlib.ColoredGlowLib.LOGGER;
 

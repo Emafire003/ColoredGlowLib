@@ -2,7 +2,6 @@ package me.emafire003.dev.coloredglowlib.util;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import me.emafire003.dev.coloredglowlib.ColoredGlowLib;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.EntityType;

@@ -75,7 +75,7 @@ public abstract class EntityColorMixin {
     }
 
     public int rainbowColor(Entity entity){
-        if(entity.getName().asString().equalsIgnoreCase("jeb_") || ColoredGlowLibClient.getRainbowChangingColor()){
+        if(entity.getName().getString().equalsIgnoreCase("jeb_") || ColoredGlowLibClient.getRainbowChangingColor()){
             jebcolor.setRainbowColor(10);
             return jebcolor.getColorValue();
         }else if(ColoredGlowLibClient.getEntityRainbowColor(entity)){
@@ -118,7 +118,9 @@ public abstract class EntityColorMixin {
             }
 
             //If nothing else has been found, set the generalized one.
-            cir.setReturnValue(ColoredGlowLibClient.getColor().getColorValue());
+            if(!ColoredGlowLibClient.getColor().equals(Color.getWhiteColor())){
+                cir.setReturnValue(ColoredGlowLibClient.getColor().getColorValue());
+            }
 
         }
     }

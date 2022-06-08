@@ -3,8 +3,6 @@ package me.emafire003.dev.coloredglowlib.util;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static me.emafire003.dev.coloredglowlib.ColoredGlowLib.LOGGER;
-
 public class Color {
     public int r;
     public int g;

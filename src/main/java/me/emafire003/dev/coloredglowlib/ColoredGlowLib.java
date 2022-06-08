@@ -17,8 +17,6 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDate;
-import java.time.Month;
 import java.util.*;
 
 public class ColoredGlowLib implements ModInitializer {

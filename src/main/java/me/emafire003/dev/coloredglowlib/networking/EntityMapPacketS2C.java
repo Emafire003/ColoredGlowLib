@@ -2,10 +2,8 @@ package me.emafire003.dev.coloredglowlib.networking;
 
 import io.netty.buffer.Unpooled;
 import me.emafire003.dev.coloredglowlib.ColoredGlowLib;
-import net.minecraft.entity.EntityType;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
