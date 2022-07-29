@@ -1,6 +1,5 @@
 package me.emafire003.dev.coloredglowlib.mixin;
 
-import me.emafire003.dev.coloredglowlib.ColoredGlowLib;
 import me.emafire003.dev.coloredglowlib.client.ColoredGlowLibClient;
 import me.emafire003.dev.coloredglowlib.util.Color;
 import net.fabricmc.api.EnvType;

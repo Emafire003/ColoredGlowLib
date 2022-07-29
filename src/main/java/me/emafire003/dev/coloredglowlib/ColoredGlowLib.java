@@ -39,7 +39,7 @@ public class ColoredGlowLib implements ModInitializer {
 	private static boolean debug = false;
 	private static int tickCounter = 0;
 	//How many seconds should pass between updating the data and sending packets to the client?
-	private static int seconds = 10;
+	private static int seconds = 2;
 	private static MinecraftServer server = null;
 	private static boolean server_registered = false;
 
