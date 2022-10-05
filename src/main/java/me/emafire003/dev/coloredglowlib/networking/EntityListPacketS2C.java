@@ -1,17 +1,17 @@
 package me.emafire003.dev.coloredglowlib.networking;
 
 import io.netty.buffer.Unpooled;
-import me.emafire003.dev.coloredglowlib.ColoredGlowLib;
+import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-import static me.emafire003.dev.coloredglowlib.ColoredGlowLib.LOGGER;
+import static me.emafire003.dev.coloredglowlib.ColoredGlowLibMod.LOGGER;
 
 public class EntityListPacketS2C extends PacketByteBuf {
-    public static final Identifier ID = new Identifier(ColoredGlowLib.MOD_ID , "rainbow_entity_list_packet");
+    public static final Identifier ID = new Identifier(ColoredGlowLibMod.MOD_ID , "rainbow_entity_list_packet");
 
     public EntityListPacketS2C(List<UUID> results) {
         super(Unpooled.buffer());

@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import static me.emafire003.dev.coloredglowlib.ColoredGlowLib.*;
+import static me.emafire003.dev.coloredglowlib.ColoredGlowLibMod.OVERRIDE_TEAM_COLORS;
 
 @Environment(EnvType.CLIENT)
 @Mixin(Entity.class)

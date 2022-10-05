@@ -1,7 +1,7 @@
 package me.emafire003.dev.coloredglowlib.networking;
 
 import io.netty.buffer.Unpooled;
-import me.emafire003.dev.coloredglowlib.ColoredGlowLib;
+import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
@@ -11,10 +11,10 @@ import java.util.LinkedHashMap;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
-import static me.emafire003.dev.coloredglowlib.ColoredGlowLib.LOGGER;
+import static me.emafire003.dev.coloredglowlib.ColoredGlowLibMod.LOGGER;
 
 public class EntityMapPacketS2C extends PacketByteBuf {
-    public static final Identifier ID = new Identifier(ColoredGlowLib.MOD_ID , "entity_map_packet");
+    public static final Identifier ID = new Identifier(ColoredGlowLibMod.MOD_ID , "entity_map_packet");
 
     public EntityMapPacketS2C(HashMap<UUID, String> results) {
         super(Unpooled.buffer());

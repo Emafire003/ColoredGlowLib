@@ -1,6 +1,6 @@
 package me.emafire003.dev.coloredglowlib.client;
 
-import me.emafire003.dev.coloredglowlib.ColoredGlowLib;
+import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
 import me.emafire003.dev.coloredglowlib.networking.*;
 import me.emafire003.dev.coloredglowlib.util.Color;
 import net.fabricmc.api.ClientModInitializer;
@@ -14,7 +14,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.*;
 
-import static me.emafire003.dev.coloredglowlib.ColoredGlowLib.LOGGER;
+import static me.emafire003.dev.coloredglowlib.ColoredGlowLibMod.LOGGER;
 
 public class ColoredGlowLibClient implements ClientModInitializer {
 
@@ -110,7 +110,7 @@ public class ColoredGlowLibClient implements ClientModInitializer {
                         if(debug){
                             LOGGER.info("Recived a packet, converting");
                         }
-                        per_entitytype_color_map = ColoredGlowLib.convertToEntityTypeMap(results);
+                        per_entitytype_color_map = ColoredGlowLibMod.getLib().convertToEntityTypeMap(results);
                     }else{
                         if(debug){
                             LOGGER.warn("The packet 'EntityTypeMap' was null or empty, probably not a problem");
@@ -159,7 +159,7 @@ public class ColoredGlowLibClient implements ClientModInitializer {
             client.execute(() -> {
                 try{
                     if(results != null && !results.isEmpty()){
-                        entitytype_rainbow_list = ColoredGlowLib.convertToEntityTypeList(results);
+                        entitytype_rainbow_list = ColoredGlowLibMod.getLib().convertToEntityTypeList(results);
                     }else{
                         if(debug){
                             LOGGER.warn("The packet 'EntityTypeList' was null or empty, probably not a problem");

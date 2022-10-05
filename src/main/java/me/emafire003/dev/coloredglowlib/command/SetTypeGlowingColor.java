@@ -6,6 +6,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.emafire003.dev.coloredglowlib.ColoredGlowLib;
+import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
 import me.emafire003.dev.coloredglowlib.util.Color;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.EntitySummonArgumentType;
@@ -15,8 +16,6 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-
-import static me.emafire003.dev.coloredglowlib.ColoredGlowLib.updateData;
 
 public class SetTypeGlowingColor {
 
@@ -35,15 +34,15 @@ public class SetTypeGlowingColor {
 
         if(Color.isHexColor(color) || color.equalsIgnoreCase("#rainbow")){
             EntityType type = EntityType.get(id.toString()).get();
-            ColoredGlowLib.removeColor(type);
+            ColoredGlowLibMod.getLib().removeColor(type);
             if(color.equalsIgnoreCase("#rainbow")){
-                ColoredGlowLib.setRainbowColorToEntityType(type, true);
+                ColoredGlowLibMod.getLib().setRainbowColorToEntityType(type, true);
             }else{
-                ColoredGlowLib.setColorToEntityType(type, Color.translateFromHEX(color));
+                ColoredGlowLibMod.getLib().setColorToEntityType(type, Color.translateFromHEX(color));
             }
 
             if(!source.getWorld().isClient){
-                updateData(source.getServer());
+                ColoredGlowLibMod.getLib().updateData(source.getServer());
             }
 
             //source.sendFeedback(new TranslatableText("commands.setglowcolor.success1").append(color).append(new TranslatableText("commands.setglowcolor.success2")), true);

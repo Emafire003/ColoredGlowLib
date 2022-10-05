@@ -20,7 +20,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "me.emafire003.dev.coloredglowlib.ColoredGlowLib"
+      "me.emafire003.dev.coloredglowlib.ColoredGlowLibMod"
     ],
     "client": [
       "me.emafire003.dev.coloredglowlib.client.ColoredGlowLibClient"

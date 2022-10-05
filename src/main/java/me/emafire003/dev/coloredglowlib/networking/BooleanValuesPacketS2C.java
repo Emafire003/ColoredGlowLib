@@ -1,7 +1,7 @@
 package me.emafire003.dev.coloredglowlib.networking;
 
 import io.netty.buffer.Unpooled;
-import me.emafire003.dev.coloredglowlib.ColoredGlowLib;
+import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
@@ -10,10 +10,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import static me.emafire003.dev.coloredglowlib.ColoredGlowLib.LOGGER;
+import static me.emafire003.dev.coloredglowlib.ColoredGlowLibMod.LOGGER;
 
 public class BooleanValuesPacketS2C extends PacketByteBuf {
-    public static final Identifier ID = new Identifier(ColoredGlowLib.MOD_ID , "boolean_values_packet");
+    public static final Identifier ID = new Identifier(ColoredGlowLibMod.MOD_ID , "boolean_values_packet");
 
     public BooleanValuesPacketS2C(List<Boolean> results) {
         super(Unpooled.buffer());

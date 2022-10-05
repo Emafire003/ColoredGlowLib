@@ -2,16 +2,17 @@ package me.emafire003.dev.coloredglowlib.networking;
 
 import io.netty.buffer.Unpooled;
 import me.emafire003.dev.coloredglowlib.ColoredGlowLib;
+import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
 import me.emafire003.dev.coloredglowlib.util.Color;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
 import java.util.NoSuchElementException;
 
-import static me.emafire003.dev.coloredglowlib.ColoredGlowLib.LOGGER;
+import static me.emafire003.dev.coloredglowlib.ColoredGlowLibMod.LOGGER;
 
 public class ColorPacketS2C extends PacketByteBuf {
-    public static final Identifier ID = new Identifier(ColoredGlowLib.MOD_ID , "color_packet");
+    public static final Identifier ID = new Identifier(ColoredGlowLibMod.MOD_ID , "color_packet");
 
     public ColorPacketS2C(Color results) {
         super(Unpooled.buffer());

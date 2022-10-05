@@ -2,7 +2,7 @@ package me.emafire003.dev.coloredglowlib.util;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import me.emafire003.dev.coloredglowlib.ColoredGlowLib;
+import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.EntityType;
 import org.jetbrains.annotations.Nullable;
@@ -11,19 +11,28 @@ import java.io.*;
 import java.lang.reflect.Type;
 import java.util.*;
 
-import static me.emafire003.dev.coloredglowlib.ColoredGlowLib.LOGGER;
+import static me.emafire003.dev.coloredglowlib.ColoredGlowLibMod.LOGGER;
 
 public class DataSaver {
 
     public static String PATH = String.valueOf(FabricLoader.getInstance().getConfigDir().resolve("coloredglowlibdata.json"));
+    @SuppressWarnings("all")
     public static Type entityColorMapToken = new TypeToken<HashMap<UUID, String>>(){}.getType();
+    @SuppressWarnings("all")
     public static Type entityTypeColorMapToken = new TypeToken<HashMap<String, String>>(){}.getType();
+    @SuppressWarnings("all")
     public static Type entityRainbowListToken = new TypeToken<List<UUID>>(){}.getType();
+    @SuppressWarnings("all")
     public static Type entityTypeRainbowListToken = new TypeToken<List<String>>(){}.getType();
+    @SuppressWarnings("all")
     public static Type generalRainbowEnabledToken = new TypeToken<Boolean>(){}.getType();
+    @SuppressWarnings("all")
     public static Type perEntityTypeToken = new TypeToken<Boolean>(){}.getType();
+    @SuppressWarnings("all")
     public static Type perEntityToken = new TypeToken<Boolean>(){}.getType();
+    @SuppressWarnings("all")
     public static Type overrideTeamsToken = new TypeToken<Boolean>(){}.getType();
+    @SuppressWarnings("all")
     public static Type defaultColorToken = new TypeToken<String>(){}.getType();
 
     static Gson gson = new Gson();
@@ -46,15 +55,15 @@ public class DataSaver {
         try {
             FileWriter datafileWriter = new FileWriter(PATH);
             String head = gson.toJson("ColoredGlowLib data. DO NOT TOUCH IF YOU DO NOT KNOW WHAT YOU ARE DOING") +"\n";
-            String entityColorMap = gson.toJson(ColoredGlowLib.getEntityColorMap()) + "\n";
-            String entityTypeColorMap = gson.toJson(ColoredGlowLib.getEntityTypeColorMap()) + "\n";
-            String entityRainbowList = gson.toJson(ColoredGlowLib.getRainbowEntityList()) + "\n";
-            String entityTypeRainbowList = gson.toJson(ColoredGlowLib.convertFromEntityTypeList(ColoredGlowLib.getRainbowEntityTypeList())) + "\n";
-            String perEntityType = gson.toJson(ColoredGlowLib.getPerEntityTypeColor()) + "\n";
-            String perEntity = gson.toJson(ColoredGlowLib.getPerEntityColor()) + "\n";
-            String generalRainbow = gson.toJson(ColoredGlowLib.getRainbowChangingColor()) + "\n";
-            String overrideTeamColors = gson.toJson(ColoredGlowLib.getOverrideTeamColors()) + "\n";
-            String defaultColor = "{" + gson.toJson(ColoredGlowLib.getColor().toHEX()) + "}" + "\n";
+            String entityColorMap = gson.toJson(ColoredGlowLibMod.getLib().getEntityColorMap()) + "\n";
+            String entityTypeColorMap = gson.toJson(ColoredGlowLibMod.getLib().getEntityTypeColorMap()) + "\n";
+            String entityRainbowList = gson.toJson(ColoredGlowLibMod.getLib().getRainbowEntityList()) + "\n";
+            String entityTypeRainbowList = gson.toJson(ColoredGlowLibMod.getLib().convertFromEntityTypeList(ColoredGlowLibMod.getLib().getRainbowEntityTypeList())) + "\n";
+            String perEntityType = gson.toJson(ColoredGlowLibMod.getLib().getPerEntityTypeColor()) + "\n";
+            String perEntity = gson.toJson(ColoredGlowLibMod.getLib().getPerEntityColor()) + "\n";
+            String generalRainbow = gson.toJson(ColoredGlowLibMod.getLib().getRainbowChangingColor()) + "\n";
+            String overrideTeamColors = gson.toJson(ColoredGlowLibMod.getLib().getOverrideTeamColors()) + "\n";
+            String defaultColor = "{" + gson.toJson(ColoredGlowLibMod.getLib().getColor().toHEX()) + "}" + "\n";
 
             datafileWriter.write(head);
             datafileWriter.append(entityColorMap);
@@ -121,7 +130,7 @@ public class DataSaver {
                 return null;
             }
             HashMap<String, String> map = gson.fromJson(line, entityTypeColorMapToken);
-            return ColoredGlowLib.convertToEntityTypeMap(map);
+            return ColoredGlowLibMod.getLib().convertToEntityTypeMap(map);
 
         } catch (IOException e) {
             LOGGER.error("There was an error trying to read the data on the file!");
@@ -166,7 +175,7 @@ public class DataSaver {
                 return null;
             }
             List<String> list = gson.fromJson(line, entityTypeRainbowListToken);
-            return ColoredGlowLib.convertToEntityTypeList(list);
+            return ColoredGlowLibMod.getLib().convertToEntityTypeList(list);
         } catch (NoSuchElementException e){
             return null;
         } catch (IOException e) {
@@ -185,17 +194,17 @@ public class DataSaver {
             FileReader file = new FileReader(PATH);
             String line = getFileLine(6, file);
             if(line.equalsIgnoreCase("ERROR001-NOLINEFOUND")){
-                return ColoredGlowLib.getPerEntityColor();
+                return ColoredGlowLibMod.getLib().getPerEntityColor();
             }
             return gson.fromJson(line, perEntityToken);
         } catch (IOException e) {
             LOGGER.error("There was an error trying to read the data on the file!");
             e.printStackTrace();
-            return ColoredGlowLib.getPerEntityColor();
+            return ColoredGlowLibMod.getLib().getPerEntityColor();
         } catch (Exception e){
             LOGGER.error("There was an error while reading on the file");
             e.printStackTrace();
-            return ColoredGlowLib.getPerEntityColor();
+            return ColoredGlowLibMod.getLib().getPerEntityColor();
         }
     }
 
@@ -204,17 +213,17 @@ public class DataSaver {
             FileReader file = new FileReader(PATH);
             String line = getFileLine(7, file);
             if(line.equalsIgnoreCase("ERROR001-NOLINEFOUND")){
-                return ColoredGlowLib.getPerEntityTypeColor();
+                return ColoredGlowLibMod.getLib().getPerEntityTypeColor();
             }
             return gson.fromJson(line, perEntityTypeToken);
         } catch (IOException e) {
             LOGGER.error("There was an error trying to read the data on the file!");
             e.printStackTrace();
-            return ColoredGlowLib.getPerEntityTypeColor();
+            return ColoredGlowLibMod.getLib().getPerEntityTypeColor();
         } catch (Exception e){
             LOGGER.error("There was an error while reading on the file");
             e.printStackTrace();
-            return ColoredGlowLib.getPerEntityTypeColor();
+            return ColoredGlowLibMod.getLib().getPerEntityTypeColor();
         }
     }
 
@@ -223,17 +232,17 @@ public class DataSaver {
             FileReader file = new FileReader(PATH);
             String line = getFileLine(8, file);
             if(line.equalsIgnoreCase("ERROR001-NOLINEFOUND")){
-                return ColoredGlowLib.getRainbowChangingColor();
+                return ColoredGlowLibMod.getLib().getRainbowChangingColor();
             }
             return gson.fromJson(line, generalRainbowEnabledToken);
         } catch (IOException e) {
             LOGGER.error("There was an error trying to read the data on the file!");
             e.printStackTrace();
-            return ColoredGlowLib.getRainbowChangingColor();
+            return ColoredGlowLibMod.getLib().getRainbowChangingColor();
         } catch (Exception e){
             LOGGER.error("There was an error while reading on the file");
             e.printStackTrace();
-            return ColoredGlowLib.getRainbowChangingColor();
+            return ColoredGlowLibMod.getLib().getRainbowChangingColor();
         }
     }
 
@@ -242,17 +251,17 @@ public class DataSaver {
             FileReader file = new FileReader(PATH);
             String line = getFileLine(9, file);
             if(line.equalsIgnoreCase("ERROR001-NOLINEFOUND")){
-                return ColoredGlowLib.getOverrideTeamColors();
+                return ColoredGlowLibMod.getLib().getOverrideTeamColors();
             }
             return gson.fromJson(line, overrideTeamsToken);
         } catch (IOException e) {
             LOGGER.error("There was an error trying to read the data on the file!");
             e.printStackTrace();
-            return ColoredGlowLib.getOverrideTeamColors();
+            return ColoredGlowLibMod.getLib().getOverrideTeamColors();
         } catch (Exception e){
             LOGGER.error("There was an error while reading on the file");
             e.printStackTrace();
-            return ColoredGlowLib.getOverrideTeamColors();
+            return ColoredGlowLibMod.getLib().getOverrideTeamColors();
         }
     }
 
@@ -267,11 +276,11 @@ public class DataSaver {
         } catch (IOException e) {
             LOGGER.error("There was an error trying to read the data on the file!");
             e.printStackTrace();
-            return ColoredGlowLib.getColor();
+            return ColoredGlowLibMod.getLib().getColor();
         } catch (Exception e){
             LOGGER.error("There was an error while reading on the file");
             e.printStackTrace();
-            return ColoredGlowLib.getColor();
+            return ColoredGlowLibMod.getLib().getColor();
         }
     }
 }

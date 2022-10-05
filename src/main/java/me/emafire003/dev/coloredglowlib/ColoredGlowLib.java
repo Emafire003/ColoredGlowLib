@@ -2,65 +2,42 @@ package me.emafire003.dev.coloredglowlib;
 
 import me.emafire003.dev.coloredglowlib.networking.*;
 import me.emafire003.dev.coloredglowlib.util.*;
-import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
-import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.world.GameRules;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import static me.emafire003.dev.coloredglowlib.ColoredGlowLibMod.LOGGER;
 
 import java.util.*;
 
-public class ColoredGlowLib implements ModInitializer {
+public class ColoredGlowLib{
+	
+	public  Color color = new Color(255, 255, 255);
 
-	public static String MOD_ID = "coloredglowlib";
+	public  HashMap<UUID, String> per_entity_color_map = new HashMap<>();
+	public  List<UUID> entity_rainbow_list = new ArrayList<>();
 
-	public static Color color = new Color(255, 255, 255);
+	public  HashMap<EntityType, String> per_entitytype_color_map = new HashMap<>();
+	public  List<EntityType> entitytype_rainbow_list = new ArrayList<>();
 
-	public static HashMap<UUID, String> per_entity_color_map = new HashMap<>();
-	public static List<UUID> entity_rainbow_list = new ArrayList<>();
+	private  boolean per_entity = true;
+	private  boolean per_entitytype = true;
+	private  boolean generalized_rainbow = false;
+	private  boolean overrideTeamColors = false;
 
-	public static HashMap<EntityType, String> per_entitytype_color_map = new HashMap<>();
-	public static List<EntityType> entitytype_rainbow_list = new ArrayList<>();
-
-	private static boolean per_entity = true;
-	private static boolean per_entitytype = true;
-	private static boolean generalized_rainbow = false;
-	private static boolean overrideTeamColors = false;
-
-	private static boolean debug = false;
-	private static int tickCounter = 0;
+	private  boolean debug = false;
+	private  int tickCounter = 0;
 	//How many seconds should pass between updating the data and sending packets to the client?
-	private static int seconds = 2;
-	private static MinecraftServer server = null;
-	private static boolean server_registered = false;
+	private  double seconds = 0.5;
+	private  MinecraftServer server = null;
+	private  boolean server_registered = false;
 
-	public static Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-
-	public static final GameRules.Key<GameRules.BooleanRule> OVERRIDE_TEAM_COLORS =
-			GameRuleRegistry.register("overrideTeamColors", GameRules.Category.MISC, GameRuleFactory.createBooleanRule(false));
-
-	@Override
-	public void onInitialize() {
-		// This code runs as soon as Minecraft is in a mod-load-ready state.
-		// However, some things (like resources) may still be uninitialized.
-		// Proceed with mild caution.
-		//Why do I even have to write this :/
-		LOGGER.info("Hey, if you have downloaded this mod from a site different from CurseForge,\n" +
-				" Modrinth or Github, please remove this mod and download it again from an official source\n, " +
-				"such as the ones cited before. Mods on other sites are NOT checked or secure since i did NOT \n" +
-				"upload them there");
-
-		LOGGER.info("Initializing...");
-		CGLCommandRegister.registerCommands();
+	public ColoredGlowLib(){
 		ServerTickEvents.END_SERVER_TICK.register(minecraftServer -> {
 			if(tickCounter != -1){
 				tickCounter++;
@@ -79,8 +56,21 @@ public class ColoredGlowLib implements ModInitializer {
 				updateData(minecraftServer);
 			}
 		});
+	}
 
-		LOGGER.info("Complete!");
+	public void optimizeData(){
+		HashMap<UUID, String> temp_entity_map = this.per_entity_color_map;
+		for(Map.Entry<UUID, String> c : temp_entity_map.entrySet()){
+			if(c.getValue().equalsIgnoreCase("ffffff")){
+				this.per_entity_color_map.remove(c.getKey());
+			}
+		}
+		HashMap<EntityType, String> temp_type_map = this.per_entitytype_color_map;
+		for(Map.Entry<EntityType, String> c : temp_type_map.entrySet()) {
+			if (c.getValue().equalsIgnoreCase("ffffff")) {
+				this.per_entitytype_color_map.remove(c.getKey());
+			}
+		}
 	}
 
 	/**
@@ -89,7 +79,8 @@ public class ColoredGlowLib implements ModInitializer {
 	 *
 	 * @param server The server object needed to send packets to players
 	 * */
-	public static void updateData(MinecraftServer server){
+	public void updateData(MinecraftServer server){
+		this.optimizeData();
 		if(server == null){
 			LOGGER.warn("The provided server variable in ColoredGlowLib.updateData(server); is null, skipping update");
 		}
@@ -107,19 +98,19 @@ public class ColoredGlowLib implements ModInitializer {
 
 	/**This method removes every color from an entity, restoring it
 	 * to the default one. (both rainbow & non rainbow)*/
-	public static void removeColor(Entity entity){
-		ColoredGlowLib.setRainbowColorToEntity(entity, false);
-		ColoredGlowLib.removeColorFromEntity(entity);
+	public  void removeColor(Entity entity){
+		this.setRainbowColorToEntity(entity, false);
+		this.removeColorFromEntity(entity);
 	}
 
 	/**This method removes every color from an EntityType, restoring it
 	 * to the default one. (both rainbow & non rainbow)*/
-	public static void removeColor(EntityType type){
-		ColoredGlowLib.setRainbowColorToEntityType(type, false);
-		ColoredGlowLib.removeColorFromEntityType(type);
+	public  void removeColor(EntityType type){
+		this.setRainbowColorToEntityType(type, false);
+		this.removeColorFromEntityType(type);
 	}
 
-	private static void getValuesFromFile(){
+	private  void getValuesFromFile(){
 		try{
 			DataSaver.createFile();
 			LOGGER.info("Getting variables values from the data file...");
@@ -174,7 +165,7 @@ public class ColoredGlowLib implements ModInitializer {
 	 *
 	 * @param delay The delay in SECONDS between one packet being sent after another one
 	 * */
-	public void setDelayBetweenSendingPackets(int delay){
+	public  void setDelayBetweenSendingPackets(int delay){
 		seconds = delay;
 	}
 	
@@ -182,7 +173,7 @@ public class ColoredGlowLib implements ModInitializer {
 	 * or integrated server, false if it's just the client
 	 * 
 	 * It gets this after the first tick of the server. So use it wisely*/
-	public static boolean isOnServer(){
+	public  boolean isOnServer(){
 		return server_registered;
 	}
 
@@ -191,7 +182,7 @@ public class ColoredGlowLib implements ModInitializer {
 	 * This will return true if the mod has loaded the config
 	 *
 	 * It gets this after the first tick of the server*/
-	public static boolean isReady(){
+	public  boolean isReady(){
 		return server_registered;
 	}
 
@@ -199,7 +190,7 @@ public class ColoredGlowLib implements ModInitializer {
 	 * This method saves the data the server has to the file
 	 *
 	 * */
-	public static void saveDataOnFile(){
+	public  void saveDataOnFile(){
 		if(isOnServer()){
 			DataSaver.write();
 		}
@@ -211,14 +202,14 @@ public class ColoredGlowLib implements ModInitializer {
 	 * It gets the server after its first tick. Probably not going to work in the ModInitializer
 	 * */
 	@Nullable
-	public static MinecraftServer getServer(){
+	public  MinecraftServer getServer(){
 		return server;
 	}
 
 	/**This method sends updated data to all players on the server
 	 *
 	 * @param server The server the players are on. And also where the mod runs most likely.*/
-	public static void sendDataPacketsToPlayers(MinecraftServer server){
+	public  void sendDataPacketsToPlayers(MinecraftServer server){
 		List<ServerPlayerEntity> players = server.getPlayerManager().getPlayerList();
 		for (ServerPlayerEntity player : players) {
 			//Maybe this should go upper with maybe FabricLoader.getEnv is server ecc
@@ -229,7 +220,7 @@ public class ColoredGlowLib implements ModInitializer {
 		}
 	}
 
-	public static void sendDataPackets(ServerPlayerEntity player){
+	public void sendDataPackets(ServerPlayerEntity player){
 		if(debug){
 			LOGGER.info("Sending packets to the client...");
 		}
@@ -250,7 +241,7 @@ public class ColoredGlowLib implements ModInitializer {
 		}
 	}
 
-	private static List<Boolean> packBooleanValuesForPackets(){
+	private  List<Boolean> packBooleanValuesForPackets(){
 		List<Boolean> list = new ArrayList<>();
 		list.add(per_entity);
 		list.add(per_entitytype);
@@ -263,31 +254,31 @@ public class ColoredGlowLib implements ModInitializer {
 	 *
 	 * @param b Set to true to enable, false to disable
 	 * */
-	public static void enableOrDisableDebugOutput(boolean b){
+	public  void enableOrDisableDebugOutput(boolean b){
 		debug = b;
 	}
 
 	/**WARNING! You should use the proper setEntityTypeColor() method instead of the
 	 * .put() method of this map!*/
-	public static HashMap<EntityType, String> getEntityTypeColorMap(){
+	public  HashMap<EntityType, String> getEntityTypeColorMap(){
 		return per_entitytype_color_map;
 	}
 
 	/**WARNING! You should use the proper setEntityColor() method instead of the
 	 * .put() method of this map!*/
-	public static HashMap<UUID, String> getEntityColorMap(){
+	public  HashMap<UUID, String> getEntityColorMap(){
 		return per_entity_color_map;
 	}
 
 	/**WARNING! You should use the proper setRainbowColorToEntityType() method instead of the
 	 * .add() method of this list!*/
-	public static List<EntityType> getRainbowEntityTypeList(){
+	public  List<EntityType> getRainbowEntityTypeList(){
 		return entitytype_rainbow_list;
 	}
 
 	/**WARNING! You should use the proper setRainbowColorToEntity() method instead of the
 	 * .add() method of this list!*/
-	public static List<UUID> getRainbowEntityList(){
+	public  List<UUID> getRainbowEntityList(){
 		return entity_rainbow_list;
 	}
 
@@ -300,7 +291,7 @@ public class ColoredGlowLib implements ModInitializer {
 	 * Aka, you will be able to set this after its first tick
 	 *
 	 * @param b The value to assing to overrideTeamColors*/
-	public static void setOverrideTeamColors(boolean b){
+	public  void setOverrideTeamColors(boolean b){
 		overrideTeamColors = b;
 
 	}
@@ -313,7 +304,7 @@ public class ColoredGlowLib implements ModInitializer {
 	 * Use the same method in the ColoredGlowLibClient class to
 	 * get the value saved on the client
 	 * */
-	public static boolean getOverrideTeamColors(){
+	public  boolean getOverrideTeamColors(){
 		return overrideTeamColors;
 	}
 
@@ -327,7 +318,7 @@ public class ColoredGlowLib implements ModInitializer {
 	 * Aka, you will be able to set this after its first tick
 	 *
 	 * */
-	public static void setRainbowChangingColor(boolean b){
+	public  void setRainbowChangingColor(boolean b){
 		generalized_rainbow = true;
 
 	}
@@ -338,7 +329,7 @@ public class ColoredGlowLib implements ModInitializer {
 	 * WARNING! This returns the value saved on the server!
 	 * Use the same method in the ColoredGlowLibClient class to
 	 * get the value saved on the client!*/
-	public static boolean getRainbowChangingColor(){
+	public  boolean getRainbowChangingColor(){
 		return generalized_rainbow;
 	}
 
@@ -355,7 +346,7 @@ public class ColoredGlowLib implements ModInitializer {
 	 * use ColoredGlowLib.updateData(MinecraftServer server);
 	 *
 	 * */
-	public static void setPerEntityTypeColor(boolean b){
+	public  void setPerEntityTypeColor(boolean b){
 		per_entitytype = b;
 
 	}
@@ -370,7 +361,7 @@ public class ColoredGlowLib implements ModInitializer {
 	 * Use the same method in the ColoredGlowLibClient class to
 	 * get the value saved on the client
 	 * */
-	public static boolean getPerEntityTypeColor(){
+	public  boolean getPerEntityTypeColor(){
 		return per_entitytype;
 	}
 
@@ -387,7 +378,7 @@ public class ColoredGlowLib implements ModInitializer {
 	 * use ColoredGlowLib.updateData(MinecraftServer server);
 	 *
 	 * */
-	public static void setPerEntityColor(boolean b){
+	public  void setPerEntityColor(boolean b){
 		per_entity = b;
 
 	}
@@ -403,7 +394,7 @@ public class ColoredGlowLib implements ModInitializer {
 	 * get the value saved on the client
 	 *
 	 * */
-	public static boolean getPerEntityColor(){
+	public  boolean getPerEntityColor(){
 		return per_entity;
 	}
 
@@ -420,7 +411,10 @@ public class ColoredGlowLib implements ModInitializer {
 	 * @param entity The Entity to set the color for
 	 * @param color The color to set for the EntityType
 	 * */
-	public static void setColorToEntity(Entity entity, Color color){
+	public  void setColorToEntity(Entity entity, Color color){
+		if(color.equals(Color.getWhiteColor())){
+			return;
+		}
 		per_entity_color_map.put(entity.getUuid(), color.toHEX());
 
 	}
@@ -431,7 +425,7 @@ public class ColoredGlowLib implements ModInitializer {
 	 *
 	 * @param entity The Entity that will no longer have a custom color
 	 * */
-	public static void removeColorFromEntity(Entity entity){
+	public  void removeColorFromEntity(Entity entity){
 		UUID uuid = entity.getUuid();
 		if(per_entity_color_map.containsKey(uuid)){
 			per_entity_color_map.remove(uuid);
@@ -450,7 +444,7 @@ public class ColoredGlowLib implements ModInitializer {
 	 *
 	 * @param entity The Entity to check the color for
 	 * */
-	public static Color getEntityColor(Entity entity){
+	public  Color getEntityColor(Entity entity){
 		UUID uuid = entity.getUuid();
 		if(!per_entity_color_map.containsKey(uuid)){
 			return Color.getWhiteColor();
@@ -465,7 +459,7 @@ public class ColoredGlowLib implements ModInitializer {
 	 * @param entity The Entity to check the color for
 	 *
 	 */
-	public static boolean hasEntityColor(Entity entity){
+	public  boolean hasEntityColor(Entity entity){
 		return per_entity_color_map.containsKey(entity.getUuid());
 	}
 
@@ -475,7 +469,7 @@ public class ColoredGlowLib implements ModInitializer {
 	 *
 	 * @param type The EntityType to check the color for
 	 * */
-	public static boolean hasEntityTypeColor(EntityType type){
+	public  boolean hasEntityTypeColor(EntityType type){
 		return per_entity_color_map.containsKey(type);
 	}
 
@@ -486,7 +480,7 @@ public class ColoredGlowLib implements ModInitializer {
 	 *
 	 * @param entity The Entity to check the rainbow color for
 	 * */
-	public static boolean hasEntityRainbowColor(Entity entity){
+	public  boolean hasEntityRainbowColor(Entity entity){
 		return per_entity_color_map.containsKey(entity.getUuid());
 	}
 
@@ -497,7 +491,7 @@ public class ColoredGlowLib implements ModInitializer {
 	 *
 	 * @param type The EntityType to check the rainbow color for
 	 * */
-	public static boolean hasEntityTypeRainbowColor(EntityType type){
+	public  boolean hasEntityTypeRainbowColor(EntityType type){
 		return entitytype_rainbow_list.contains(type);
 	}
 
@@ -511,7 +505,7 @@ public class ColoredGlowLib implements ModInitializer {
 	 * @param entity The Entity to set the rainbow for
 	 * @param enabled Weather or not to enable or disable the rainbow color
 	 * */
-	public static void setRainbowColorToEntity(Entity entity, boolean enabled){
+	public  void setRainbowColorToEntity(Entity entity, boolean enabled){
 		if(enabled){
 			entity_rainbow_list.add(entity.getUuid());
 		}else if(entity_rainbow_list.contains(entity.getUuid())){
@@ -529,7 +523,7 @@ public class ColoredGlowLib implements ModInitializer {
 	 *
 	 * @param entity The Entity to remove the rainbow color from
 	 * */
-	public static void removeRainbowColorFromEntity(Entity entity){
+	public  void removeRainbowColorFromEntity(Entity entity){
 		if(getEntityRainbowColor(entity)){
 			entity_rainbow_list.remove(entity.getUuid());
 
@@ -545,7 +539,7 @@ public class ColoredGlowLib implements ModInitializer {
 	 *
 	 * @param type The EntityType to remove the rainbow color from
 	 * */
-	public static void removeRainbowColorFromEntityType(EntityType type){
+	public  void removeRainbowColorFromEntityType(EntityType type){
 		if(getEntityTypeRainbowColor(type)){
 			entitytype_rainbow_list.remove(type);
 
@@ -564,7 +558,7 @@ public class ColoredGlowLib implements ModInitializer {
 	 *
 	 * @param entity The Entity to check the color for
 	 * */
-	public static boolean getEntityRainbowColor(Entity entity){
+	public  boolean getEntityRainbowColor(Entity entity){
 		return entity_rainbow_list.contains(entity.getUuid());
 	}
 
@@ -578,9 +572,11 @@ public class ColoredGlowLib implements ModInitializer {
 	 * @param type The EntityType to set the color for
 	 * @param color The color to set for the EntityType
 	 * */
-	public static void setColorToEntityType(EntityType type, Color color){
+	public  void setColorToEntityType(EntityType type, Color color){
+		if(color.equals(Color.getWhiteColor())){
+			return;
+		}
 		per_entitytype_color_map.put(type, color.toHEX());
-
 	}
 
 	/**
@@ -589,7 +585,7 @@ public class ColoredGlowLib implements ModInitializer {
 	 *
 	 * @param type The EntityType that will no longer have a custom color
 	 * */
-	public static void removeColorFromEntityType(EntityType type){
+	public  void removeColorFromEntityType(EntityType type){
 		if(per_entitytype_color_map.containsKey(type)){
 			per_entitytype_color_map.remove(type);
 		}
@@ -607,7 +603,7 @@ public class ColoredGlowLib implements ModInitializer {
 	 *
 	 * @param type The EntityType to check the color for
 	 * */
-	public static Color getEntityTypeColor(EntityType type){
+	public  Color getEntityTypeColor(EntityType type){
 		if(!per_entitytype_color_map.containsKey(type)){
 			return Color.getWhiteColor();
 		}
@@ -624,7 +620,7 @@ public class ColoredGlowLib implements ModInitializer {
 	 * @param type The EntityType to set the rainbow for
 	 * @param enabled Weather or not to enable or disable the rainbow color
 	 * */
-	public static void setRainbowColorToEntityType(EntityType type, boolean enabled){
+	public  void setRainbowColorToEntityType(EntityType type, boolean enabled){
 		if(enabled){
 			entitytype_rainbow_list.add(type);
 		}else if(entitytype_rainbow_list.contains(type)){
@@ -645,7 +641,7 @@ public class ColoredGlowLib implements ModInitializer {
 	 *
 	 * @param type The EntityType to check the color for
 	 * */
-	public static boolean getEntityTypeRainbowColor(EntityType type){
+	public  boolean getEntityTypeRainbowColor(EntityType type){
 		return entitytype_rainbow_list.contains(type);
 	}
 
@@ -658,7 +654,7 @@ public class ColoredGlowLib implements ModInitializer {
 	 * Use the same method in the ColoredGlowLibClient class to
 	 * get the value saved on the client
 	 * */
-	public static Color getColor(){
+	public  Color getColor(){
 		return color;
 	}
 
@@ -667,7 +663,10 @@ public class ColoredGlowLib implements ModInitializer {
 	 *
 	 * @param colour A Color object that will determine the glowing color
 	 * */
-	public static void setColor(Color colour){
+	public  void setColor(Color colour){
+		if(colour.equals(Color.getWhiteColor())){
+			return;
+		}
 		color = colour;
 	}
 
@@ -678,7 +677,10 @@ public class ColoredGlowLib implements ModInitializer {
 	 * @param green Green value (0-255)
 	 * @param blue Blue value (0-255)
 	 * */
-	public static void setColor(int red, int green, int blue){
+	public  void setColor(int red, int green, int blue){
+		if(red == 255 && green == 255 && blue == 255){
+			return;
+		}
 		color = new Color(red, green, blue);
 	}
 
@@ -687,14 +689,17 @@ public class ColoredGlowLib implements ModInitializer {
 	 *
 	 * @param value The colorvalue (RRRRRRGGGGGGBBBBBB) You can get this via Color.translateToColorValue()
 	 */
-	public static void setColorValue(int value){
+	public  void setColorValue(int value){
+		if(value == Color.translateToColorValue(255, 255, 255)){
+			return;
+		}
 		color = Color.translateFromColorValue(value);
 	}
 
 	/**
 	 * Used to convert EntityType values to string (those in a list)
 	 * */
-	public static List<String> convertFromEntityTypeList(List<EntityType> typelist){
+	public  List<String> convertFromEntityTypeList(List<EntityType> typelist){
 		List<String> list = new ArrayList<>();
 		for(EntityType type : typelist){
 			list.add(EntityType.getId(type).toString());
@@ -703,9 +708,20 @@ public class ColoredGlowLib implements ModInitializer {
 	}
 
 	/**
+	 * Used to convert String values to EntityType (those in a list)
+	 * */
+	public  List<EntityType> convertToEntityTypeList(List<String> typelist){
+		List<EntityType> list = new ArrayList<>();
+		for(String type : typelist){
+			list.add(EntityType.get(type).get());
+		}
+		return list;
+	}
+
+	/**
 	 * Used to convert EntityType values to string (those in a hashmap)
 	 * */
-	public static HashMap<String, String> convertFromEntityTypeMap(HashMap<EntityType, String> typemap){
+	public  HashMap<String, String> convertFromEntityTypeMap(HashMap<EntityType, String> typemap){
 		HashMap<String, String> stringmap = new HashMap<>();
 		for(EntityType type : typemap.keySet()){
 			stringmap.put(EntityType.getId(type).toString(), typemap.get(type));
@@ -716,23 +732,12 @@ public class ColoredGlowLib implements ModInitializer {
 	/**
 	 * Used to convert String values to EntityType (those in a hashmap)
 	 * */
-	public static HashMap<EntityType, String> convertToEntityTypeMap(HashMap<String, String> typemap){
+	public  HashMap<EntityType, String> convertToEntityTypeMap(HashMap<String, String> typemap){
 		HashMap<EntityType, String> enmap = new HashMap<>();
 		for(String type : typemap.keySet()){
 			enmap.put(EntityType.get(type).get(), typemap.get(type));
 		}
 		return enmap;
-	}
-
-	/**
-	 * Used to convert String values to EntityType (those in a list)
-	 * */
-	public static List<EntityType> convertToEntityTypeList(List<String> typelist){
-		List<EntityType> list = new ArrayList<>();
-		for(String type : typelist){
-			list.add(EntityType.get(type).get());
-		}
-		return list;
 	}
 
 }

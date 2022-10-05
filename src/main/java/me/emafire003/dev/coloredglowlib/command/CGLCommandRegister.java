@@ -1,10 +1,8 @@
-package me.emafire003.dev.coloredglowlib.util;
+package me.emafire003.dev.coloredglowlib.command;
 
-import me.emafire003.dev.coloredglowlib.command.SetGlowingColor;
-import me.emafire003.dev.coloredglowlib.command.SetTypeGlowingColor;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 
-import static me.emafire003.dev.coloredglowlib.ColoredGlowLib.LOGGER;
+import static me.emafire003.dev.coloredglowlib.ColoredGlowLibMod.LOGGER;
 
 public class CGLCommandRegister {
     public static void registerCommands() {
