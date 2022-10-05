@@ -43,7 +43,8 @@ public class ColoredGlowLib{
 				tickCounter++;
 			}
 			if(tickCounter==20*seconds){
-				updateData(minecraftServer);
+				//updateData(minecraftServer);
+				sendDataPacketsToPlayers(minecraftServer);
 				tickCounter = 0;
 			}
 		});
@@ -53,11 +54,27 @@ public class ColoredGlowLib{
 				server = minecraftServer;
 				getValuesFromFile();
 				server_registered = true;
-				updateData(minecraftServer);
+				//updateData(minecraftServer);
+				sendDataPacketsToPlayers(minecraftServer);
+			}
+		});
+
+		ServerLifecycleEvents.SERVER_STOPPING.register(server1 -> {
+			try{
+				saveDataToFile();
+			}catch (Exception e){
+				LOGGER.error("There was an error while trying to save the data file!");
+				e.printStackTrace();
 			}
 		});
 	}
 
+	/**
+	 * This method removes entities/entitytypes that have their color
+	 * set to #FFFFFF aka white aka default. This is not needed since the
+	 * default color rendered is white.
+	 * So to save resources and space this method gets called with updateData().
+	 * You can call it yourself too, every once in a while, if you feel like it.*/
 	public void optimizeData(){
 		HashMap<UUID, String> temp_entity_map = this.per_entity_color_map;
 		for(Map.Entry<UUID, String> c : temp_entity_map.entrySet()){
@@ -77,6 +94,10 @@ public class ColoredGlowLib{
 	 * This method saves the data the server has to the file, and
 	 * then it sends the same updated that to the client with packets.
 	 *
+	 * Normally, you should use sendDataPacketsToPlayers() if the action will
+	 * be repeated several times. Instead if it is a one-time change, you might
+	 * as well use this method in order to secure the data to the file.
+	 *
 	 * @param server The server object needed to send packets to players
 	 * */
 	public void updateData(MinecraftServer server){
@@ -85,15 +106,28 @@ public class ColoredGlowLib{
 			LOGGER.warn("The provided server variable in ColoredGlowLib.updateData(server); is null, skipping update");
 		}
 		if(isOnServer()){
-			DataSaver.write();
+			saveDataToFile();
 			sendDataPacketsToPlayers(server);	
-		}else{
-			DataSaver.write();
-			LOGGER.warn("Server not ready yet, only saving the data without sending packets");
+		}
+		else{
+			saveDataToFile();
+			LOGGER.warn("Server not ready yet, only saving the data to file without sending packets");
 		}
 		if(debug){
 			LOGGER.info("Updating data...");
 		}
+	}
+
+	/**This method gets usually called when the server is stopping or when
+	 * calling updateData().
+	 * It saves the data of the maps, lists, and variables that were changed
+	 * during playtime.
+	 * It can be called after modifying a setting or a color of
+	 * something to ensure it is saved permanently. */
+	public void saveDataToFile(){
+		LOGGER.info("Saving the colored glow data to the file...");
+		DataSaver.write();
+		LOGGER.info("Saved!");
 	}
 
 	/**This method removes every color from an entity, restoring it
@@ -161,11 +195,11 @@ public class ColoredGlowLib{
 	 * the lower the value, the more frequently the client will get updated data,
 	 * but worse performance.
 	 *
-	 * Default value: 10 seconds
+	 * Default value: 0.5 seconds
 	 *
 	 * @param delay The delay in SECONDS between one packet being sent after another one
 	 * */
-	public  void setDelayBetweenSendingPackets(int delay){
+	public  void setDelayBetweenSendingPackets(double delay){
 		seconds = delay;
 	}
 	
