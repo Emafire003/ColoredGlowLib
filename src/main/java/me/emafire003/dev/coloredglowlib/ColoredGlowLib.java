@@ -1,5 +1,6 @@
 package me.emafire003.dev.coloredglowlib;
 
+import me.emafire003.dev.coloredglowlib.config.Config;
 import me.emafire003.dev.coloredglowlib.networking.*;
 import me.emafire003.dev.coloredglowlib.util.*;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -173,10 +174,10 @@ public class ColoredGlowLib{
 				entitytype_rainbow_list = DataSaver.getEntityTypeRainbowList();
 			}
 
-			per_entitytype = DataSaver.getPerEntityTypeColor();
+			/*per_entitytype = DataSaver.getPerEntityTypeColor();
 			per_entity = DataSaver.getPerEntityColor();
 			overrideTeamColors = DataSaver.getOverrideTeams();
-			generalized_rainbow = DataSaver.getRainbowEnabled();
+			generalized_rainbow = DataSaver.getRainbowEnabled();*/
 			color = DataSaver.getDefaultColor();
 			LOGGER.info("Done!");
 		}catch (Exception e){
@@ -327,6 +328,8 @@ public class ColoredGlowLib{
 	 * @param b The value to assing to overrideTeamColors*/
 	public  void setOverrideTeamColors(boolean b){
 		overrideTeamColors = b;
+		Config.OVERRIDE_TEAM_COLORS = overrideTeamColors;
+		Config.reloadConfig();
 
 	}
 
@@ -353,7 +356,9 @@ public class ColoredGlowLib{
 	 *
 	 * */
 	public  void setRainbowChangingColor(boolean b){
-		generalized_rainbow = true;
+		generalized_rainbow = b;
+		Config.GENERALIZED_RAINBOW = generalized_rainbow;
+		Config.reloadConfig();
 
 	}
 
@@ -368,7 +373,7 @@ public class ColoredGlowLib{
 	}
 
 	/**
-	 * Sets the EntityType-specifc option for the custom colored
+	 * Sets the EntityType-specific option for the custom colored
 	 * glow effect.
 	 * If enabled it will check for the EntityType of an entity
 	 * and set (if configured) a custom glow color for the entity.
@@ -382,6 +387,8 @@ public class ColoredGlowLib{
 	 * */
 	public  void setPerEntityTypeColor(boolean b){
 		per_entitytype = b;
+		Config.PER_ENTITYTYPE = per_entitytype;
+		Config.reloadConfig();
 
 	}
 
@@ -414,7 +421,8 @@ public class ColoredGlowLib{
 	 * */
 	public  void setPerEntityColor(boolean b){
 		per_entity = b;
-
+		Config.PER_ENTITY = per_entity;
+		Config.reloadConfig();
 	}
 
 	/**

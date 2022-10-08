@@ -16,7 +16,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import static me.emafire003.dev.coloredglowlib.ColoredGlowLibMod.OVERRIDE_TEAM_COLORS;
+import static me.emafire003.dev.coloredglowlib.ColoredGlowLibMod.LOGGER;
+//import static me.emafire003.dev.coloredglowlib.ColoredGlowLibMod.OVERRIDE_TEAM_COLORS;
 
 @Environment(EnvType.CLIENT)
 @Mixin(Entity.class)
@@ -90,7 +91,8 @@ public abstract class EntityColorMixin {
 
     @Inject(method = "getTeamColorValue", at = @At("RETURN"), cancellable = true)
     public void injectChangeColorValue(CallbackInfoReturnable<Integer> cir){
-        if(this.getScoreboardTeam() == null || ColoredGlowLibClient.getOverrideTeamColors() || this.getEntityWorld().getGameRules().getBoolean(OVERRIDE_TEAM_COLORS)) {
+
+        if(this.getScoreboardTeam() == null || ColoredGlowLibClient.getOverrideTeamColors() /*|| this.getEntityWorld().getGameRules().getBoolean(OVERRIDE_TEAM_COLORS)*/) {
 
             if(ColoredGlowLibClient.isAp1()){
                 cir.setReturnValue(new Color(255, 0, 174).getColorValue());

@@ -3,7 +3,6 @@ package me.emafire003.dev.coloredglowlib.util;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.EntityType;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,7 +14,7 @@ import static me.emafire003.dev.coloredglowlib.ColoredGlowLibMod.LOGGER;
 
 public class DataSaver {
 
-    public static String PATH = String.valueOf(FabricLoader.getInstance().getConfigDir().resolve("coloredglowlibdata.json"));
+    public static String PATH = String.valueOf(ColoredGlowLibMod.PATH+ "/" +ColoredGlowLibMod.MOD_ID + "_data.json");
     @SuppressWarnings("all")
     public static Type entityColorMapToken = new TypeToken<HashMap<UUID, String>>(){}.getType();
     @SuppressWarnings("all")
@@ -59,10 +58,11 @@ public class DataSaver {
             String entityTypeColorMap = gson.toJson(ColoredGlowLibMod.getLib().getEntityTypeColorMap()) + "\n";
             String entityRainbowList = gson.toJson(ColoredGlowLibMod.getLib().getRainbowEntityList()) + "\n";
             String entityTypeRainbowList = gson.toJson(ColoredGlowLibMod.getLib().convertFromEntityTypeList(ColoredGlowLibMod.getLib().getRainbowEntityTypeList())) + "\n";
-            String perEntityType = gson.toJson(ColoredGlowLibMod.getLib().getPerEntityTypeColor()) + "\n";
+            /*String perEntityType = gson.toJson(ColoredGlowLibMod.getLib().getPerEntityTypeColor()) + "\n";
             String perEntity = gson.toJson(ColoredGlowLibMod.getLib().getPerEntityColor()) + "\n";
             String generalRainbow = gson.toJson(ColoredGlowLibMod.getLib().getRainbowChangingColor()) + "\n";
             String overrideTeamColors = gson.toJson(ColoredGlowLibMod.getLib().getOverrideTeamColors()) + "\n";
+            */
             String defaultColor = "{" + gson.toJson(ColoredGlowLibMod.getLib().getColor().toHEX()) + "}" + "\n";
 
             datafileWriter.write(head);
@@ -70,10 +70,10 @@ public class DataSaver {
             datafileWriter.append(entityTypeColorMap);
             datafileWriter.append(entityRainbowList);
             datafileWriter.append(entityTypeRainbowList);
-            datafileWriter.append(perEntity);
+            /*datafileWriter.append(perEntity);
             datafileWriter.append(perEntityType);
             datafileWriter.append(generalRainbow);
-            datafileWriter.append(overrideTeamColors);
+            datafileWriter.append(overrideTeamColors);*/
             datafileWriter.append(defaultColor);
 
             datafileWriter.close();
