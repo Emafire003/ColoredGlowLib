@@ -172,7 +172,6 @@ public class Color {
         return translateToColorValue(this.r, this.g, this.b);
     }
 
-    //TODO also for the per world file save problem i can use a dir and then thorw in there a file for every wiworld
     public static String translateToHEX(int red, int green, int blue){
         String red_hex;
         String green_hex;
@@ -193,6 +192,10 @@ public class Color {
             blue_hex = Integer.toHexString(blue);
         }
         return "#"+red_hex+green_hex+blue_hex;
+    }
+
+    public static String translateToHEX(Color color){
+        return translateToHEX(color.r, color.g, color.b);
     }
 
     public String toHEX(){

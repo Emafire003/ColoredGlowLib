@@ -9,6 +9,7 @@ import me.emafire003.dev.coloredglowlib.util.Color;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.command.argument.EntitySummonArgumentType;
 import net.minecraft.command.suggestion.SuggestionProviders;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.server.command.CommandManager;
@@ -75,7 +76,7 @@ public class SetGlowColorCommand implements CGLCommand {
         }
     }
 
-    public LiteralCommandNode<ServerCommandSource> getNode() {
+    public LiteralCommandNode<CommandSourceStack> getNode() {
         return CommandManager
                 .literal("setglowcolor")
                 .then(

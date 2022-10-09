@@ -4,6 +4,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
@@ -21,7 +22,7 @@ public class InfoCommand implements CGLCommand {
         return 1;
     }
 
-    public LiteralCommandNode<ServerCommandSource> getNode() {
+    public LiteralCommandNode<CommandSourceStack> getNode() {
         return CommandManager
                 .literal("info")
                 .executes(this::info)

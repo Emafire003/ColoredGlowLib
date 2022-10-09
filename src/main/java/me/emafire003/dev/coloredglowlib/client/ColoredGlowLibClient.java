@@ -3,12 +3,8 @@ package me.emafire003.dev.coloredglowlib.client;
 import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
 import me.emafire003.dev.coloredglowlib.networking.*;
 import me.emafire003.dev.coloredglowlib.util.Color;
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -16,7 +12,7 @@ import java.util.*;
 
 import static me.emafire003.dev.coloredglowlib.ColoredGlowLibMod.LOGGER;
 
-public class ColoredGlowLibClient implements ClientModInitializer {
+public class ColoredGlowLibClient{
 
     public static Color color = new Color(255, 255, 255);
 
@@ -32,9 +28,7 @@ public class ColoredGlowLibClient implements ClientModInitializer {
     private static boolean overrideTeamColors = false;
     private static boolean debug = false;
     private static boolean ap1 = false;
-
-    @Override
-    @Environment(EnvType.CLIENT)
+    
     public void onInitializeClient() {
         LOGGER.info("Registering packets receivers...");
         LocalDate currentDate = LocalDate.now();
@@ -44,7 +38,6 @@ public class ColoredGlowLibClient implements ClientModInitializer {
             ap1 = true;
         }
         try{
-            registerPackets();
             LOGGER.info("Complete!");
         }catch (Exception e){
             LOGGER.error("FAILED to register packet receivers!");
@@ -54,165 +47,116 @@ public class ColoredGlowLibClient implements ClientModInitializer {
 
     //Network part
 
-    /**Used to register thes that the client will recive. Normally,
-     * you should not use this*/
-    public void registerPackets(){
-        LOGGER.info("Registering packets");
-        registerEntityMapPacket();
-        registerEntityListPacket();
-        registerEntityTypeMapPacket();
-        registerEntityTypeListPacket();
-        registerBooleanValuesMapPacket();
-        registerColorPacket();
-    }
-
     /**Diz iz a zecret*/
     public static boolean isAp1(){
         return ap1;
     }
 
-    private void registerEntityMapPacket(){
-        ClientPlayNetworking.registerGlobalReceiver(EntityMapPacketS2C.ID, ((client, handler, buf, responseSender) -> {
-            var results = EntityMapPacketS2C.read(buf);
-
-            client.execute(() -> {
-                try{
-                    if(debug){
-                        LOGGER.info("Getting new data from the server");
-                    }
-                    if(results != null && !results.isEmpty()){
-                        per_entity_color_map = results;
-                    }else{
-                        if(debug){
-                            LOGGER.warn("The packet 'EntityMap' was null or empty, probably not a problem");
-                        }
-                    }
-                    if(debug){
-                        LOGGER.info("Got new data! Like: " + results);
-                    }
-                }catch (NoSuchElementException e){
-                    LOGGER.warn("No value in the packet, probably not a big problem");
-                }catch (Exception e){
-                    LOGGER.error("There was an error while getting the packet!");
-                    e.printStackTrace();
+    public static void handleEntityMapPacket(HashMap<UUID, String> results){
+        try{
+            if(debug){
+                LOGGER.info("Getting new data from the server");
+            }
+            if(results != null && !results.isEmpty()){
+                per_entity_color_map = results;
+            }else{
+                if(debug){
+                    LOGGER.warn("The packet 'EntityMap' was null or empty, probably not a problem");
                 }
-            });
-        }));
+            }
+            if(debug){
+                LOGGER.info("Got new data! Like: " + results);
+            }
+        }catch (NoSuchElementException e){
+            LOGGER.warn("No value in the packet, probably not a big problem");
+        }catch (Exception e){
+            LOGGER.error("There was an error while getting the packet!");
+            e.printStackTrace();
+        }
     }
 
-    private void registerEntityTypeMapPacket(){
-        ClientPlayNetworking.registerGlobalReceiver(EntityTypeMapPacketS2C.ID, ((client, handler, buf, responseSender) -> {
-            var results = EntityTypeMapPacketS2C.read(buf);
-
-            client.execute(() -> {
-                try{
-                    if(results != null && !results.isEmpty()){
-                        if(debug){
-                            LOGGER.info("Recived a packet, converting");
-                        }
-                        per_entitytype_color_map = ColoredGlowLibMod.getLib().convertToEntityTypeMap(results);
-                    }else{
-                        if(debug){
-                            LOGGER.warn("The packet 'EntityTypeMap' was null or empty, probably not a problem");
-                        }
-                    }
-                    
-                }catch (NoSuchElementException e){
-                    LOGGER.warn("No value in the packet, probably not a big problem");
-                }catch (Exception e){
-                    LOGGER.error("There was an error while getting the packet!");
-                    e.printStackTrace();
+    public static void handleEntityTypeMapPacket(HashMap<String, String> results){
+        try{
+            if(results != null && !results.isEmpty()){
+                if(debug){
+                    LOGGER.info("Recived a packet, converting");
                 }
+                per_entitytype_color_map = ColoredGlowLibMod.getLib().convertToEntityTypeMap(results);
+            }else{
+                if(debug){
+                    LOGGER.warn("The packet 'EntityTypeMap' was null or empty, probably not a problem");
+                }
+            }
 
-            });
-        }));
+        }catch (NoSuchElementException e){
+            LOGGER.warn("No value in the packet, probably not a big problem");
+        }catch (Exception e){
+            LOGGER.error("There was an error while getting the packet!");
+            e.printStackTrace();
+        }
     }
 
-    private void registerEntityListPacket(){
-        ClientPlayNetworking.registerGlobalReceiver(EntityListPacketS2C.ID, ((client, handler, buf, responseSender) -> {
-            var results = EntityListPacketS2C.read(buf);
-
-            client.execute(() -> {
-                try {
-                    if(results != null && !results.isEmpty()){
-                        entity_rainbow_list = results;
-                    }else{
-                        if(debug){
-                            LOGGER.warn("The packet 'EntityList' was null or empty, probably not a problem");
-                        }
-                    }
-                    
-                }catch (NoSuchElementException e){
-                    LOGGER.warn("No value in the packet, probably not a big problem");
-                }catch (Exception e){
-                    LOGGER.error("There was an error while getting the packet!");
-                    e.printStackTrace();
+    public static void handleEntityListPacket(List<UUID> results){
+        try {
+            if(results != null && !results.isEmpty()){
+                entity_rainbow_list = results;
+            }else{
+                if(debug){
+                    LOGGER.warn("The packet 'EntityList' was null or empty, probably not a problem");
                 }
-            });
-        }));
+            }
+
+        }catch (NoSuchElementException e){
+            LOGGER.warn("No value in the packet, probably not a big problem");
+        }catch (Exception e){
+            LOGGER.error("There was an error while getting the packet!");
+            e.printStackTrace();
+        }
     }
 
-    private void registerEntityTypeListPacket(){
-        ClientPlayNetworking.registerGlobalReceiver(EntityTypeListPacketS2C.ID, ((client, handler, buf, responseSender) -> {
-            var results = EntityTypeListPacketS2C.read(buf);
-
-            client.execute(() -> {
-                try{
-                    if(results != null && !results.isEmpty()){
-                        entitytype_rainbow_list = ColoredGlowLibMod.getLib().convertToEntityTypeList(results);
-                    }else{
-                        if(debug){
-                            LOGGER.warn("The packet 'EntityTypeList' was null or empty, probably not a problem");
-                        }
-                    }
-                }catch (NoSuchElementException e){
-                    LOGGER.warn("No value in the packet, probably not a big problem");
-                }catch (Exception e){
-                    LOGGER.error("There was an error while getting the packet!");
-                    e.printStackTrace();
+    public static void handleEntityTypeListPacket(List<String> results){
+        try{
+            if(results != null && !results.isEmpty()){
+                entitytype_rainbow_list = ColoredGlowLibMod.getLib().convertToEntityTypeList(results);
+            }else{
+                if(debug){
+                    LOGGER.warn("The packet 'EntityTypeList' was null or empty, probably not a problem");
                 }
-            });
-        }));
+            }
+        }catch (NoSuchElementException e){
+            LOGGER.warn("No value in the packet, probably not a big problem");
+        }catch (Exception e){
+            LOGGER.error("There was an error while getting the packet!");
+            e.printStackTrace();
+        }
     }
 
-    private void registerBooleanValuesMapPacket(){
-        ClientPlayNetworking.registerGlobalReceiver(BooleanValuesPacketS2C.ID, ((client, handler, buf, responseSender) -> {
-            var results = BooleanValuesPacketS2C.read(buf);
-
-            client.execute(() -> {
-                try{
-                    if(results != null && !results.isEmpty()){
-                        unPackBooleanValuesPackets(results);
-                    }else{
-                        if(debug){
-                            LOGGER.warn("The packet 'Booleans' was null or empty, probably not a problem");
-                        }
-                    }
-                }catch (NoSuchElementException e){
-                    LOGGER.warn("No value in the packet, probably not a big problem");
-                }catch (Exception e){
-                    LOGGER.error("There was an error while getting the packet!");
-                    e.printStackTrace();
+    public static void handleBooleanValuesMapPacket(List<Boolean> results){
+        try{
+            if(results != null && !results.isEmpty()){
+                unPackBooleanValuesPackets(results);
+            }else{
+                if(debug){
+                    LOGGER.warn("The packet 'Booleans' was null or empty, probably not a problem");
                 }
-            });
-        }));
+            }
+        }catch (NoSuchElementException e){
+            LOGGER.warn("No value in the packet, probably not a big problem");
+        }catch (Exception e){
+            LOGGER.error("There was an error while getting the packet!");
+            e.printStackTrace();
+        }
     }
 
-    private void registerColorPacket(){
-        ClientPlayNetworking.registerGlobalReceiver(ColorPacketS2C.ID, ((client, handler, buf, responseSender) -> {
-            var results = ColorPacketS2C.read(buf);
-
-            client.execute(() -> {
-                try{
-                    color = results;
-                }catch (NoSuchElementException e){
-                    LOGGER.warn("No value in the packet 'color' , probably not a big problem");
-                }catch (Exception e){
-                    LOGGER.error("There was an error while getting the packet!");
-                    e.printStackTrace();
-                }
-            });
-        }));
+    public static void handleColorPacket(Color results){
+        try{
+            color = results;
+        }catch (NoSuchElementException e){
+            LOGGER.warn("No value in the packet 'color' , probably not a big problem");
+        }catch (Exception e){
+            LOGGER.error("There was an error while getting the packet!");
+            e.printStackTrace();
+        }
     }
 
     private static void unPackBooleanValuesPackets(List<Boolean> list){
@@ -244,7 +188,7 @@ public class ColoredGlowLibClient implements ClientModInitializer {
      * @param entity The Entity to check the color for
      * */
     public static boolean getEntityRainbowColor(Entity entity){
-        return entity_rainbow_list.contains(entity.getUuid());
+        return entity_rainbow_list.contains(entity.getUUID());
     }
 
     /**
@@ -303,7 +247,7 @@ public class ColoredGlowLibClient implements ClientModInitializer {
      * @param entity The Entity to check the color for
      * */
     public static Color getEntityColor(Entity entity){
-        UUID uuid = entity.getUuid();
+        UUID uuid = entity.getUUID();
         if(!per_entity_color_map.containsKey(uuid)){
             return Color.getWhiteColor();
         }

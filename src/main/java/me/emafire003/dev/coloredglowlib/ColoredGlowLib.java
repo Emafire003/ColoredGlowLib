@@ -2,14 +2,16 @@ package me.emafire003.dev.coloredglowlib;
 
 import me.emafire003.dev.coloredglowlib.config.Config;
 import me.emafire003.dev.coloredglowlib.networking.*;
+import me.emafire003.dev.coloredglowlib.networking.packets.*;
 import me.emafire003.dev.coloredglowlib.util.*;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
+import net.minecraft.server.level.ServerPlayer;
+
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.players.PlayerList;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.event.server.ServerStoppedEvent;
 import org.jetbrains.annotations.Nullable;
 
 import static me.emafire003.dev.coloredglowlib.ColoredGlowLibMod.LOGGER;
@@ -32,42 +34,13 @@ public class ColoredGlowLib{
 	private  boolean overrideTeamColors = false;
 
 	private  boolean debug = false;
-	private  int tickCounter = 0;
+
 	//How many seconds should pass between updating the data and sending packets to the client?
 	private  double seconds = 0.5;
 	private  MinecraftServer server = null;
-	private  boolean server_registered = false;
+	public  boolean server_registered = false;
 
 	public ColoredGlowLib(){
-		ServerTickEvents.END_SERVER_TICK.register(minecraftServer -> {
-			if(tickCounter != -1){
-				tickCounter++;
-			}
-			if(tickCounter==20*seconds){
-				//updateData(minecraftServer);
-				sendDataPacketsToPlayers(minecraftServer);
-				tickCounter = 0;
-			}
-		});
-
-		ServerLifecycleEvents.SERVER_STARTED.register(minecraftServer -> {
-			if(!server_registered){
-				server = minecraftServer;
-				getValuesFromFile();
-				server_registered = true;
-				//updateData(minecraftServer);
-				sendDataPacketsToPlayers(minecraftServer);
-			}
-		});
-
-		ServerLifecycleEvents.SERVER_STOPPING.register(server1 -> {
-			try{
-				saveDataToFile();
-			}catch (Exception e){
-				LOGGER.error("There was an error while trying to save the data file!");
-				e.printStackTrace();
-			}
-		});
 	}
 
 	/**
@@ -145,7 +118,13 @@ public class ColoredGlowLib{
 		this.removeColorFromEntityType(type);
 	}
 
-	private  void getValuesFromFile(){
+	/**
+	 * WARNING! Not intended to be used aside from the start event. I needed
+	 * to set this to public because I needed to use this method in the event
+	 * class.
+	 *
+	 * This method gets the data from the file and puts into the variables.*/
+	public  void getValuesFromFile(){
 		try{
 			DataSaver.createFile();
 			LOGGER.info("Getting variables values from the data file...");
@@ -203,6 +182,22 @@ public class ColoredGlowLib{
 	public  void setDelayBetweenSendingPackets(double delay){
 		seconds = delay;
 	}
+
+	/**
+	 * This method returns the time between packets sent
+	 * by the server to client to update the values on the client.
+	 * The delay is in SECONDS not ticks.
+	 *
+	 * The higher the value, the less frequently the client will get
+	 * updated information on the colors of the entities, but better performance.
+	 * the lower the value, the more frequently the client will get updated data,
+	 * but worse performance.
+	 *
+	 * Default value: 0.5 seconds
+	 * */
+	public double getDelayBetweenSendingPackets(){
+		return this.seconds;
+	}
 	
 	/**This will return true if the mod is run on a dedicated
 	 * or integrated server, false if it's just the client
@@ -245,27 +240,25 @@ public class ColoredGlowLib{
 	 *
 	 * @param server The server the players are on. And also where the mod runs most likely.*/
 	public  void sendDataPacketsToPlayers(MinecraftServer server){
-		List<ServerPlayerEntity> players = server.getPlayerManager().getPlayerList();
-		for (ServerPlayerEntity player : players) {
+		List<ServerPlayer> players = server.getPlayerList().getPlayers();
+		
+		for (ServerPlayer player : players) {
 			//Maybe this should go upper with maybe FabricLoader.getEnv is server ecc
-			if(player.getWorld().isClient){
-				return;
-			}
 			sendDataPackets(player);
 		}
 	}
 
-	public void sendDataPackets(ServerPlayerEntity player){
+	public void sendDataPackets(ServerPlayer player){
 		if(debug){
 			LOGGER.info("Sending packets to the client...");
 		}
 		try{
-			ServerPlayNetworking.send(player, EntityMapPacketS2C.ID, new EntityMapPacketS2C(per_entity_color_map));
-			ServerPlayNetworking.send(player, EntityTypeMapPacketS2C.ID, new EntityTypeMapPacketS2C(convertFromEntityTypeMap(per_entitytype_color_map)));
-			ServerPlayNetworking.send(player, EntityListPacketS2C.ID, new EntityListPacketS2C(entity_rainbow_list));
-			ServerPlayNetworking.send(player, EntityTypeListPacketS2C.ID, new EntityTypeListPacketS2C(convertFromEntityTypeList(entitytype_rainbow_list)));
-			ServerPlayNetworking.send(player, BooleanValuesPacketS2C.ID, new BooleanValuesPacketS2C(packBooleanValuesForPackets()));
-			ServerPlayNetworking.send(player, ColorPacketS2C.ID, new ColorPacketS2C(color));
+			CGLNetworking.send(player, new EntityMapPacketS2c(per_entity_color_map));
+			CGLNetworking.send(player, new EntityTypeMapPacketS2c(convertFromEntityTypeMap(per_entitytype_color_map)));
+			CGLNetworking.send(player, new EntityListPacketS2c(entity_rainbow_list));
+			CGLNetworking.send(player, new EntityTypeListPacketS2c(convertFromEntityTypeList(entitytype_rainbow_list)));
+			CGLNetworking.send(player, new BooleanValuesPacketS2c(packBooleanValuesForPackets()));
+			CGLNetworking.send(player, new ColorPacketS2c(Color.translateToHEX(color)));
 		}catch(Exception e){
 			LOGGER.error("FAILED to send data packets to the client!");
 			e.printStackTrace();
@@ -457,7 +450,7 @@ public class ColoredGlowLib{
 		if(color.equals(Color.getWhiteColor())){
 			return;
 		}
-		per_entity_color_map.put(entity.getUuid(), color.toHEX());
+		per_entity_color_map.put(entity.getUUID(), color.toHEX());
 
 	}
 
@@ -468,7 +461,7 @@ public class ColoredGlowLib{
 	 * @param entity The Entity that will no longer have a custom color
 	 * */
 	public  void removeColorFromEntity(Entity entity){
-		UUID uuid = entity.getUuid();
+		UUID uuid = entity.getUUID();
 		if(per_entity_color_map.containsKey(uuid)){
 			per_entity_color_map.remove(uuid);
 		}
@@ -487,7 +480,7 @@ public class ColoredGlowLib{
 	 * @param entity The Entity to check the color for
 	 * */
 	public  Color getEntityColor(Entity entity){
-		UUID uuid = entity.getUuid();
+		UUID uuid = entity.getUUID();
 		if(!per_entity_color_map.containsKey(uuid)){
 			return Color.getWhiteColor();
 		}
@@ -502,7 +495,7 @@ public class ColoredGlowLib{
 	 *
 	 */
 	public  boolean hasEntityColor(Entity entity){
-		return per_entity_color_map.containsKey(entity.getUuid());
+		return per_entity_color_map.containsKey(entity.getUUID());
 	}
 
 	/**
@@ -523,7 +516,7 @@ public class ColoredGlowLib{
 	 * @param entity The Entity to check the rainbow color for
 	 * */
 	public  boolean hasEntityRainbowColor(Entity entity){
-		return per_entity_color_map.containsKey(entity.getUuid());
+		return per_entity_color_map.containsKey(entity.getUUID());
 	}
 
 	/**
@@ -549,9 +542,9 @@ public class ColoredGlowLib{
 	 * */
 	public  void setRainbowColorToEntity(Entity entity, boolean enabled){
 		if(enabled){
-			entity_rainbow_list.add(entity.getUuid());
-		}else if(entity_rainbow_list.contains(entity.getUuid())){
-			entity_rainbow_list.remove(entity.getUuid());
+			entity_rainbow_list.add(entity.getUUID());
+		}else if(entity_rainbow_list.contains(entity.getUUID())){
+			entity_rainbow_list.remove(entity.getUUID());
 		}
 
 	}
@@ -567,7 +560,7 @@ public class ColoredGlowLib{
 	 * */
 	public  void removeRainbowColorFromEntity(Entity entity){
 		if(getEntityRainbowColor(entity)){
-			entity_rainbow_list.remove(entity.getUuid());
+			entity_rainbow_list.remove(entity.getUUID());
 
 		}
 	}
@@ -601,7 +594,7 @@ public class ColoredGlowLib{
 	 * @param entity The Entity to check the color for
 	 * */
 	public  boolean getEntityRainbowColor(Entity entity){
-		return entity_rainbow_list.contains(entity.getUuid());
+		return entity_rainbow_list.contains(entity.getUUID());
 	}
 
 	/**
@@ -744,7 +737,7 @@ public class ColoredGlowLib{
 	public  List<String> convertFromEntityTypeList(List<EntityType> typelist){
 		List<String> list = new ArrayList<>();
 		for(EntityType type : typelist){
-			list.add(EntityType.getId(type).toString());
+			list.add(EntityType.getKey(type).toString());
 		}
 		return list;
 	}
@@ -755,7 +748,7 @@ public class ColoredGlowLib{
 	public  List<EntityType> convertToEntityTypeList(List<String> typelist){
 		List<EntityType> list = new ArrayList<>();
 		for(String type : typelist){
-			list.add(EntityType.get(type).get());
+			list.add(EntityType.byString(type).get());
 		}
 		return list;
 	}
@@ -766,7 +759,7 @@ public class ColoredGlowLib{
 	public  HashMap<String, String> convertFromEntityTypeMap(HashMap<EntityType, String> typemap){
 		HashMap<String, String> stringmap = new HashMap<>();
 		for(EntityType type : typemap.keySet()){
-			stringmap.put(EntityType.getId(type).toString(), typemap.get(type));
+			stringmap.put(EntityType.getKey(type).toString(), typemap.get(type));
 		}
 		return stringmap;
 	}
@@ -777,7 +770,7 @@ public class ColoredGlowLib{
 	public  HashMap<EntityType, String> convertToEntityTypeMap(HashMap<String, String> typemap){
 		HashMap<EntityType, String> enmap = new HashMap<>();
 		for(String type : typemap.keySet()){
-			enmap.put(EntityType.get(type).get(), typemap.get(type));
+			enmap.put(EntityType.byString(type).get(), typemap.get(type));
 		}
 		return enmap;
 	}

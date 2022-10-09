@@ -2,34 +2,25 @@ package me.emafire003.dev.coloredglowlib.mixin;
 
 import me.emafire003.dev.coloredglowlib.client.ColoredGlowLibClient;
 import me.emafire003.dev.coloredglowlib.util.Color;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.scoreboard.AbstractTeam;
-import net.minecraft.text.Text;
-import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.scores.Team;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import static me.emafire003.dev.coloredglowlib.ColoredGlowLibMod.LOGGER;
-//import static me.emafire003.dev.coloredglowlib.ColoredGlowLibMod.OVERRIDE_TEAM_COLORS;
+import javax.annotation.Nullable;
 
-@Environment(EnvType.CLIENT)
 @Mixin(Entity.class)
 public abstract class EntityColorMixin {
 
-    @Shadow @Nullable public abstract AbstractTeam getScoreboardTeam();
-
-    @Shadow public abstract World getEntityWorld();
+    @Shadow @Nullable
+    public abstract Team getTeam();
 
     @Shadow public abstract EntityType<?> getType();
 
-    @Shadow public abstract Text getName();
 
     private Entity entity = ((Entity)(Object)this);
 
@@ -89,10 +80,10 @@ public abstract class EntityColorMixin {
         }
     }
 
-    @Inject(method = "getTeamColorValue", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "getTeamColor", at = @At("RETURN"), cancellable = true)
     public void injectChangeColorValue(CallbackInfoReturnable<Integer> cir){
 
-        if(this.getScoreboardTeam() == null || ColoredGlowLibClient.getOverrideTeamColors() /*|| this.getEntityWorld().getGameRules().getBoolean(OVERRIDE_TEAM_COLORS)*/) {
+        if(this.getTeam() == null || ColoredGlowLibClient.getOverrideTeamColors() /*|| this.getEntityWorld().getGameRules().getBoolean(OVERRIDE_TEAM_COLORS)*/) {
 
             if(ColoredGlowLibClient.isAp1()){
                 cir.setReturnValue(new Color(255, 0, 174).getColorValue());

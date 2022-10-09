@@ -3,7 +3,7 @@ package me.emafire003.dev.coloredglowlib.util;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
-import net.minecraft.entity.EntityType;
+import net.minecraft.world.entity.EntityType;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
@@ -58,11 +58,6 @@ public class DataSaver {
             String entityTypeColorMap = gson.toJson(ColoredGlowLibMod.getLib().getEntityTypeColorMap()) + "\n";
             String entityRainbowList = gson.toJson(ColoredGlowLibMod.getLib().getRainbowEntityList()) + "\n";
             String entityTypeRainbowList = gson.toJson(ColoredGlowLibMod.getLib().convertFromEntityTypeList(ColoredGlowLibMod.getLib().getRainbowEntityTypeList())) + "\n";
-            /*String perEntityType = gson.toJson(ColoredGlowLibMod.getLib().getPerEntityTypeColor()) + "\n";
-            String perEntity = gson.toJson(ColoredGlowLibMod.getLib().getPerEntityColor()) + "\n";
-            String generalRainbow = gson.toJson(ColoredGlowLibMod.getLib().getRainbowChangingColor()) + "\n";
-            String overrideTeamColors = gson.toJson(ColoredGlowLibMod.getLib().getOverrideTeamColors()) + "\n";
-            */
             String defaultColor = "{" + gson.toJson(ColoredGlowLibMod.getLib().getColor().toHEX()) + "}" + "\n";
 
             datafileWriter.write(head);
@@ -70,10 +65,6 @@ public class DataSaver {
             datafileWriter.append(entityTypeColorMap);
             datafileWriter.append(entityRainbowList);
             datafileWriter.append(entityTypeRainbowList);
-            /*datafileWriter.append(perEntity);
-            datafileWriter.append(perEntityType);
-            datafileWriter.append(generalRainbow);
-            datafileWriter.append(overrideTeamColors);*/
             datafileWriter.append(defaultColor);
 
             datafileWriter.close();
