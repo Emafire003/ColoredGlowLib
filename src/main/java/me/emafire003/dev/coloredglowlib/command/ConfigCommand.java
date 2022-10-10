@@ -17,7 +17,7 @@ public class ConfigCommand implements CGLCommand {
 
     private int setGeneralizedRainbow(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         boolean b = BoolArgumentType.getBool(context, "value");
-        CommandSource source = (CommandSource) context.getSource();
+        CommandSourceStack source = context.getSource();
         ColoredGlowLibMod.getLib().setRainbowChangingColor(b);
         if(b){
             source.sendSystemMessage(Component.literal(ColoredGlowLibMod.PREFIX+"§aNow all entities will glow in rainbow! (Generalized Rainbow : Enabled) "));
@@ -28,7 +28,7 @@ public class ConfigCommand implements CGLCommand {
     }
 
     private int getGeneralizedRainbow(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        CommandSource source = (CommandSource) context.getSource();
+        CommandSourceStack source = context.getSource();
         boolean b = ColoredGlowLibMod.getLib().getRainbowChangingColor();
         if(b){
             source.sendSystemMessage(Component.literal(ColoredGlowLibMod.PREFIX+"§aAll entities glow in rainbow! (Generalized Rainbow : Enabled) "));
@@ -40,7 +40,7 @@ public class ConfigCommand implements CGLCommand {
 
     private int setOverrideTeamColors(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         boolean b = BoolArgumentType.getBool(context, "value");
-        CommandSource source = (CommandSource) context.getSource();
+        CommandSourceStack source = context.getSource();
         ColoredGlowLibMod.getLib().setOverrideTeamColors(b);
         if(b){
             source.sendSystemMessage(Component.literal(ColoredGlowLibMod.PREFIX+"§aThe color set by the mod will a have priority over the vanilla team color! (Override Team Colors : Enabled) "));
@@ -51,7 +51,7 @@ public class ConfigCommand implements CGLCommand {
     }
 
     private int getOverrideTeamColors(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        CommandSource source = (CommandSource) context.getSource();
+        CommandSourceStack source = context.getSource();
         boolean b = ColoredGlowLibMod.getLib().getOverrideTeamColors();
         if(b){
             source.sendSystemMessage(Component.literal(ColoredGlowLibMod.PREFIX+"§aThe color set by the mod has priority over the vanilla team color! (Override Team Colors : Enabled) "));
@@ -63,7 +63,7 @@ public class ConfigCommand implements CGLCommand {
 
     private int setPerEntityColor(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         boolean b = BoolArgumentType.getBool(context, "value");
-        CommandSource source = (CommandSource) context.getSource();
+        CommandSourceStack source = context.getSource();
         ColoredGlowLibMod.getLib().setPerEntityColor(b);
         if(b){
             source.sendSystemMessage(Component.literal(ColoredGlowLibMod.PREFIX+"§aThe glow color is now specific for each entity! (Per Entity Color : Enabled) "));
@@ -74,7 +74,7 @@ public class ConfigCommand implements CGLCommand {
     }
 
     private int getPerEntityColor(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        CommandSource source = (CommandSource) context.getSource();
+        CommandSourceStack source = context.getSource();
         boolean b = ColoredGlowLibMod.getLib().getPerEntityColor();
         if(b){
             source.sendSystemMessage(Component.literal(ColoredGlowLibMod.PREFIX+"§aThe glow color is specific for each entity! (Per Entity Color : Enabled) "));
@@ -86,7 +86,7 @@ public class ConfigCommand implements CGLCommand {
 
     private int setPerEntityTypeColor(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         boolean b = BoolArgumentType.getBool(context, "value");
-        CommandSource source = (CommandSource) context.getSource();
+        CommandSourceStack source = context.getSource();
         ColoredGlowLibMod.getLib().setPerEntityTypeColor(b);
         if(b){
             source.sendSystemMessage(Component.literal(ColoredGlowLibMod.PREFIX+"§aThe glow color is now specific for each entity type! (Per EntityType Color : Enabled) "));
@@ -97,7 +97,7 @@ public class ConfigCommand implements CGLCommand {
     }
 
     private int getPerEntityTypeColor(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        CommandSource source = (CommandSource) context.getSource();
+        CommandSourceStack source = context.getSource();
         boolean b = ColoredGlowLibMod.getLib().getPerEntityTypeColor();
         if(b){
             source.sendSystemMessage(Component.literal(ColoredGlowLibMod.PREFIX+"§aThe glow color is specific for each entity type! (Per EntityType Color : Enabled) "));
@@ -108,7 +108,7 @@ public class ConfigCommand implements CGLCommand {
     }
 
     private int reloadConfig(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        CommandSource source = (CommandSource) context.getSource();
+        CommandSourceStack source = context.getSource();
         Config.reloadConfig();
         source.sendSystemMessage(Component.literal(ColoredGlowLibMod.PREFIX+"The config has been reloaded!"));
         return 1;

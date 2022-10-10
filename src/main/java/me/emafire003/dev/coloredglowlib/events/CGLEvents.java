@@ -21,6 +21,7 @@ public class CGLEvents {
         @SubscribeEvent
         public static void onServerStops(ServerStoppedEvent event) {
             try{
+                ColoredGlowLibMod.getLib().optimizeData();
                 ColoredGlowLibMod.getLib().saveDataToFile();
             }catch (Exception e){
                 LOGGER.error("There was an error while trying to save the data file!");

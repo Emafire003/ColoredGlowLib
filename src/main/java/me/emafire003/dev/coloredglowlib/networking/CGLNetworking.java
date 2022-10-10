@@ -1,8 +1,7 @@
 package me.emafire003.dev.coloredglowlib.networking;
 
-import me.emafire003.dev.coloredglowlib.networking.packets.EntityMapPacketS2c;
-import net.kaupenjoe.tutorialmod.TutorialMod;
-import net.kaupenjoe.tutorialmod.networking.packet.*;
+import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
+import me.emafire003.dev.coloredglowlib.networking.packets.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkDirection;
@@ -19,7 +18,7 @@ public class CGLNetworking {
 
     public static void register() {
         SimpleChannel net = NetworkRegistry.ChannelBuilder
-                .named(new ResourceLocation(TutorialMod.MOD_ID, "packets"))
+                .named(new ResourceLocation(ColoredGlowLibMod.MOD_ID, "packets"))
                 .networkProtocolVersion(() -> "1.0")
                 .clientAcceptedVersions(s -> true)
                 .serverAcceptedVersions(s -> true)
@@ -33,22 +32,34 @@ public class CGLNetworking {
                 .consumerMainThread(EntityMapPacketS2c::handle)
                 .add();
 
-        net.messageBuilder(EnergySyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
-                .decoder(EnergySyncS2CPacket::new)
-                .encoder(EnergySyncS2CPacket::toBytes)
-                .consumerMainThread(EnergySyncS2CPacket::handle)
+        net.messageBuilder(EntityTypeMapPacketS2c.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(EntityTypeMapPacketS2c::new)
+                .encoder(EntityTypeMapPacketS2c::toBytes)
+                .consumerMainThread(EntityTypeMapPacketS2c::handle)
                 .add();
 
-        net.messageBuilder(FluidSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
-                .decoder(FluidSyncS2CPacket::new)
-                .encoder(FluidSyncS2CPacket::toBytes)
-                .consumerMainThread(FluidSyncS2CPacket::handle)
+        net.messageBuilder(EntityListPacketS2c.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(EntityListPacketS2c::new)
+                .encoder(EntityListPacketS2c::toBytes)
+                .consumerMainThread(EntityListPacketS2c::handle)
                 .add();
 
-        net.messageBuilder(ItemStackSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
-                .decoder(ItemStackSyncS2CPacket::new)
-                .encoder(ItemStackSyncS2CPacket::toBytes)
-                .consumerMainThread(ItemStackSyncS2CPacket::handle)
+        net.messageBuilder(EntityTypeListPacketS2c.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(EntityTypeListPacketS2c::new)
+                .encoder(EntityTypeListPacketS2c::toBytes)
+                .consumerMainThread(EntityTypeListPacketS2c::handle)
+                .add();
+
+        net.messageBuilder(BooleanValuesPacketS2c.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(BooleanValuesPacketS2c::new)
+                .encoder(BooleanValuesPacketS2c::toBytes)
+                .consumerMainThread(BooleanValuesPacketS2c::handle)
+                .add();
+
+        net.messageBuilder(ColorPacketS2c.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(ColorPacketS2c::new)
+                .encoder(ColorPacketS2c::toBytes)
+                .consumerMainThread(ColorPacketS2c::handle)
                 .add();
     }
 

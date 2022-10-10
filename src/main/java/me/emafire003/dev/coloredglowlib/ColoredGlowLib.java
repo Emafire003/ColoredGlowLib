@@ -50,17 +50,26 @@ public class ColoredGlowLib{
 	 * So to save resources and space this method gets called with updateData().
 	 * You can call it yourself too, every once in a while, if you feel like it.*/
 	public void optimizeData(){
-		HashMap<UUID, String> temp_entity_map = this.per_entity_color_map;
-		for(Map.Entry<UUID, String> c : temp_entity_map.entrySet()){
-			if(c.getValue().equalsIgnoreCase("ffffff")){
-				this.per_entity_color_map.remove(c.getKey());
+		try{
+			LOGGER.info("Optimizing Data...");
+			List<UUID> removeKeys = new ArrayList<>();
+			for(Map.Entry<UUID, String> c : per_entity_color_map.entrySet()){
+				if(c.getValue().equalsIgnoreCase("#ffffff")){
+					removeKeys.add(c.getKey());
+				}
 			}
-		}
-		HashMap<EntityType, String> temp_type_map = this.per_entitytype_color_map;
-		for(Map.Entry<EntityType, String> c : temp_type_map.entrySet()) {
-			if (c.getValue().equalsIgnoreCase("ffffff")) {
-				this.per_entitytype_color_map.remove(c.getKey());
+			removeKeys.forEach(t -> per_entity_color_map.remove(t));
+
+			List<EntityType> removeKeysType = new ArrayList<>();
+			for(Map.Entry<EntityType, String> c : per_entitytype_color_map.entrySet()) {
+				if (c.getValue().equalsIgnoreCase("#ffffff")) {
+					removeKeysType.add(c.getKey());
+				}
 			}
+			removeKeysType.forEach(t -> per_entitytype_color_map.remove(t));
+		}catch (Exception e){
+			LOGGER.error("An error occurred while optimizing data!");
+			e.printStackTrace();
 		}
 	}
 

@@ -2,13 +2,16 @@ package me.emafire003.dev.coloredglowlib;
 
 import me.emafire003.dev.coloredglowlib.config.Config;
 import me.emafire003.dev.coloredglowlib.networking.CGLNetworking;
+import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLPaths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,14 +26,12 @@ public class ColoredGlowLibMod {
 
     private static ColoredGlowLib coloredGlowLib = new ColoredGlowLib();
     //TODO figure out where the config folder is
-    public static Path PATH = Path.of( "/" + MOD_ID + "/");
+    public static Path PATH = FMLPaths.CONFIGDIR.get().resolve(MOD_ID);
 
     public ColoredGlowLibMod(){
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         LOGGER.info("Initializing...");
-        //CGLCommandRegister.registerCommands();
-        //CommandRegistrationCallback.EVENT.register(CGLCommands::registerCommands);
         Config.registerConfigs();
         Config.reloadConfig();
         coloredGlowLib.setPerEntityColor(Config.PER_ENTITY);
