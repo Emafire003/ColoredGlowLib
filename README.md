@@ -12,22 +12,28 @@ This library enables you to make entities glow different colors other than plain
 ### For normal users:
 Just drag and drop this mod into your mod folder and enjoy!
 
-#### Gamerules & commands
-You can set weather or not to override the default team colors (the ones minecraft assigns) with the gamerule:
+#### Commands & Configuration
+Every command begins with `/cgl` , short for **C**olored**G**low**L**ib. You can also use `/coloredglowlib`. 
 
-`/gamerule overrideTeamColors true/false`
+You can specify a color to use for an entity/entitytype using the following command:
 
-It is recommended to leave this on false, since you may have some other mod/datapack/modpack that sets a team color to an entity, and it can get confusing.
+`/cgl setglowcolor <entity/type> <color>`
 
-You can specify a color to use for an entity using the following command:
-
-`/setglowcolor <entity> <color>`
-
-The `entity` parameter is the entity you want to target, so @p, Emafire003, the uuid of the entity in front of you etc. It is not recommended to use @e, @a and 
-stuff that targets a lot of entities since I will implement a command to set a color for each **type** of entity that will perform better. If you want you can use it anyway, for ~100ish entities it should run just fine, maybe even a lot more.
+The `entity` parameter is the entity you want to target, so @p, Emafire003, the uuid of the entity in front of you etc or it's type such as `minecraft:sheep`. It is not recommended to use @e, @a and stuff that targets a lot of entities. If you want you can use it anyway, for ~1000ish entities it should run just fine, maybe even a lot more. At around 4k tho it starts to complain so don't push it.
 
 The `color` parameter is a hexadecimal color code (like #ff85ab, #750711, #abc, #123, #a7e ecc, search "color picker" online to get them) without the `#` since minecraft interprets it as a beginning of a tag (which is not what it should be doing in this case). In alternative you can provide the word `rainbow` that will make the entity glow, you guessed it, rainbow.
 
+You can interact with the config directly in game. For example if you want to override the default team colors (the ones minecraft assigns) with the command:
+
+`/cgl config set overrideTeamColors <true/false>`
+
+It is recommended to leave this on false, since you may have some other mod/datapack/modpack that sets a team color to an entity, and it can get confusing.
+
+You can also get the current value of the setting, like so: 
+
+`/cgl config get overrideTeamColors`
+
+More of this in the wiki!
 
 ### For developers:
 Include this library into your `build.gradle` as a dependency
@@ -58,7 +64,7 @@ You can find examples of this lib being used in my [FoxGlow](https://github.com/
 
 ## License
 
-This mod is available under the GNU GPL3 License.
+This mod is available under the GNU LGPL3 License.
 
 ## Support me
 If you would like to offer me a coffee, here you go.
