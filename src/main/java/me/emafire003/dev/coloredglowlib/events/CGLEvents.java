@@ -2,11 +2,14 @@ package me.emafire003.dev.coloredglowlib.events;
 
 import me.emafire003.dev.coloredglowlib.ColoredGlowLib;
 import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
+import me.emafire003.dev.coloredglowlib.command.CGLCommands;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.event.server.ServerStoppedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.server.command.ConfigCommand;
 
 
 import static me.emafire003.dev.coloredglowlib.ColoredGlowLibMod.LOGGER;
@@ -46,6 +49,14 @@ public class CGLEvents {
                 ColoredGlowLibMod.getLib().sendDataPacketsToPlayers(event.getServer());
                 tickCounter = 0;
             }
+        }
+
+        @SubscribeEvent
+        public static void onCommandsRegister(RegisterCommandsEvent event) {
+            new CGLCommands(event.getDispatcher());
+
+
+            ConfigCommand.register(event.getDispatcher());
         }
     }
 

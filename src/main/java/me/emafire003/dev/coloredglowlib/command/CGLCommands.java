@@ -1,30 +1,15 @@
 package me.emafire003.dev.coloredglowlib.command;
 
-import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.core.RegistryAccess;
-import org.apache.logging.log4j.core.tools.picocli.CommandLine;
 
+
+//Initially based on Factions' code https://github.com/ickerio/factions
+//then modified by me (Emafire003) and ported to forge, again, by me
 public class CGLCommands {
-
-
-    //Based on Factions' code https://github.com/ickerio/factions
-    public static void registerCommands(CommandDispatcher<CommandSource> dispatcher, RegistryAccess registryAccess) {
-        /*CGLCommand cgl_commands = new CGLCommand() {
-            @Override
-            public LiteralCommandNode<CommandSourceStack> getNode() {
-                return Commands
-                        .literal("cgl")
-                        .build();
-            }
-        };*/
-
+    public CGLCommands(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralCommandNode<CommandSourceStack> cgl_commands = Commands
                 .literal("cgl")
                 .requires(serverCommandSource -> {
@@ -39,8 +24,8 @@ public class CGLCommands {
                 })
                 .build();
 
-        dispatcher.getRoot().addChild((CommandNode<CommandSource>) cgl_commands.getRelevantNodes(new StringReader("cgl")));
-        dispatcher.getRoot().addChild((CommandNode<CommandSource>) alias.getRelevantNodes(new StringReader("coloredglowlib")));
+        dispatcher.getRoot().addChild(cgl_commands);
+        dispatcher.getRoot().addChild(alias);
 
 
         CGLCommand[] commands = new CGLCommand[] {
@@ -51,7 +36,8 @@ public class CGLCommands {
 
         for (CGLCommand command : commands) {
             cgl_commands.addChild(command.getNode());
-            //alias.addChild(command.getNode());
+            alias.addChild(command.getNode());
         }
     }
+
 }

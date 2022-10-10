@@ -1,12 +1,7 @@
 package me.emafire003.dev.coloredglowlib;
 
-import me.emafire003.dev.coloredglowlib.command.CGLCommands;
 import me.emafire003.dev.coloredglowlib.config.Config;
 import me.emafire003.dev.coloredglowlib.networking.CGLNetworking;
-import net.kaupenjoe.tutorialmod.TutorialMod;
-import net.kaupenjoe.tutorialmod.item.ModItems;
-import net.minecraftforge.common.ForgeConfig;
-import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -32,8 +27,6 @@ public class ColoredGlowLibMod {
 
     public ColoredGlowLibMod(){
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-
-        ModItems.register(modEventBus);
 
         LOGGER.info("Initializing...");
         //CGLCommandRegister.registerCommands();
