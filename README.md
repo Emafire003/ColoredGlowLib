@@ -9,8 +9,8 @@ This library enables you to make entities glow different colors other than plain
 ![coloredglowlib-with-player](https://user-images.githubusercontent.com/29462910/157507551-dfc4ee7e-66fb-4dae-9578-e17ca64e3b44.png)
 
 ## Setup
-### For normal users:
-Just drag and drop this mod into your mod folder and enjoy!
+### For normal users (Both Fabric and Forge):
+Just drag and drop this mod into your mod folder and enjoy! (Make sure you are downloading the correct file for the correct loader tho!)
 
 #### Commands & Configuration
 Every command begins with `/cgl` , short for **C**olored**G**low**L**ib. You can also use `/coloredglowlib`. 
