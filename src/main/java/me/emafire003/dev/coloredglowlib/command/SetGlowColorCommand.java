@@ -40,6 +40,7 @@ public class SetGlowColorCommand implements CGLCommand {
 
             //source.sendFeedback(new TranslatableText("commands.setglowcolor.success1").append(color).append(new TranslatableText("commands.setglowcolor.success2")), true);
             source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"Setted color '" + color + "' to the selected entity/entities!"), false);
+            ColoredGlowLibMod.getLib().optimizeData();
             return targets.size();
         }else{
             //source.sendError(new TranslatableText("commands.setglowcolor.notcolor"));
@@ -67,6 +68,7 @@ public class SetGlowColorCommand implements CGLCommand {
 
             //source.sendFeedback(new TranslatableText("commands.setglowcolor.success1").append(color).append(new TranslatableText("commands.setglowcolor.success2")), true);
             source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"Setted color '" + color + "' to the selected entity/entities!"), false);
+            ColoredGlowLibMod.getLib().optimizeData();
             return 1;
         }else{
             //source.sendError(new TranslatableText("commands.setglowcolor.notcolor"));
