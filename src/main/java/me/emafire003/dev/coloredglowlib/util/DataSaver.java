@@ -180,86 +180,11 @@ public class DataSaver {
         }
     }
 
-    public static boolean getPerEntityColor(){
-        try {
-            FileReader file = new FileReader(PATH);
-            String line = getFileLine(6, file);
-            if(line.equalsIgnoreCase("ERROR001-NOLINEFOUND")){
-                return ColoredGlowLibMod.getLib().getPerEntityColor();
-            }
-            return gson.fromJson(line, perEntityToken);
-        } catch (IOException e) {
-            LOGGER.error("There was an error trying to read the data on the file!");
-            e.printStackTrace();
-            return ColoredGlowLibMod.getLib().getPerEntityColor();
-        } catch (Exception e){
-            LOGGER.error("There was an error while reading on the file");
-            e.printStackTrace();
-            return ColoredGlowLibMod.getLib().getPerEntityColor();
-        }
-    }
-
-    public static boolean getPerEntityTypeColor(){
-        try {
-            FileReader file = new FileReader(PATH);
-            String line = getFileLine(7, file);
-            if(line.equalsIgnoreCase("ERROR001-NOLINEFOUND")){
-                return ColoredGlowLibMod.getLib().getPerEntityTypeColor();
-            }
-            return gson.fromJson(line, perEntityTypeToken);
-        } catch (IOException e) {
-            LOGGER.error("There was an error trying to read the data on the file!");
-            e.printStackTrace();
-            return ColoredGlowLibMod.getLib().getPerEntityTypeColor();
-        } catch (Exception e){
-            LOGGER.error("There was an error while reading on the file");
-            e.printStackTrace();
-            return ColoredGlowLibMod.getLib().getPerEntityTypeColor();
-        }
-    }
-
-    public static boolean getRainbowEnabled(){
-        try {
-            FileReader file = new FileReader(PATH);
-            String line = getFileLine(8, file);
-            if(line.equalsIgnoreCase("ERROR001-NOLINEFOUND")){
-                return ColoredGlowLibMod.getLib().getRainbowChangingColor();
-            }
-            return gson.fromJson(line, generalRainbowEnabledToken);
-        } catch (IOException e) {
-            LOGGER.error("There was an error trying to read the data on the file!");
-            e.printStackTrace();
-            return ColoredGlowLibMod.getLib().getRainbowChangingColor();
-        } catch (Exception e){
-            LOGGER.error("There was an error while reading on the file");
-            e.printStackTrace();
-            return ColoredGlowLibMod.getLib().getRainbowChangingColor();
-        }
-    }
-
-    public static boolean getOverrideTeams(){
-        try {
-            FileReader file = new FileReader(PATH);
-            String line = getFileLine(9, file);
-            if(line.equalsIgnoreCase("ERROR001-NOLINEFOUND")){
-                return ColoredGlowLibMod.getLib().getOverrideTeamColors();
-            }
-            return gson.fromJson(line, overrideTeamsToken);
-        } catch (IOException e) {
-            LOGGER.error("There was an error trying to read the data on the file!");
-            e.printStackTrace();
-            return ColoredGlowLibMod.getLib().getOverrideTeamColors();
-        } catch (Exception e){
-            LOGGER.error("There was an error while reading on the file");
-            e.printStackTrace();
-            return ColoredGlowLibMod.getLib().getOverrideTeamColors();
-        }
-    }
 
     public static Color getDefaultColor(){
         try {
             FileReader file = new FileReader(PATH);
-            String line = getFileLine(10, file);
+            String line = getFileLine(6, file);
             if(line.equalsIgnoreCase("ERROR001-NOLINEFOUND")){
                 return Color.getWhiteColor();
             }

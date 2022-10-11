@@ -69,12 +69,37 @@ public class SetGlowColorCommand implements CGLCommand {
                 ColoredGlowLibMod.getLib().updateData(source.getServer());
             }
 
-            //source.sendFeedback(new TranslatableText("commands.setglowcolor.success1").append(color).append(new TranslatableText("commands.setglowcolor.success2")), true);
             source.sendSystemMessage(Component.literal(ColoredGlowLibMod.PREFIX+"Setted color '" + color + "' to the selected entity/entities!"));
             ColoredGlowLibMod.getLib().optimizeData();
             return 1;
         }else{
-            //source.sendError(new TranslatableText("commands.setglowcolor.notcolor"));
+            source.sendSystemMessage(Component.literal(ColoredGlowLibMod.PREFIX+"Error! The value you have specified is not valid! It should be RRGGBB (without '#') or 'rainbow'"));
+            return 0;
+        }
+    }
+
+    private int setDefaultGlowColor(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        String color = "#"+StringArgumentType.getString(context, "color");
+        CommandSourceStack source = context.getSource();
+
+
+        if(Color.isHexColor(color) || color.equalsIgnoreCase("#rainbow")){
+            EntityType type = EntityType.byString(EntitySummonArgument.getSummonableEntity(context, "entity").toString()).get();
+            ColoredGlowLibMod.getLib().removeColor(type);
+            if(color.equalsIgnoreCase("#rainbow")){
+                ColoredGlowLibMod.getLib().setRainbowChangingColor(true);
+            }else{
+                ColoredGlowLibMod.getLib().setColor(Color.translateFromHEX(color));
+            }
+
+            if(!source.getLevel().isClientSide) {
+                ColoredGlowLibMod.getLib().updateData(source.getServer());
+            }
+
+            source.sendSystemMessage(Component.literal(ColoredGlowLibMod.PREFIX+"Setted color '" + color + "' as the default color!"));
+            ColoredGlowLibMod.getLib().optimizeData();
+            return 1;
+        }else{
             source.sendSystemMessage(Component.literal(ColoredGlowLibMod.PREFIX+"Error! The value you have specified is not valid! It should be RRGGBB (without '#') or 'rainbow'"));
             return 0;
         }
@@ -95,6 +120,13 @@ public class SetGlowColorCommand implements CGLCommand {
                                 .then(
                                         Commands.argument("color", StringArgumentType.string())
                                                 .executes(this::setTypeGlowColor)
+                                )
+                )
+                .then(
+                        Commands.literal("default")
+                                .then(
+                                        Commands.argument("color", StringArgumentType.string())
+                                                .executes(this::setDefaultGlowColor)
                                 )
                 )
                 .build();
