@@ -77,6 +77,33 @@ public class SetGlowColorCommand implements CGLCommand {
         }
     }
 
+    private int setDefaultGlowColor(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        String color = "#"+StringArgumentType.getString(context, "color");
+        ServerCommandSource source = context.getSource();
+
+        if(Color.isHexColor(color) || color.equalsIgnoreCase("#rainbow")){
+            EntityType type = EntityType.get(EntitySummonArgumentType.getEntitySummon(context, "entity").toString()).get();
+            ColoredGlowLibMod.getLib().removeColor(type);
+            if(color.equalsIgnoreCase("#rainbow")){
+                ColoredGlowLibMod.getLib().setRainbowChangingColor(true);
+            }else{
+                ColoredGlowLibMod.getLib().setColor(Color.translateFromHEX(color));
+            }
+
+            if(!source.getWorld().isClient){
+                ColoredGlowLibMod.getLib().updateData(source.getServer());
+            }
+
+            source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"Setted color '" + color + "' as the default color!"), false);
+            ColoredGlowLibMod.getLib().optimizeData();
+            return 1;
+        }else{
+            //source.sendError(new TranslatableText("commands.setglowcolor.notcolor"));
+            source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"Error! The value you have specified is not valid! It should be RRGGBB (without '#') or 'rainbow'"));
+            return 0;
+        }
+    }
+
     public LiteralCommandNode<ServerCommandSource> getNode() {
         return CommandManager
                 .literal("setglowcolor")
@@ -92,6 +119,13 @@ public class SetGlowColorCommand implements CGLCommand {
                                 .then(
                                         CommandManager.argument("color", StringArgumentType.string())
                                                 .executes(this::setTypeGlowColor)
+                                )
+                )
+                .then(
+                        CommandManager.literal("default")
+                                .then(
+                                        CommandManager.argument("color", StringArgumentType.string())
+                                                .executes(this::setDefaultGlowColor)
                                 )
                 )
                 .build();
