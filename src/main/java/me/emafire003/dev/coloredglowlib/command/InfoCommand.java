@@ -14,7 +14,7 @@ public class InfoCommand implements CGLCommand {
 
     private int info(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         CommandSourceStack source = context.getSource();
-        source.sendSystemMessage(Component.literal(ColoredGlowLibMod.PREFIX+"Running version §l2.0.0§r of ColoredGlowLib - Forge"));
+        source.sendSystemMessage(Component.literal(ColoredGlowLibMod.PREFIX+"Running version §l2.0.1§r of ColoredGlowLib - Forge"));
         source.sendSystemMessage(Component.literal(ColoredGlowLibMod.PREFIX+"A mod made by §9Emafire003"));
         source.sendSystemMessage(Component.literal(ColoredGlowLibMod.PREFIX+"Source Code: https://github.com/Emafire003/ColoredGlowLib"));
 
