@@ -1,18 +1,19 @@
 {
   "required": true,
-  "minVersion": "0.8",
   "package": "me.emafire003.dev.coloredglowlib.mixin",
   "compatibilityLevel": "JAVA_16",
+  "refmap": "coloredglowlib.refmap.json",
   "mixins": [
-
-  ],
-  "server": [
     "ClearGlowOnDeath"
   ],
-  "client": [
+  "server":[
+
+  ],
+  "client":[
     "EntityColorMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "minVersion": "0.8.4"
 }

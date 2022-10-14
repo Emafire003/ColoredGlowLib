@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Entity.class)
 public abstract class ClearGlowOnDeath {
 
-    @Inject(method = "Lnet/minecraft/world/entity/Entity;remove(Lnet/minecraft/world/entity/Entity$RemovalReason;)V", at = @At("HEAD"))
+    @Inject(method = "remove", at = @At("HEAD"))
     public void injectRemoveGlow(Entity.RemovalReason pReason, CallbackInfo ci) {
         if(ColoredGlowLibMod.getLib().getEntityRainbowColor(((Entity)(Object)this))){
             ColoredGlowLibMod.getLib().setRainbowColorToEntity(((Entity)(Object)this), false);
