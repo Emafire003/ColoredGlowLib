@@ -4,10 +4,10 @@
   "package": "me.emafire003.dev.coloredglowlib.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "ClearGlowOnDeath"
+
   ],
   "server": [
-
+    "ClearGlowOnDeath"
   ],
   "client": [
     "EntityColorMixin"

@@ -80,7 +80,7 @@ public abstract class EntityColorMixin {
         }
     }
 
-    @Inject(method = "getTeamColor", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "Lnet/minecraft/world/entity/Entity;getTeamColor()I", at = @At("RETURN"), cancellable = true)
     public void injectChangeColorValue(CallbackInfoReturnable<Integer> cir){
 
         if(this.getTeam() == null || ColoredGlowLibClient.getOverrideTeamColors() /*|| this.getEntityWorld().getGameRules().getBoolean(OVERRIDE_TEAM_COLORS)*/) {
