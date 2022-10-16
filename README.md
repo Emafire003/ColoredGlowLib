@@ -34,6 +34,7 @@ You can also get the current value of the setting, like so:
 More of this in the wiki!
 
 ### For developers:
+#### Fabric
 Include this library into your `build.gradle` as a dependency
 ```gradle
 repositories {
@@ -48,6 +49,24 @@ repositories {
 
 dependencies {
     modImplementation "maven.modrinth:coloredglowlib:<version>"
+}
+```
+
+#### Forge
+Include this library into your `build.gradle` as a dependency
+```gradle
+repositories {
+    maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+        content {
+            includeGroup "maven.modrinth"
+        }
+    }
+}
+
+dependencies {
+    implementation "maven.modrinth:coloredglowlib:<version>+forge"
 }
 ```
 
