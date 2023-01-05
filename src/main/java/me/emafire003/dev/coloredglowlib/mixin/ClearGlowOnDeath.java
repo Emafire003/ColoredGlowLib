@@ -1,6 +1,5 @@
 package me.emafire003.dev.coloredglowlib.mixin;
 
-import me.emafire003.dev.coloredglowlib.ColoredGlowLib;
 import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
 import me.emafire003.dev.coloredglowlib.util.DataSaver;
 import net.minecraft.entity.Entity;

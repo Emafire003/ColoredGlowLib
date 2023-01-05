@@ -7,7 +7,6 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
 import me.emafire003.dev.coloredglowlib.util.Color;
 import net.minecraft.command.argument.EntityArgumentType;
-import net.minecraft.command.argument.EntitySummonArgumentType;
 import net.minecraft.command.suggestion.SuggestionProviders;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -54,7 +53,7 @@ public class SetGlowColorCommand implements CGLCommand {
         ServerCommandSource source = context.getSource();
 
         if(Color.isHexColor(color) || color.equalsIgnoreCase("#rainbow")){
-            EntityType type = EntityType.get(EntitySummonArgumentType.getEntitySummon(context, "entity").toString()).get();
+            EntityType type = EntityType.get(EntityArgumentType.getEntity(context, "entity").toString()).get();
             ColoredGlowLibMod.getLib().removeColor(type);
             if(color.equalsIgnoreCase("#rainbow")){
                 ColoredGlowLibMod.getLib().setRainbowColorToEntityType(type, true);
@@ -82,7 +81,7 @@ public class SetGlowColorCommand implements CGLCommand {
         ServerCommandSource source = context.getSource();
 
         if(Color.isHexColor(color) || color.equalsIgnoreCase("#rainbow")){
-            EntityType type = EntityType.get(EntitySummonArgumentType.getEntitySummon(context, "entity").toString()).get();
+            EntityType type = EntityType.get(EntityArgumentType.getEntity(context, "entity").toString()).get();
             ColoredGlowLibMod.getLib().removeColor(type);
             if(color.equalsIgnoreCase("#rainbow")){
                 ColoredGlowLibMod.getLib().setRainbowChangingColor(true);
@@ -115,7 +114,7 @@ public class SetGlowColorCommand implements CGLCommand {
                                 )
                 )
                 .then(
-                        CommandManager.argument("entity", EntitySummonArgumentType.entitySummon()).suggests(SuggestionProviders.SUMMONABLE_ENTITIES)
+                        CommandManager.argument("entity", EntityArgumentType.entity()).suggests(SuggestionProviders.SUMMONABLE_ENTITIES)
                                 .then(
                                         CommandManager.argument("color", StringArgumentType.string())
                                                 .executes(this::setTypeGlowColor)
