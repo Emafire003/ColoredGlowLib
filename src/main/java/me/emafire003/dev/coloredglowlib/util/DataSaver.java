@@ -55,10 +55,10 @@ public class DataSaver {
             FileWriter datafileWriter = new FileWriter(PATH);
             String head = gson.toJson("ColoredGlowLib data. DO NOT TOUCH IF YOU DO NOT KNOW WHAT YOU ARE DOING") +"\n";
             String entityColorMap = gson.toJson(ColoredGlowLibMod.getLib().getEntityColorMap()) + "\n";
-            String entityTypeColorMap = gson.toJson(ColoredGlowLibMod.getLib().getEntityTypeColorMap()) + "\n";
+            String entityTypeColorMap = gson.toJson(ColoredGlowLibMod.getLib().convertFromEntityTypeMap(ColoredGlowLibMod.getLib().getEntityTypeColorMap())) + "\n";
             String entityRainbowList = gson.toJson(ColoredGlowLibMod.getLib().getRainbowEntityList()) + "\n";
             String entityTypeRainbowList = gson.toJson(ColoredGlowLibMod.getLib().convertFromEntityTypeList(ColoredGlowLibMod.getLib().getRainbowEntityTypeList())) + "\n";
-            String defaultColor = "{" + gson.toJson(ColoredGlowLibMod.getLib().getColor().toHEX()) + "}" + "\n";
+            String defaultColor = gson.toJson(ColoredGlowLibMod.getLib().getColor().toHEX()) + "\n";
 
             datafileWriter.write(head);
             datafileWriter.append(entityColorMap);
