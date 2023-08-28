@@ -1,5 +1,4 @@
 # ColoredGlow Lib
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Emafire003/ColoredGlowLib/build?style=flat-square)
 ![Modrinth](https://img.shields.io/modrinth/dt/coloredglowlib?color=green&label=Modrinth%20downloads&style=flat-square)
 
 This library enables you to make entities glow different colors other than plain white or based on their team color.
@@ -17,7 +16,7 @@ You can specify a color to use for an entity/entitytype using the following comm
 
 `/cgl setglowcolor <entity/type> <color>`
 
-The `entity` parameter is the entity you want to target, so @p, Emafire003, the uuid of the entity in front of you etc or it's type such as `minecraft:sheep`. It is not recommended to use @e, @a and stuff that targets a lot of entities. If you want you can use it anyway, for ~1000ish entities it should run just fine, maybe even a lot more. At around 4k tho it starts to complain so don't push it.
+The `entity` parameter is the entity you want to target, so @p, Emafire003, the uuid of the entity in front of you etc or it's type such as `minecraft:sheep`.
 
 The `color` parameter is a hexadecimal color code (like #ff85ab, #750711, #abc, #123, #a7e ecc, search "color picker" online to get them) without the `#` since minecraft interprets it as a beginning of a tag (which is not what it should be doing in this case). In alternative you can provide the word `rainbow` that will make the entity glow, you guessed it, rainbow.
 
@@ -25,13 +24,14 @@ You can interact with the config directly in game. For example if you want to ov
 
 `/cgl config set overrideTeamColors <true/false>`
 
-It is recommended to leave this on false, since you may have some other mod/datapack/modpack that sets a team color to an entity, and it can get confusing.
-
 You can also get the current value of the setting, like so: 
 
 `/cgl config get overrideTeamColors`
 
 More of this in the wiki!
+
+[![bisecthosting](https://www.bisecthosting.com/images/CF/ColoredGlowLib/BH_NU_PROMO.png)](https://www.bisecthosting.com/LightDev)
+
 
 ### For developers:
 Include this library into your `build.gradle` as a dependency
@@ -51,7 +51,8 @@ dependencies {
 }
 ```
 
-You can find the correct version in the [versions page](https://modrinth.com/mod/coloredglowlib/versions) on [Modrinth](https://modrinth.com/mod/coloredglowlib).
+You can find the correct version in the [versions page](https://modrinth.com/mod/coloredglowlib/versions) on [Modrinth](https://modrinth.com/mod/coloredglowlib). 
+If you want the forge version, add a +forge to the number version
 
 
 #### You can find more information on the [wiki](https://github.com/Emafire003/ColoredGlowLib/wiki)! 
