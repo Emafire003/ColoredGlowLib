@@ -1,6 +1,7 @@
 package me.emafire003.dev.coloredglowlib;
 
-import me.emafire003.dev.coloredglowlib.config.Config;
+import me.emafire003.dev.coloredglowlib.config.ConfigDataSaver;
+import me.emafire003.dev.coloredglowlib.config.GsonConfigInstance;
 import me.emafire003.dev.coloredglowlib.networking.*;
 import me.emafire003.dev.coloredglowlib.util.*;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -10,14 +11,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
-import org.jetbrains.annotations.Nullable;
 
 import static me.emafire003.dev.coloredglowlib.ColoredGlowLibMod.LOGGER;
 
 import java.util.*;
 
 public class ColoredGlowLib{
-	
+
 	public  Color color = new Color(255, 255, 255);
 
 	public  HashMap<UUID, String> per_entity_color_map = new HashMap<>();
@@ -136,7 +136,7 @@ public class ColoredGlowLib{
 	 * something to ensure it is saved permanently. */
 	public void saveDataToFile(){
 		LOGGER.info("Saving the colored glow data to the file...");
-		DataSaver.write();
+		ConfigDataSaver.CONFIG_INSTANCE.save();
 		LOGGER.info("Saved!");
 	}
 
@@ -154,42 +154,51 @@ public class ColoredGlowLib{
 		this.removeColorFromEntityType(type);
 	}
 
-	private  void getValuesFromFile(){
+	public  void getValuesFromFile(){
 		try{
-			DataSaver.createFile();
+			ConfigDataSaver.CONFIG_INSTANCE.load();
 			LOGGER.info("Getting variables values from the data file...");
 
-			if(DataSaver.getEntityMap() != null && !DataSaver.getEntityMap().isEmpty()){
+			ConfigDataSaver CONFIG = ConfigDataSaver.CONFIG_INSTANCE.getConfig();
+			LOGGER.info("Getting variables values from the data file...");
+
+			this.setGeneralizedRainbow(CONFIG.generalized_rainbow);
+			this.setPerEntityColor(CONFIG.per_entity);
+			this.setPerEntityTypeColor(CONFIG.per_entitytype);
+			this.setOverrideTeamColors(CONFIG.override_team_colors);
+
+			if(ConfigDataSaver.CONFIG_INSTANCE.getConfig().entityColorMap != null && !ConfigDataSaver.CONFIG_INSTANCE.getConfig().entityColorMap.isEmpty()){
 				if(!per_entity_color_map.isEmpty()){
-					per_entity_color_map.putAll(DataSaver.getEntityMap());
+					per_entity_color_map.putAll(ConfigDataSaver.CONFIG_INSTANCE.getConfig().entityColorMap);
 				}else{
-					per_entity_color_map = DataSaver.getEntityMap();
+					per_entity_color_map = ConfigDataSaver.CONFIG_INSTANCE.getConfig().entityColorMap;
 				}
 			}
 
-			if(DataSaver.getEntityTypeMap() != null && !DataSaver.getEntityTypeMap().isEmpty()){
+			if(ConfigDataSaver.CONFIG_INSTANCE.getConfig().entityTypeColorMap != null && !ConfigDataSaver.CONFIG_INSTANCE.getConfig().entityTypeColorMap.isEmpty()){
 				if(!per_entitytype_color_map.isEmpty()){
-					per_entitytype_color_map.putAll(DataSaver.getEntityTypeMap());
+					per_entitytype_color_map.putAll(ConfigDataSaver.CONFIG_INSTANCE.getConfig().entityTypeColorMap);
 				}else{
-					per_entitytype_color_map = DataSaver.getEntityTypeMap();
+					per_entitytype_color_map = ConfigDataSaver.CONFIG_INSTANCE.getConfig().entityTypeColorMap;
 				}
 			}
 
-			if(DataSaver.getEntityRainbowList() != null && !DataSaver.getEntityRainbowList().isEmpty()){
-				entity_rainbow_list = DataSaver.getEntityRainbowList();
+			if(ConfigDataSaver.CONFIG_INSTANCE.getConfig().entityRainbowList!= null && !ConfigDataSaver.CONFIG_INSTANCE.getConfig().entityRainbowList.isEmpty()){
+				entity_rainbow_list = ConfigDataSaver.CONFIG_INSTANCE.getConfig().entityRainbowList;
 			}
 
-			if(DataSaver.getEntityTypeRainbowList() != null && !DataSaver.getEntityTypeRainbowList().isEmpty()){
-				entitytype_rainbow_list = DataSaver.getEntityTypeRainbowList();
+			if(ConfigDataSaver.CONFIG_INSTANCE.getConfig().entityTypeRainbowList != null && !ConfigDataSaver.CONFIG_INSTANCE.getConfig().entityTypeRainbowList.isEmpty()){
+				entitytype_rainbow_list =ConfigDataSaver.CONFIG_INSTANCE.getConfig().entityTypeRainbowList;
 			}
 
-			color = DataSaver.getDefaultColor();
+			color = Color.translateFromHEX(ConfigDataSaver.CONFIG_INSTANCE.getConfig().defaultColor);
 			LOGGER.info("Done!");
 		}catch (Exception e){
 			LOGGER.error("There was an error while getting the values from the file onto the mod");
 			e.printStackTrace();
 		}
 	}
+
 
 	/**
 	 * This method changes the time between packets sent
@@ -232,7 +241,18 @@ public class ColoredGlowLib{
 	 * */
 	public  void saveDataOnFile(){
 		if(isOnServer()){
-			DataSaver.write();
+			GsonConfigInstance<ConfigDataSaver> CONFIG = ConfigDataSaver.CONFIG_INSTANCE;
+			CONFIG.getConfig().per_entity = this.getPerEntityColor();
+			CONFIG.getConfig().per_entitytype = this.getPerEntityTypeColor();
+			CONFIG.getConfig().generalized_rainbow = this.getGeneralizedRainbow();
+			CONFIG.getConfig().override_team_colors = this.getOverrideTeamColors();
+
+			CONFIG.getConfig().entityColorMap = this.per_entity_color_map;
+			CONFIG.getConfig().entityTypeColorMap = this.per_entitytype_color_map;
+			CONFIG.getConfig().entityRainbowList = this.entity_rainbow_list;
+			CONFIG.getConfig().entityTypeRainbowList = this.entitytype_rainbow_list;
+			CONFIG.getConfig().defaultColor = this.color.toHEX();
+			ConfigDataSaver.CONFIG_INSTANCE.save();
 		}
 	}
 
@@ -241,7 +261,6 @@ public class ColoredGlowLib{
 	 * method instead of this, use that other method.
 	 * It gets the server after its first tick. Probably not going to work in the ModInitializer
 	 * */
-	@Nullable
 	public  MinecraftServer getServer(){
 		return server;
 	}
@@ -333,8 +352,7 @@ public class ColoredGlowLib{
 	 * @param b The value to assing to overrideTeamColors*/
 	public  void setOverrideTeamColors(boolean b){
 		overrideTeamColors = b;
-		Config.OVERRIDE_TEAM_COLORS = overrideTeamColors;
-		Config.reloadConfig();
+		ConfigDataSaver.CONFIG_INSTANCE.save();
 
 	}
 
@@ -360,10 +378,9 @@ public class ColoredGlowLib{
 	 * Aka, you will be able to set this after its first tick
 	 *
 	 * */
-	public  void setRainbowChangingColor(boolean b){
+	public  void setGeneralizedRainbow(boolean b){
 		generalized_rainbow = b;
-		Config.GENERALIZED_RAINBOW = generalized_rainbow;
-		Config.reloadConfig();
+		ConfigDataSaver.CONFIG_INSTANCE.save();
 
 	}
 
@@ -373,7 +390,7 @@ public class ColoredGlowLib{
 	 * WARNING! This returns the value saved on the server!
 	 * Use the same method in the ColoredGlowLibClient class to
 	 * get the value saved on the client!*/
-	public  boolean getRainbowChangingColor(){
+	public  boolean getGeneralizedRainbow(){
 		return generalized_rainbow;
 	}
 
@@ -392,8 +409,7 @@ public class ColoredGlowLib{
 	 * */
 	public  void setPerEntityTypeColor(boolean b){
 		per_entitytype = b;
-		Config.PER_ENTITYTYPE = per_entitytype;
-		Config.reloadConfig();
+		ConfigDataSaver.CONFIG_INSTANCE.save();
 
 	}
 
@@ -426,8 +442,7 @@ public class ColoredGlowLib{
 	 * */
 	public  void setPerEntityColor(boolean b){
 		per_entity = b;
-		Config.PER_ENTITY = per_entity;
-		Config.reloadConfig();
+		ConfigDataSaver.CONFIG_INSTANCE.save();
 	}
 
 	/**

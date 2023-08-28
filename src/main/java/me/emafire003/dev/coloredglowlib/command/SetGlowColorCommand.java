@@ -38,12 +38,12 @@ public class SetGlowColorCommand implements CGLCommand {
             }
 
             //source.sendFeedback(new TranslatableText("commands.setglowcolor.success1").append(color).append(new TranslatableText("commands.setglowcolor.success2")), true);
-            source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"Setted color '" + color + "' to the selected entity/entities!"), false);
+            source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"Setted color '" + color + "' to the selected entity/entities!"), false);
             ColoredGlowLibMod.getLib().optimizeData();
             return targets.size();
         }else{
             //source.sendError(new TranslatableText("commands.setglowcolor.notcolor"));
-            source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"Error! The value you have specified is not valid! It should be RRGGBB (without '#') or 'rainbow'"));
+            source.sendError((Text.literal(ColoredGlowLibMod.PREFIX+"Error! The value you have specified is not valid! It should be RRGGBB (without '#') or 'rainbow'")));
             return 0;
         }
     }
@@ -66,7 +66,7 @@ public class SetGlowColorCommand implements CGLCommand {
             }
 
             //source.sendFeedback(new TranslatableText("commands.setglowcolor.success1").append(color).append(new TranslatableText("commands.setglowcolor.success2")), true);
-            source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"Setted color '" + color + "' to the selected entity/entities!"), false);
+            source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"Setted color '" + color + "' to the selected entity/entities!"), false);
             ColoredGlowLibMod.getLib().optimizeData();
             return 1;
         }else{
@@ -84,7 +84,7 @@ public class SetGlowColorCommand implements CGLCommand {
             EntityType type = EntityType.get(EntityArgumentType.getEntity(context, "entity").toString()).get();
             ColoredGlowLibMod.getLib().removeColor(type);
             if(color.equalsIgnoreCase("#rainbow")){
-                ColoredGlowLibMod.getLib().setRainbowChangingColor(true);
+                ColoredGlowLibMod.getLib().setGeneralizedRainbow(true);
             }else{
                 ColoredGlowLibMod.getLib().setColor(Color.translateFromHEX(color));
             }
@@ -93,7 +93,7 @@ public class SetGlowColorCommand implements CGLCommand {
                 ColoredGlowLibMod.getLib().updateData(source.getServer());
             }
 
-            source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"Setted color '" + color + "' as the default color!"), false);
+            source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"Setted color '" + color + "' as the default color!"), false);
             ColoredGlowLibMod.getLib().optimizeData();
             return 1;
         }else{

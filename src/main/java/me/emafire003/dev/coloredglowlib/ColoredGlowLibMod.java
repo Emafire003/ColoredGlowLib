@@ -1,7 +1,7 @@
 package me.emafire003.dev.coloredglowlib;
 
 import me.emafire003.dev.coloredglowlib.command.CGLCommands;
-import me.emafire003.dev.coloredglowlib.config.Config;
+import me.emafire003.dev.coloredglowlib.config.ConfigDataSaver;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.loader.api.FabricLoader;
@@ -32,14 +32,10 @@ public class ColoredGlowLibMod implements ModInitializer {
         LOGGER.info("Initializing...");
         //CGLCommandRegister.registerCommands();
         CommandRegistrationCallback.EVENT.register(CGLCommands::registerCommands);
-        Config.registerConfigs();
-        Config.reloadConfig();
-        coloredGlowLib.setPerEntityColor(Config.PER_ENTITY);
-        coloredGlowLib.setPerEntityTypeColor(Config.PER_ENTITYTYPE);
-        coloredGlowLib.setRainbowChangingColor(Config.GENERALIZED_RAINBOW);
-        coloredGlowLib.setOverrideTeamColors(Config.OVERRIDE_TEAM_COLORS);
+        ConfigDataSaver.CONFIG_INSTANCE.save();
         LOGGER.info("Complete!");
     }
+
 
     public static ColoredGlowLib getAPI(){
         return coloredGlowLib;

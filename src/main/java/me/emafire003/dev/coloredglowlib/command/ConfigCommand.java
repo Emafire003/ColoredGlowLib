@@ -5,7 +5,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
-import me.emafire003.dev.coloredglowlib.config.Config;
+import me.emafire003.dev.coloredglowlib.config.ConfigDataSaver;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
@@ -17,22 +17,22 @@ public class ConfigCommand implements CGLCommand {
     private int setGeneralizedRainbow(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         boolean b = BoolArgumentType.getBool(context, "value");
         ServerCommandSource source = context.getSource();
-        ColoredGlowLibMod.getLib().setRainbowChangingColor(b);
+        ColoredGlowLibMod.getLib().setGeneralizedRainbow(b);
         if(b){
-            source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"§aNow all entities will glow in rainbow! (Generalized Rainbow : Enabled) "), true);
+            source.sendFeedback(() ->Text.literal(ColoredGlowLibMod.PREFIX+"§aNow all entities will glow in rainbow! (Generalized Rainbow : Enabled) "), true);
         }else{
-            source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"§cEntities will no longer glow in rainbow unless specified! (Generalized Rainbow: Disabled)"), true);
+            source.sendFeedback(() ->Text.literal(ColoredGlowLibMod.PREFIX+"§cEntities will no longer glow in rainbow unless specified! (Generalized Rainbow: Disabled)"), true);
         }
         return 1;
     }
 
     private int getGeneralizedRainbow(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         ServerCommandSource source = context.getSource();
-        boolean b = ColoredGlowLibMod.getLib().getRainbowChangingColor();
+        boolean b = ColoredGlowLibMod.getLib().getGeneralizedRainbow();
         if(b){
-            source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"§aAll entities glow in rainbow! (Generalized Rainbow : Enabled) "), false);
+            source.sendFeedback(() ->Text.literal(ColoredGlowLibMod.PREFIX+"§aAll entities glow in rainbow! (Generalized Rainbow : Enabled) "), false);
         }else{
-            source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"§cEntities will no longer glow in rainbow unless specified! (Generalized Rainbow: Disabled)"), false);
+            source.sendFeedback(() ->Text.literal(ColoredGlowLibMod.PREFIX+"§cEntities will no longer glow in rainbow unless specified! (Generalized Rainbow: Disabled)"), false);
         }
         return 1;
     }
@@ -42,9 +42,9 @@ public class ConfigCommand implements CGLCommand {
         ServerCommandSource source = context.getSource();
         ColoredGlowLibMod.getLib().setOverrideTeamColors(b);
         if(b){
-            source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"§aThe color set by the mod will a have priority over the vanilla team color! (Override Team Colors : Enabled) "), true);
+            source.sendFeedback(() ->Text.literal(ColoredGlowLibMod.PREFIX+"§aThe color set by the mod will a have priority over the vanilla team color! (Override Team Colors : Enabled) "), true);
         }else{
-            source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"§cThe color of the vanilla team will have priority over the one set by the mod! (Override Team Colors : Disabled)"), true);
+            source.sendFeedback(() ->Text.literal(ColoredGlowLibMod.PREFIX+"§cThe color of the vanilla team will have priority over the one set by the mod! (Override Team Colors : Disabled)"), true);
         }
         return 1;
     }
@@ -53,9 +53,9 @@ public class ConfigCommand implements CGLCommand {
         ServerCommandSource source = context.getSource();
         boolean b = ColoredGlowLibMod.getLib().getOverrideTeamColors();
         if(b){
-            source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"§aThe color set by the mod has priority over the vanilla team color! (Override Team Colors : Enabled) "), false);
+            source.sendFeedback(() ->Text.literal(ColoredGlowLibMod.PREFIX+"§aThe color set by the mod has priority over the vanilla team color! (Override Team Colors : Enabled) "), false);
         }else{
-            source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"§cThe color of the vanilla team has priority over the one set by the mod! (Override Team Colors : Disabled)"), false);
+            source.sendFeedback(() ->Text.literal(ColoredGlowLibMod.PREFIX+"§cThe color of the vanilla team has priority over the one set by the mod! (Override Team Colors : Disabled)"), false);
         }
         return 1;
     }
@@ -65,9 +65,9 @@ public class ConfigCommand implements CGLCommand {
         ServerCommandSource source = context.getSource();
         ColoredGlowLibMod.getLib().setPerEntityColor(b);
         if(b){
-            source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"§aThe glow color is now specific for each entity! (Per Entity Color : Enabled) "), false);
+            source.sendFeedback(() ->Text.literal(ColoredGlowLibMod.PREFIX+"§aThe glow color is now specific for each entity! (Per Entity Color : Enabled) "), false);
         }else{
-            source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"§cThe glow color is no longer specific for each entity! (Per Entity Color : Disabled)"), false);
+            source.sendFeedback(() ->Text.literal(ColoredGlowLibMod.PREFIX+"§cThe glow color is no longer specific for each entity! (Per Entity Color : Disabled)"), false);
         }
         return 1;
     }
@@ -76,9 +76,9 @@ public class ConfigCommand implements CGLCommand {
         ServerCommandSource source = context.getSource();
         boolean b = ColoredGlowLibMod.getLib().getPerEntityColor();
         if(b){
-            source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"§aThe glow color is specific for each entity! (Per Entity Color : Enabled) "), false);
+            source.sendFeedback(() ->Text.literal(ColoredGlowLibMod.PREFIX+"§aThe glow color is specific for each entity! (Per Entity Color : Enabled) "), false);
         }else{
-            source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"§cThe glow color is NOT specific for each entity! (Per Entity Color : Disabled)"), false);
+            source.sendFeedback(() ->Text.literal(ColoredGlowLibMod.PREFIX+"§cThe glow color is NOT specific for each entity! (Per Entity Color : Disabled)"), false);
         }
         return 1;
     }
@@ -88,9 +88,9 @@ public class ConfigCommand implements CGLCommand {
         ServerCommandSource source = context.getSource();
         ColoredGlowLibMod.getLib().setPerEntityTypeColor(b);
         if(b){
-            source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"§aThe glow color is now specific for each entity type! (Per EntityType Color : Enabled) "), false);
+            source.sendFeedback(() ->Text.literal(ColoredGlowLibMod.PREFIX+"§aThe glow color is now specific for each entity type! (Per EntityType Color : Enabled) "), false);
         }else{
-            source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"§cThe glow color is no longer specific for each entity type! (Per EntityType Color : Disabled)"), false);
+            source.sendFeedback(() ->Text.literal(ColoredGlowLibMod.PREFIX+"§cThe glow color is no longer specific for each entity type! (Per EntityType Color : Disabled)"), false);
         }
         return 1;
     }
@@ -99,17 +99,18 @@ public class ConfigCommand implements CGLCommand {
         ServerCommandSource source = context.getSource();
         boolean b = ColoredGlowLibMod.getLib().getPerEntityTypeColor();
         if(b){
-            source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"§aThe glow color is specific for each entity type! (Per EntityType Color : Enabled) "), false);
+            source.sendFeedback(() ->Text.literal(ColoredGlowLibMod.PREFIX+"§aThe glow color is specific for each entity type! (Per EntityType Color : Enabled) "), false);
         }else{
-            source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"§cThe glow color is NOT specific for each entity type! (Per EntityType Color : Disabled)"), false);
+            source.sendFeedback(() ->Text.literal(ColoredGlowLibMod.PREFIX+"§cThe glow color is NOT specific for each entity type! (Per EntityType Color : Disabled)"), false);
         }
         return 1;
     }
 
     private int reloadConfig(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         ServerCommandSource source = context.getSource();
-        Config.reloadConfig();
-        source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"The config has been reloaded!"), true);
+        ColoredGlowLibMod.getLib().getValuesFromFile();
+
+        source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"The config has been reloaded!"), true);
         return 1;
     }
 

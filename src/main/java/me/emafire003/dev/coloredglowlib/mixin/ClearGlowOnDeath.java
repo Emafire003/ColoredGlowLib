@@ -1,7 +1,7 @@
 package me.emafire003.dev.coloredglowlib.mixin;
 
 import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
-import me.emafire003.dev.coloredglowlib.util.DataSaver;
+import me.emafire003.dev.coloredglowlib.config.ConfigDataSaver;
 import net.minecraft.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,6 +20,6 @@ public abstract class ClearGlowOnDeath {
             ColoredGlowLibMod.getLib().removeColorFromEntity(((Entity)(Object)this));
 
         }
-        DataSaver.write();
+        ConfigDataSaver.CONFIG_INSTANCE.save();
     }
 }
