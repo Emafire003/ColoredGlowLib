@@ -67,6 +67,8 @@ public class GsonConfigInstance<T> extends ConfigInstance<T> {
     public void load() {
         try {
             if (Files.notExists(path)) {
+                ColoredGlowLibMod.LOGGER.info("Creating stuffffffffffffffffffffff");
+                Files.createDirectories(ColoredGlowLibMod.PATH);
                 save();
                 return;
             }

@@ -17,7 +17,7 @@ public class ColoredGlowLibMod implements ModInitializer {
     public static String PREFIX = "§f[§1C§2o§3l§4o§5r§6e§7d§8G§9l§ao§bw§cL§di§eb§f] §r";
 
     private static ColoredGlowLib coloredGlowLib = new ColoredGlowLib();
-    public static Path PATH = Path.of(FabricLoader.getInstance().getConfigDir() + "/" + MOD_ID + "/");
+    public static Path PATH = Path.of(String.valueOf(FabricLoader.getInstance().getConfigDir())+ "/" + MOD_ID + "/");
 
     /*public static final GameRules.Key<GameRules.BooleanRule> OVERRIDE_TEAM_COLORS =
             GameRuleRegistry.register("overrideTeamColors", GameRules.Category.MISC, GameRuleFactory.createBooleanRule(false));
@@ -32,7 +32,7 @@ public class ColoredGlowLibMod implements ModInitializer {
         LOGGER.info("Initializing...");
         //CGLCommandRegister.registerCommands();
         CommandRegistrationCallback.EVENT.register(CGLCommands::registerCommands);
-        ConfigDataSaver.CONFIG_INSTANCE.save();
+        ConfigDataSaver.CONFIG_INSTANCE.load();
         LOGGER.info("Complete!");
     }
 
