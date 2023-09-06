@@ -38,8 +38,8 @@ public class CGLCommands {
         };
 
         for (CGLCommand command : commands) {
-            cgl_commands.addChild(command.getNode());
-            alias.addChild(command.getNode());
+            cgl_commands.addChild(command.getNode(registryAccess));
+            alias.addChild(command.getNode(registryAccess));
         }
     }
 }

@@ -6,10 +6,13 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
 import me.emafire003.dev.coloredglowlib.util.Color;
+import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.EntityArgumentType;
+import net.minecraft.command.argument.RegistryEntryArgumentType;
 import net.minecraft.command.suggestion.SuggestionProviders;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
@@ -53,7 +56,7 @@ public class SetGlowColorCommand implements CGLCommand {
         ServerCommandSource source = context.getSource();
 
         if(Color.isHexColor(color) || color.equalsIgnoreCase("#rainbow")){
-            EntityType type = EntityType.get(EntityArgumentType.getEntity(context, "entity").toString()).get();
+            EntityType type = RegistryEntryArgumentType.getSummonableEntityType(context, "entity").value();
             ColoredGlowLibMod.getLib().removeColor(type);
             if(color.equalsIgnoreCase("#rainbow")){
                 ColoredGlowLibMod.getLib().setRainbowColorToEntityType(type, true);
@@ -77,33 +80,37 @@ public class SetGlowColorCommand implements CGLCommand {
     }
 
     private int setDefaultGlowColor(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        String color = "#"+StringArgumentType.getString(context, "color");
-        ServerCommandSource source = context.getSource();
+        try {
+            String color = "#"+StringArgumentType.getString(context, "color");
+            ServerCommandSource source = context.getSource();
 
-        if(Color.isHexColor(color) || color.equalsIgnoreCase("#rainbow")){
-            EntityType type = EntityType.get(EntityArgumentType.getEntity(context, "entity").toString()).get();
-            ColoredGlowLibMod.getLib().removeColor(type);
-            if(color.equalsIgnoreCase("#rainbow")){
-                ColoredGlowLibMod.getLib().setGeneralizedRainbow(true);
+            if(Color.isHexColor(color) || color.equalsIgnoreCase("#rainbow")){
+                if(color.equalsIgnoreCase("#rainbow")){
+                    ColoredGlowLibMod.getLib().setGeneralizedRainbow(true);
+                }else{
+                    ColoredGlowLibMod.getLib().setColor(Color.translateFromHEX(color));
+                }
+
+                if(!source.getWorld().isClient){
+                    ColoredGlowLibMod.getLib().updateData(source.getServer());
+                }
+
+                source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"Setted color '" + color + "' as the default color!"), false);
+                ColoredGlowLibMod.getLib().optimizeData();
+                return 1;
             }else{
-                ColoredGlowLibMod.getLib().setColor(Color.translateFromHEX(color));
+                //source.sendError(new TranslatableText("commands.setglowcolor.notcolor"));
+                source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"Error! The value you have specified is not valid! It should be RRGGBB (without '#') or 'rainbow'"));
+                return 0;
             }
-
-            if(!source.getWorld().isClient){
-                ColoredGlowLibMod.getLib().updateData(source.getServer());
-            }
-
-            source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"Setted color '" + color + "' as the default color!"), false);
-            ColoredGlowLibMod.getLib().optimizeData();
-            return 1;
-        }else{
-            //source.sendError(new TranslatableText("commands.setglowcolor.notcolor"));
-            source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"Error! The value you have specified is not valid! It should be RRGGBB (without '#') or 'rainbow'"));
+        }catch (Exception e){
+            e.printStackTrace();
             return 0;
         }
+
     }
 
-    public LiteralCommandNode<ServerCommandSource> getNode() {
+    public LiteralCommandNode<ServerCommandSource> getNode(CommandRegistryAccess registryAccess) {
         return CommandManager
                 .literal("setglowcolor")
                 .then(
@@ -114,7 +121,7 @@ public class SetGlowColorCommand implements CGLCommand {
                                 )
                 )
                 .then(
-                        CommandManager.argument("entity", EntityArgumentType.entity()).suggests(SuggestionProviders.SUMMONABLE_ENTITIES)
+                        CommandManager.argument("entity", RegistryEntryArgumentType.registryEntry(registryAccess, RegistryKeys.ENTITY_TYPE)).suggests(SuggestionProviders.SUMMONABLE_ENTITIES)
                                 .then(
                                         CommandManager.argument("color", StringArgumentType.string())
                                                 .executes(this::setTypeGlowColor)

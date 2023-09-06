@@ -136,6 +136,17 @@ public class ColoredGlowLib{
 	 * something to ensure it is saved permanently. */
 	public void saveDataToFile(){
 		LOGGER.info("Saving the colored glow data to the file...");
+		ConfigDataSaver.CONFIG_INSTANCE.getConfig().defaultColor = getColor().toHEX();
+		ConfigDataSaver.CONFIG_INSTANCE.getConfig().entityTypeRainbowList = getRainbowEntityTypeList();
+		ConfigDataSaver.CONFIG_INSTANCE.getConfig().entityRainbowList = getRainbowEntityList();
+		ConfigDataSaver.CONFIG_INSTANCE.getConfig().entityColorMap = getEntityColorMap();
+		ConfigDataSaver.CONFIG_INSTANCE.getConfig().entityTypeColorMap = getEntityTypeColorMap();
+		ConfigDataSaver.CONFIG_INSTANCE.getConfig().override_team_colors = getOverrideTeamColors();
+		ConfigDataSaver.CONFIG_INSTANCE.getConfig().generalized_rainbow = getGeneralizedRainbow();
+		ConfigDataSaver.CONFIG_INSTANCE.getConfig().per_entitytype = getPerEntityTypeColor();
+		ConfigDataSaver.CONFIG_INSTANCE.getConfig().per_entity = getPerEntityColor();
+		ConfigDataSaver.CONFIG_INSTANCE.save();
+
 		ConfigDataSaver.CONFIG_INSTANCE.save();
 		LOGGER.info("Saved!");
 	}
