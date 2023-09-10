@@ -137,10 +137,10 @@ public class ColoredGlowLib{
 	public void saveDataToFile(){
 		LOGGER.info("Saving the colored glow data to the file...");
 		ConfigDataSaver.CONFIG_INSTANCE.getConfig().defaultColor = getColor().toHEX();
-		ConfigDataSaver.CONFIG_INSTANCE.getConfig().entityTypeRainbowList = getRainbowEntityTypeList();
+		ConfigDataSaver.CONFIG_INSTANCE.getConfig().entityTypeRainbowList = convertFromEntityTypeList(getRainbowEntityTypeList());
 		ConfigDataSaver.CONFIG_INSTANCE.getConfig().entityRainbowList = getRainbowEntityList();
 		ConfigDataSaver.CONFIG_INSTANCE.getConfig().entityColorMap = getEntityColorMap();
-		ConfigDataSaver.CONFIG_INSTANCE.getConfig().entityTypeColorMap = getEntityTypeColorMap();
+		ConfigDataSaver.CONFIG_INSTANCE.getConfig().entityTypeColorMap = convertFromEntityTypeMap(getEntityTypeColorMap());
 		ConfigDataSaver.CONFIG_INSTANCE.getConfig().override_team_colors = getOverrideTeamColors();
 		ConfigDataSaver.CONFIG_INSTANCE.getConfig().generalized_rainbow = getGeneralizedRainbow();
 		ConfigDataSaver.CONFIG_INSTANCE.getConfig().per_entitytype = getPerEntityTypeColor();
@@ -188,9 +188,9 @@ public class ColoredGlowLib{
 
 			if(ConfigDataSaver.CONFIG_INSTANCE.getConfig().entityTypeColorMap != null && !ConfigDataSaver.CONFIG_INSTANCE.getConfig().entityTypeColorMap.isEmpty()){
 				if(!per_entitytype_color_map.isEmpty()){
-					per_entitytype_color_map.putAll(ConfigDataSaver.CONFIG_INSTANCE.getConfig().entityTypeColorMap);
+					per_entitytype_color_map.putAll(ConfigDataSaver.CONFIG_INSTANCE.getConfig().getEntityTypeColorMap());
 				}else{
-					per_entitytype_color_map = ConfigDataSaver.CONFIG_INSTANCE.getConfig().entityTypeColorMap;
+					per_entitytype_color_map = ConfigDataSaver.CONFIG_INSTANCE.getConfig().getEntityTypeColorMap();
 				}
 			}
 
@@ -199,7 +199,7 @@ public class ColoredGlowLib{
 			}
 
 			if(ConfigDataSaver.CONFIG_INSTANCE.getConfig().entityTypeRainbowList != null && !ConfigDataSaver.CONFIG_INSTANCE.getConfig().entityTypeRainbowList.isEmpty()){
-				entitytype_rainbow_list =ConfigDataSaver.CONFIG_INSTANCE.getConfig().entityTypeRainbowList;
+				entitytype_rainbow_list =ConfigDataSaver.CONFIG_INSTANCE.getConfig().getEntityTypeRainbowList();
 			}
 
 			color = Color.translateFromHEX(ConfigDataSaver.CONFIG_INSTANCE.getConfig().defaultColor);
@@ -259,9 +259,9 @@ public class ColoredGlowLib{
 			CONFIG.getConfig().override_team_colors = this.getOverrideTeamColors();
 
 			CONFIG.getConfig().entityColorMap = this.per_entity_color_map;
-			CONFIG.getConfig().entityTypeColorMap = this.per_entitytype_color_map;
+			CONFIG.getConfig().entityTypeColorMap = convertFromEntityTypeMap(this.per_entitytype_color_map);
 			CONFIG.getConfig().entityRainbowList = this.entity_rainbow_list;
-			CONFIG.getConfig().entityTypeRainbowList = this.entitytype_rainbow_list;
+			CONFIG.getConfig().entityTypeRainbowList = convertFromEntityTypeList(this.entitytype_rainbow_list);
 			CONFIG.getConfig().defaultColor = this.color.toHEX();
 			ConfigDataSaver.CONFIG_INSTANCE.save();
 		}

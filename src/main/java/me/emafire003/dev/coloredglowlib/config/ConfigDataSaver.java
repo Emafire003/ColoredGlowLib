@@ -33,16 +33,24 @@ public class ConfigDataSaver {
     public HashMap<UUID, String> entityColorMap = ColoredGlowLibMod.getLib().getEntityColorMap();
 
     @ConfigEntry
-    public HashMap<EntityType, String> entityTypeColorMap = ColoredGlowLibMod.getLib().getEntityTypeColorMap();
+    public HashMap<String, String> entityTypeColorMap = ColoredGlowLibMod.getLib().convertFromEntityTypeMap(ColoredGlowLibMod.getLib().getEntityTypeColorMap());
 
     @ConfigEntry
     public List<UUID> entityRainbowList = ColoredGlowLibMod.getLib().getRainbowEntityList();
 
     @ConfigEntry
-    public List<EntityType> entityTypeRainbowList = ColoredGlowLibMod.getLib().getRainbowEntityTypeList();
+    public List<String> entityTypeRainbowList = ColoredGlowLibMod.getLib().convertFromEntityTypeList(ColoredGlowLibMod.getLib().getRainbowEntityTypeList());
 
     @ConfigEntry
     public String defaultColor = ColoredGlowLibMod.getLib().getColor().toHEX();
+
+    public HashMap<EntityType, String> getEntityTypeColorMap(){
+        return ColoredGlowLibMod.getLib().convertToEntityTypeMap(entityTypeColorMap);
+    }
+
+    public List<EntityType> getEntityTypeRainbowList(){
+        return ColoredGlowLibMod.getLib().convertToEntityTypeList(entityTypeRainbowList);
+    }
 
     /*public Screen createGui(Screen parent) {
         // time to use YOCL!
