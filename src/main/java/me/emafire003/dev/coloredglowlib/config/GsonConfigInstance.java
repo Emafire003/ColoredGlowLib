@@ -46,7 +46,7 @@ public class GsonConfigInstance<T> extends ConfigInstance<T> {
         this.gson = builder
                 .setExclusionStrategies(new ConfigExclusionStrategy())
                 .registerTypeHierarchyAdapter(Text.class, new Text.Serializer())
-                .registerTypeHierarchyAdapter(Style.class, new Style.Serializer())
+                //.registerTypeHierarchyAdapter(Style.class, new Style.Serializer())
                 .registerTypeHierarchyAdapter(Color.class, new ColorTypeAdapter())
                 .serializeNulls()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
@@ -69,6 +69,7 @@ public class GsonConfigInstance<T> extends ConfigInstance<T> {
             if (Files.notExists(path)) {
                 Files.createDirectories(ColoredGlowLibMod.PATH);
                 save();
+                ColoredGlowLibMod.LOGGER.info("while loading");
                 return;
             }
 

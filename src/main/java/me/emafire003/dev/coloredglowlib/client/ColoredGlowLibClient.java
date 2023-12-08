@@ -9,9 +9,6 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.registry.Registries;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.dimension.NetherPortal;
 
 import java.time.LocalDate;
 import java.time.Month;

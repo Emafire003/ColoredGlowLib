@@ -1,5 +1,6 @@
 package me.emafire003.dev.coloredglowlib.mixin;
 
+import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
 import me.emafire003.dev.coloredglowlib.client.ColoredGlowLibClient;
 import me.emafire003.dev.coloredglowlib.util.Color;
 import net.fabricmc.api.EnvType;
@@ -7,6 +8,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.scoreboard.AbstractTeam;
+import net.minecraft.scoreboard.Team;
 import net.minecraft.text.Text;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -23,7 +25,7 @@ import static me.emafire003.dev.coloredglowlib.ColoredGlowLibMod.LOGGER;
 @Mixin(Entity.class)
 public abstract class EntityColorMixin {
 
-    @Shadow @Nullable public abstract AbstractTeam getScoreboardTeam();
+    @Shadow @Nullable public abstract Team getScoreboardTeam();
 
     @Shadow public abstract World getEntityWorld();
 

@@ -1,12 +1,9 @@
 package me.emafire003.dev.coloredglowlib.config;
 
 
-import com.google.common.reflect.TypeToken;
-import com.mojang.datafixers.util.Pair;
 import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
 import net.minecraft.entity.EntityType;
 
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;

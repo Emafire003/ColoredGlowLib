@@ -11,6 +11,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 
 import static me.emafire003.dev.coloredglowlib.ColoredGlowLibMod.LOGGER;
 
@@ -145,7 +146,6 @@ public class ColoredGlowLib{
 		ConfigDataSaver.CONFIG_INSTANCE.getConfig().generalized_rainbow = getGeneralizedRainbow();
 		ConfigDataSaver.CONFIG_INSTANCE.getConfig().per_entitytype = getPerEntityTypeColor();
 		ConfigDataSaver.CONFIG_INSTANCE.getConfig().per_entity = getPerEntityColor();
-		ConfigDataSaver.CONFIG_INSTANCE.save();
 
 		ConfigDataSaver.CONFIG_INSTANCE.save();
 		LOGGER.info("Saved!");
@@ -363,7 +363,6 @@ public class ColoredGlowLib{
 	 * @param b The value to assing to overrideTeamColors*/
 	public  void setOverrideTeamColors(boolean b){
 		overrideTeamColors = b;
-		ConfigDataSaver.CONFIG_INSTANCE.save();
 
 	}
 
@@ -391,7 +390,6 @@ public class ColoredGlowLib{
 	 * */
 	public  void setGeneralizedRainbow(boolean b){
 		generalized_rainbow = b;
-		ConfigDataSaver.CONFIG_INSTANCE.save();
 
 	}
 
@@ -420,7 +418,6 @@ public class ColoredGlowLib{
 	 * */
 	public  void setPerEntityTypeColor(boolean b){
 		per_entitytype = b;
-		ConfigDataSaver.CONFIG_INSTANCE.save();
 
 	}
 
@@ -453,7 +450,6 @@ public class ColoredGlowLib{
 	 * */
 	public  void setPerEntityColor(boolean b){
 		per_entity = b;
-		ConfigDataSaver.CONFIG_INSTANCE.save();
 	}
 
 	/**
@@ -584,6 +580,7 @@ public class ColoredGlowLib{
 		}else if(entity_rainbow_list.contains(entity.getUuid())){
 			entity_rainbow_list.remove(entity.getUuid());
 		}
+		updateData(server);
 
 	}
 
