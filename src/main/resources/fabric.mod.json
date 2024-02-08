@@ -24,12 +24,23 @@
     ],
     "client": [
       "me.emafire003.dev.coloredglowlib.client.ColoredGlowLibClient"
+    ],
+    "cardinal-components-entity": [
+      "me.emafire003.dev.coloredglowlib.ColoredGlowLibMod"
+    ],
+    "cardinal-components-scoreboard": [
+      "me.emafire003.dev.coloredglowlib.ColoredGlowLibMod"
     ]
   },
   "mixins": [
     "coloredglowlib.mixins.json"
   ],
-
+  "custom": {
+    "cardinal-components": [
+      "coloredglowlib:color_component",
+      "coloredglowlib:global_color_component"
+    ]
+  },
   "depends": {
     "fabricloader": ">=0.13.3",
     "minecraft": ">=1.17-",

@@ -1,0 +1,4 @@
+Probably recode everything from stracth. Use just the hex string and store values with Cardinal Components, then
+use architectury to multiplatform
+
+Add permissions to use commands

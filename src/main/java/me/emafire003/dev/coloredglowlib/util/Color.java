@@ -3,6 +3,7 @@ package me.emafire003.dev.coloredglowlib.util;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Deprecated
 public class Color {
     public int r;
     public int g;
@@ -201,26 +202,14 @@ public class Color {
 
     public static boolean isHexColor(String str)
     {
-        // Regex to check valid hexadecimal color code.
-        String regex = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
+        // Define the regular expression pattern for a valid hexadecimal color code
+        // It matches either a 6-character or 3-character code, preceded by a #
+        Pattern hexaPattern = Pattern.compile("^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$");
+        // Create a Matcher object to match the input against the pattern
+        Matcher matcher = hexaPattern.matcher(str);
 
-        // Compile the ReGex
-        Pattern p = Pattern.compile(regex);
-
-        // If the string is empty
-        // return false
-        if (str == null) {
-            return false;
-        }
-
-        // Pattern class contains matcher() method
-        // to find matching between given string
-        // and regular expression.
-        Matcher m = p.matcher(str);
-
-        // Return if the string
-        // matched the ReGex
-        return m.matches();
+        // Return true if the input matches the pattern, otherwise false
+        return matcher.matches();
     }
 
     public static Color translateFromHEX(String hex_color){
