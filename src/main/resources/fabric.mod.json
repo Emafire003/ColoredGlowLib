@@ -3,7 +3,7 @@
   "id": "coloredglowlib",
   "version": "${version}",
 
-  "name": "ColoredGlow Lib",
+  "name": "ColoredGlowLib",
   "description": "This mod/library allows you to make entities glow any color, not just the vanilla ones!",
   "authors": [
     "Emafire003"
@@ -14,7 +14,7 @@
     "issues": "https://github.com/Emafire003/ColoredGlowLib/issues"
   },
 
-  "license": "GNU GPL3",
+  "license": "GNU LGPL3",
   "icon": "assets/coloredglowlib/icon.jpg",
 
   "environment": "*",
@@ -23,7 +23,6 @@
       "me.emafire003.dev.coloredglowlib.ColoredGlowLibMod"
     ],
     "client": [
-      "me.emafire003.dev.coloredglowlib.client.ColoredGlowLibClient"
     ],
     "cardinal-components-entity": [
       "me.emafire003.dev.coloredglowlib.ColoredGlowLibMod"
@@ -42,8 +41,8 @@
     ]
   },
   "depends": {
-    "fabricloader": ">=0.13.3",
-    "minecraft": ">=1.17-",
+    "fabricloader": ">=0.15.1",
+    "minecraft": ">=1.20-",
     "java": ">=16"
   },
   "suggests": {

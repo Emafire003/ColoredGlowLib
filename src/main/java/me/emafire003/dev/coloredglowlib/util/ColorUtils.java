@@ -5,6 +5,12 @@ import java.util.regex.Pattern;
 
 public class ColorUtils {
 
+    public static final String WHITE = "#ffffff";
+    public static final String RED = "#ff0000";
+    public static final String GREEN = "#00ff00";
+    public static final String BLUE = "#0000ff";
+    public static final String BLACK = "#000000";
+
     /**Checks if a given String represents a Color in Hexadecimal format.
      * The string can start with or without "#"
      *

@@ -10,33 +10,34 @@ import dev.onyxstudios.cca.api.v3.scoreboard.ScoreboardComponentInitializer;
 import me.emafire003.dev.coloredglowlib.command.CGLCommands;
 import me.emafire003.dev.coloredglowlib.component.ColorComponent;
 import me.emafire003.dev.coloredglowlib.component.GlobalColorComponent;
-import me.emafire003.dev.coloredglowlib.config.ConfigDataSaver;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.mob.DrownedEntity;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.Month;
 
 public class ColoredGlowLibMod implements ModInitializer, EntityComponentInitializer, ScoreboardComponentInitializer {
 
     public static String MOD_ID = "coloredglowlib";
     public static Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-    public static String PREFIX = "§f[§1C§2o§3l§4o§5r§6e§7d§8G§9l§ao§bw§cL§di§eb§f] §r";
+    public static String PREFIX = "§f[§cC§6o§el§ao§3r§9e§5d§cG§6l§eo§aw§3L§9i§5b§f] §r";
+        // Old prefix: "§f[§1C§2o§3l§4o§5r§6e§7d§8G§9l§ao§bw§cL§di§eb§f] §r";
 
-    private static ColoredGlowLib coloredGlowLib = new ColoredGlowLib();
-    public static Path PATH = Path.of(String.valueOf(FabricLoader.getInstance().getConfigDir())+ "/" + MOD_ID + "/");
+    private static ColoredGlowLibAPI coloredGlowLib;
 
     public static final ComponentKey<ColorComponent> COLOR_COMPONENT =
             ComponentRegistry.getOrCreate(new Identifier(MOD_ID, "color_component"), ColorComponent.class);
 
     public static final ComponentKey<GlobalColorComponent> GLOBAL_COLOR_COMPONENT =
             ComponentRegistry.getOrCreate(new Identifier(MOD_ID, "global_color_component"), GlobalColorComponent.class);
+
+    public static boolean isAp1 = false;
 
 
     @Override
@@ -46,37 +47,58 @@ public class ColoredGlowLibMod implements ModInitializer, EntityComponentInitial
         // Proceed with mild caution.
 
         LOGGER.info("Initializing...");
-        //CGLCommandRegister.registerCommands();
-        //TODO maybe I should make the API available only after the server has loaded.
+
+
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> coloredGlowLib = new ColoredGlowLibAPI(server.getScoreboard()));
+
+        LocalDate currentDate = LocalDate.now();
+        int day = currentDate.getDayOfMonth();
+        Month month = currentDate.getMonth();
+        if(month.equals(Month.APRIL) && day == 1){
+            isAp1 = true;
+        }
+
         CommandRegistrationCallback.EVENT.register(CGLCommands::registerCommands);
-        ConfigDataSaver.CONFIG_INSTANCE.load();
-        ServerLifecycleEvents.SERVER_STOPPING.register((server -> {
-            getLib().saveDataToFile();
-        }));
+
         LOGGER.info("Complete!");
     }
 
     /**
      * Use this to get the ColoredGlowLib API instance and
      * use the methods to set colors and such
+     *
+     * It will return null if the server hasn't started yet.
+     *
+     * Aliases: {@link #getColoredGlowLib()} , {@link #getLib()}
      * */
-    public static ColoredGlowLib getAPI(){
+    @Nullable
+    public static ColoredGlowLibAPI getAPI(){
         return coloredGlowLib;
     }
 
     /**
      * Use this to get the ColoredGlowLib API instance and
      * use the methods to set colors and such
+     *
+     * It will return null if the server hasn't started yet.
+     *
+     * Aliases: {@link #getAPI()} , {@link #getLib()}
      * */
-    public static ColoredGlowLib getColoredGlowLib(){
+    @Nullable
+    public static ColoredGlowLibAPI getColoredGlowLib(){
         return coloredGlowLib;
     }
 
     /**
      * Use this to get the ColoredGlowLib API instance and
      * use the methods to set colors and such
+     *
+     * It will return null if the server hasn't started yet.
+     *
+     * Aliases: {@link #getAPI()} , {@link #getAPI()}
      * */
-    public static ColoredGlowLib getLib(){
+    @Nullable
+    public static ColoredGlowLibAPI getLib(){
         return coloredGlowLib;
     }
 

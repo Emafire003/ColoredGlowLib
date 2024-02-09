@@ -2,44 +2,24 @@ package me.emafire003.dev.coloredglowlib;
 
 import me.emafire003.dev.coloredglowlib.component.ColorComponent;
 import me.emafire003.dev.coloredglowlib.component.GlobalColorComponent;
-import me.emafire003.dev.coloredglowlib.config.ConfigDataSaver;
-import me.emafire003.dev.coloredglowlib.config.GsonConfigInstance;
-import me.emafire003.dev.coloredglowlib.networking.*;
-import me.emafire003.dev.coloredglowlib.util.Color;
 import me.emafire003.dev.coloredglowlib.util.ColorUtils;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.scoreboard.Scoreboard;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.world.World;
 
 import static me.emafire003.dev.coloredglowlib.ColoredGlowLibMod.*;
 
 public class ColoredGlowLibAPI {
 
-	private  boolean debug = false;
-	private  int tickCounter = 0;
-	//How many seconds should pass between updating the data and sending packets to the client?
-	private  double seconds = 0.5;
-	private  MinecraftServer server = null;
-	private  boolean server_registered = false;
 
 	//Needed to access server-wide settings such as default color and entitytype's colors
-	private World world;
-	private Scoreboard scoreboard;
-	private GlobalColorComponent globalColorComponent;
+	private final GlobalColorComponent globalColorComponent;
 
 	/**Create an instance of the ColoredGlowLib API
 	 *
-	 * @param world An instance of the world that will be used to get server-wide settings such as defaultColor,
-	 *                 the EntityType's colors and so on*/
-	public ColoredGlowLibAPI(World world){
-		this.world = world;
-		this.scoreboard = world.getScoreboard();
+	 * @param scoreboard An instance of the server/worlds scoreboard that will be used to get
+	 *                      server-wide settings such as defaultColor the EntityType's colors and so on*/
+	public ColoredGlowLibAPI(Scoreboard scoreboard){
 		this.globalColorComponent = GLOBAL_COLOR_COMPONENT.get(scoreboard);
 
 	}
@@ -48,7 +28,7 @@ public class ColoredGlowLibAPI {
 	/**Set this to true to override the default minecraft team colors
 	 * even of the entity is in a team.
 	 *
-	 * By default this option is set to <i>true</i>
+	 * By default this option is set to <i>false</i>
 	 *
 	 * @param b The value to assing to overrideTeamColors*/
 	public void setOverrideTeamColors(boolean b){
@@ -95,7 +75,7 @@ public class ColoredGlowLibAPI {
 	}
 
 	/**
-	 * Gets the current override status of EntityType color over Entity Color
+	 * Gets the current override status of EntityType<?> color over Entity Color
 	 *
 	 * @return Returns true if the EntityType-specific color overrides the Entity-specific one
 	 * */
@@ -146,7 +126,7 @@ public class ColoredGlowLibAPI {
 	 * This glow color can be overridden by other methods, such as:
 	 * {@link #setDefaultOverridesAll(boolean)} and {@link #setEntityTypeColorOverridesEntityColor(boolean)}
 	 *
-	 * If no color is specified, but an EntityType or default color is, the entity will glow that color.
+	 * If no color is specified, but an EntityType<?> or default color is, the entity will glow that color.
 	 *
 	 * @param target The Entity that will glow the specified color
 	 * @param color An hexadecimal color value String, like <b>"#RRGGBB"</b>, or <b>"rainbow"</b> to make the rainbow color.
@@ -158,7 +138,7 @@ public class ColoredGlowLibAPI {
 
 	/**
 	 * Sets a custom glow color for an EntityType.
-	 * All entities of the specified EntityType will now glow the specified color instead of vanilla minecraft's one.
+	 * All entities of the specified EntityType<?> will now glow the specified color instead of vanilla minecraft's one.
 	 *
 	 * This glow color can be overridden by other methods, such as:
 	 * {@link #setDefaultOverridesAll(boolean)}
@@ -171,7 +151,7 @@ public class ColoredGlowLibAPI {
 	 * @param target The EntityType that will glow the specified color
 	 * @param color An hexadecimal color value String, like <b>"#RRGGBB"</b>, or <b>"rainbow"</b> to make the rainbow color.
 	 */
-	public void setColor(EntityType target, String color){
+	public void setColor(EntityType<?> target, String color){
 		globalColorComponent.setEntityTypeColor(target, color);
 	}
 
@@ -195,7 +175,7 @@ public class ColoredGlowLibAPI {
 	 *
 	 * @param target The EntityType that will glow the specified color
 	 * */
-	public void setRainbowColor(EntityType target){
+	public void setRainbowColor(EntityType<?> target){
 		setColor(target, "rainbow");
 	}
 
@@ -227,7 +207,7 @@ public class ColoredGlowLibAPI {
 	 * @param entityType The EntityType that will be cleared from the color
 	 * @param useDefaultColorInstead Weather or not to use the default color or #ffffff
 	 * */
-	public void clearColor(EntityType entityType, boolean useDefaultColorInstead){
+	public void clearColor(EntityType<?> entityType, boolean useDefaultColorInstead){
 		if(useDefaultColorInstead){
 			globalColorComponent.setEntityTypeColor(entityType, globalColorComponent.getDefaultColor());
 			return;
@@ -266,24 +246,24 @@ public class ColoredGlowLibAPI {
 	 *
 	 * @return The color string associated to that EntityType
 	 * */
-	public String getColor(EntityType target){
+	public String getColor(EntityType<?> target){
 		return globalColorComponent.getEntityTypeColor(target);
 	}
 
 
 	/**
-	 * Checks if an EntityType has a custom glow color or not.
+	 * Checks if an EntityType<?> has a custom glow color or not.
 	 * This is done by checking if its color is <i>"#ffffff"</i> or not.
 	 *
 	 * Warning! If you used {@link #clearColor(EntityType, boolean)} with <i>useDefaultColorInstead</i> to true,
-	 * you may want to use: {@link #hasCustomColor(EntityType)}
+	 * you may want to use: {@link #hasCustomOrDefaultColor(EntityType)}
 	 *
-	 * @param target The EntityType to check the color for
+	 * @param target The EntityType<?> to check the color for
 	 *
-	 * @return Returns true if the EntityType has a custom glow color associated to it.
+	 * @return Returns true if the EntityType<?> has a custom glow color associated to it.
 	 */
-	public boolean hasCustomColor(EntityType target){
-		return ColorUtils.checkDefault(globalColorComponent.getEntityTypeColor(target));
+	public boolean hasCustomColor(EntityType<?> target){
+		return !ColorUtils.checkDefault(globalColorComponent.getEntityTypeColor(target));
 	}
 
 	/**
@@ -294,9 +274,9 @@ public class ColoredGlowLibAPI {
 	 *
 	 * @return Returns true if the EntityType has a custom glow color associated to it that differs from the defaultColor.
 	 */
-	public boolean hasCustomOrDefaultColor(EntityType target){
-		return ColorUtils.checkDefault(globalColorComponent.getEntityTypeColor(target))
-				|| ColorUtils.checkSameColor(globalColorComponent.getEntityTypeColor(target), globalColorComponent.getDefaultColor()) ;
+	public boolean hasCustomOrDefaultColor(EntityType<?> target){
+		return !(ColorUtils.checkDefault(globalColorComponent.getEntityTypeColor(target))
+				|| ColorUtils.checkSameColor(globalColorComponent.getEntityTypeColor(target), globalColorComponent.getDefaultColor())) ;
 	}
 
 	/**
@@ -304,7 +284,7 @@ public class ColoredGlowLibAPI {
 	 * This is done by checking if its color is <i>"#ffffff"</i> or not.
 	 *
 	 * Warning! If you used {@link #clearColor(Entity, boolean)} with <i>useDefaultColorInstead</i> to true,
-	 * you may want to use: {@link #hasCustomColor(Entity)}
+	 * you may want to use: {@link #hasCustomOrDefaultColor(Entity)}
 	 *
 	 * @param target The Entity to check the color for
 	 *
@@ -333,9 +313,9 @@ public class ColoredGlowLibAPI {
 	 *
 	 * @param target The EntityType to check the rainbow color for
 	 *
-	 * @return Returns true if the color associated to that EntityType is rainbow
+	 * @return Returns true if the color associated to that EntityType<?> is rainbow
 	 * */
-	public boolean hasRainbowColor(EntityType target){
+	public boolean hasRainbowColor(EntityType<?> target){
 		return globalColorComponent.getEntityTypeColor(target).equalsIgnoreCase("rainbow");
 	}
 

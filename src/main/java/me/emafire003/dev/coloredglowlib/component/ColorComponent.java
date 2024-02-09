@@ -3,6 +3,7 @@ package me.emafire003.dev.coloredglowlib.component;
 import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
+import me.emafire003.dev.coloredglowlib.util.ColorUtils;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.NbtCompound;
 
@@ -12,7 +13,7 @@ public class ColorComponent implements ComponentV3, AutoSyncedComponent, CGLComp
     private final LivingEntity self;
 
     //TODO the rainbow thing doesn't work, it's black
-    protected String color = "#ffffff";
+    protected String color = ColorUtils.WHITE;
 
     public ColorComponent(LivingEntity livingEntity) {
         this.self = livingEntity;
@@ -24,7 +25,7 @@ public class ColorComponent implements ComponentV3, AutoSyncedComponent, CGLComp
         if(tag.contains("color")){
             this.color = tag.getString("color");
         }else{
-            this.color = "#ffffff";
+            this.color = ColorUtils.WHITE;
         }
     }
 
@@ -42,12 +43,15 @@ public class ColorComponent implements ComponentV3, AutoSyncedComponent, CGLComp
     /**
      * @param color A hex color or "rainbow"*/
     public void setColor(String color) {
+        ColoredGlowLibMod.LOGGER.info("Setting color to entity ( "+ this.self + ") : " + color);
         this.color = color;
         ColoredGlowLibMod.COLOR_COMPONENT.sync(self);
     }
 
     public void clear(){
-        this.color = "#ffffff";
+        this.color = ColorUtils.WHITE;
+        ColoredGlowLibMod.LOGGER.info("Clearing the color of ( "+ this.self + ") : " + color);
+        ColoredGlowLibMod.LOGGER.info("The entity color: " + getColor());
         ColoredGlowLibMod.COLOR_COMPONENT.sync(self);
     }
 

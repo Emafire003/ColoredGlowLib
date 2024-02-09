@@ -3,6 +3,7 @@ package me.emafire003.dev.coloredglowlib.component;
 import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
+import me.emafire003.dev.coloredglowlib.util.ColorUtils;
 import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.scoreboard.Scoreboard;
@@ -18,9 +19,8 @@ public class GlobalColorComponent implements ComponentV3, AutoSyncedComponent, C
 
 
     private final Scoreboard scoreboard;
-    private final MinecraftServer server;
 
-    protected String default_color = "#ffffff";
+    protected String default_color = ColorUtils.WHITE;
     protected boolean typeOverridesEntityColor = false;
     protected boolean defaultOverridesAll = false;
     protected boolean overrideTeamColors = false;
@@ -29,12 +29,8 @@ public class GlobalColorComponent implements ComponentV3, AutoSyncedComponent, C
 
     public GlobalColorComponent(Scoreboard scoreboard, @Nullable MinecraftServer server) {
         this.scoreboard = scoreboard;
-        this.server = server;
+        //this.server = server;
     }
-
-    //TODO remove (after testing everything else)
-    //represent a list of strings https://minecraft.wiki/w/NBT_format
-    private final byte listType = 8;
 
     @Override
     public void readFromNbt(NbtCompound tag) {
@@ -42,7 +38,7 @@ public class GlobalColorComponent implements ComponentV3, AutoSyncedComponent, C
         if(tag.contains("defaultColor")){
             this.default_color = tag.getString("defaultColor");
         }else{
-            this.default_color = "#ffffff";
+            this.default_color = ColorUtils.WHITE;
         }
 
         if(tag.contains("typeOverridesEntityColor")){
@@ -72,18 +68,16 @@ public class GlobalColorComponent implements ComponentV3, AutoSyncedComponent, C
 
     @Override
     public void writeToNbt(NbtCompound tag) {
-        tag.putString("color", this.default_color);
+        tag.putString("defaultColor", this.default_color);
         tag.putBoolean("typeOverridesEntityColor", this.typeOverridesEntityColor);
         tag.putBoolean("defaultOverridesAll", this.defaultOverridesAll);
         tag.putBoolean("overrideTeamColors", this.overrideTeamColors);
-        //TODO need to test these
         tag.put("entityTypeColorMap", this.entityTypeColorMap);
     }
 
 
-    //TODO TEST TEST TEST very well
-    public HashMap<EntityType, String> getEntityTypeColorMap(){
-        HashMap<EntityType, String> map = new HashMap<>();
+    public HashMap<EntityType<?>, String> getEntityTypeColorMap(){
+        HashMap<EntityType<?>, String> map = new HashMap<>();
         List<String> keys = new ArrayList<>(this.entityTypeColorMap.getKeys());
         keys.forEach((key) -> {
             Optional<EntityType<?>> type = EntityType.get(key);
@@ -93,12 +87,10 @@ public class GlobalColorComponent implements ComponentV3, AutoSyncedComponent, C
         return map;
     }
 
-    //TODO TEST TEST TEST very well
     /**
      * @param type An entity type
      * @param color A hex color or "rainbow"*/
-    public void addEntityTypeColor(EntityType type, String color){
-        //TODO may need to substitute .toString with getUntranslatedName
+    public void addEntityTypeColor(EntityType<?> type, String color){
         entityTypeColorMap.putString(type.toString(), color);
         ColoredGlowLibMod.GLOBAL_COLOR_COMPONENT.sync(scoreboard);
     }
@@ -109,31 +101,27 @@ public class GlobalColorComponent implements ComponentV3, AutoSyncedComponent, C
      *
      * @param type An entity type
      * @param color A hex color or "rainbow"*/
-    public void setEntityTypeColor(EntityType type, String color){
+    public void setEntityTypeColor(EntityType<?> type, String color){
         if(entityTypeColorMap.contains(type.toString())){
             entityTypeColorMap.remove(type.toString());
         }
-        entityTypeColorMap.putString(type.toString(), color);
-        ColoredGlowLibMod.GLOBAL_COLOR_COMPONENT.sync(scoreboard);
+        //This other method calls the sync
+        addEntityTypeColor(type, color);
     }
 
-    //TODO TEST TEST TEST very well
-    public void clearEntityTypeColor(EntityType type){
+    public void clearEntityTypeColor(EntityType<?> type){
         entityTypeColorMap.remove(type.toString());
         ColoredGlowLibMod.GLOBAL_COLOR_COMPONENT.sync(scoreboard);
     }
 
-    //TODO TEST TEST TEST very well
-    public String getEntityTypeColor(EntityType type){
+    public String getEntityTypeColor(EntityType<?> type){
         String color = entityTypeColorMap.getString(type.toString());
-        if(color == null){
-            //TODO make configurable? Like using the default color instead
-            return "#ffffff";
+        if(color == null || color.equalsIgnoreCase("")){
+            return ColorUtils.WHITE;
         }
         return entityTypeColorMap.getString(type.toString());
     }
 
-    //TODO TEST TEST TEST very well
     public String getDefaultColor(){
         return this.default_color;
     }
@@ -171,7 +159,7 @@ public class GlobalColorComponent implements ComponentV3, AutoSyncedComponent, C
     }
 
     public void clear(){
-        this.default_color = "#ffffff";
+        this.default_color = ColorUtils.WHITE;
         this.typeOverridesEntityColor = false;
         this.defaultOverridesAll = false;
         this.entityTypeColorMap = new NbtCompound();
