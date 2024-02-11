@@ -70,7 +70,7 @@ public class ColoredGlowLibAPI {
 	 *
 	 * @param b Set to true to enable overriding, set false to disable it.
 	 * */
-	public  void setEntityTypeColorOverridesEntityColor(boolean b){
+	public void setEntityTypeColorOverridesEntityColor(boolean b){
 		globalColorComponent.setTypeOverridesEntityColor(b);
 	}
 
@@ -82,6 +82,11 @@ public class ColoredGlowLibAPI {
 	public boolean getEntityTypeColorOverridesEntityColor(){
 		return globalColorComponent.getEntityTypeOverridesEntityColor();
 	}
+	
+	// ========= END OF THE SETTINGS PART =========
+	
+	
+	// ========= START OF THE SET COLOR PART =========
 
 
 	/** Sets a default global color. The one used by default is <b>"#ffffff</b>, same as vanilla Minecraft.
@@ -89,7 +94,7 @@ public class ColoredGlowLibAPI {
 	 * If an entity has another color assigned to its EntityType, or itself it will glow that color
 	 * instead of this one, unless {@link #setDefaultOverridesAll(boolean)} method is used.
 	 *
-	 * @param color An hexadecimal color value String, like <b>"#RRGGBB"</b>, or <b>"rainbow"</b> to make the rainbow color.
+	 * @param color An hexadecimal color value String, like <b>"#RRGGBB"</b>, or <b>"rainbow"</b> to make the rainbow color, or <b>"random"</b> to make a random color every tick.
 	 */
 	public void setGlobalColor(String color){
 		globalColorComponent.setDefaultColor(color);
@@ -105,16 +110,23 @@ public class ColoredGlowLibAPI {
 		setGlobalColor("rainbow");
 	}
 
+	/** Makes the default color to be "random", so every entity will by default
+	 * glow in a random color each tick.
+	 *
+	 * If an entity has another color assigned to its EntityType, or itself it will glow that color
+	 * instead of this one, unless {@link #setDefaultOverridesAll(boolean)} method is used.
+	 */
+	public void setGlobalRandom(){
+		setGlobalColor("random");
+	}
+
 	/**An alias of {@link #setGlobalColor(String)}*/
 	public void setDefaultColor(String color){
 		setGlobalColor(color);
 	}
 
 	/**Resets the global default color to #ffffff, which is the default color
-	 * used by vanilla Minecraft.
-	 *
-	 * If you want to restore a custom color after you have set it to rainbow use
-	 * {@link #setGlobalColor(String)} instead*/
+	 * used by vanilla Minecraft.*/
 	public void clearGlobalColor(){
 		globalColorComponent.setDefaultColor("#ffffff");
 	}
@@ -129,7 +141,7 @@ public class ColoredGlowLibAPI {
 	 * If no color is specified, but an EntityType<?> or default color is, the entity will glow that color.
 	 *
 	 * @param target The Entity that will glow the specified color
-	 * @param color An hexadecimal color value String, like <b>"#RRGGBB"</b>, or <b>"rainbow"</b> to make the rainbow color.
+	 * @param color An hexadecimal color value String, like <b>"#RRGGBB"</b>, or <b>"rainbow"</b> to make the rainbow color, or <b>"random"</b> to make a random color
 	 */
 	public void setColor(Entity target, String color){
 		ColorComponent component = COLOR_COMPONENT.get(target);
@@ -149,7 +161,7 @@ public class ColoredGlowLibAPI {
 	 * If no color is specified, but a default color is, the entities will glow that color.
 	 *
 	 * @param target The EntityType that will glow the specified color
-	 * @param color An hexadecimal color value String, like <b>"#RRGGBB"</b>, or <b>"rainbow"</b> to make the rainbow color.
+	 * @param color An hexadecimal color value String, like <b>"#RRGGBB"</b>, or <b>"rainbow"</b> to make the rainbow color, or <b>"random"</b> to make a random color each tick
 	 */
 	public void setColor(EntityType<?> target, String color){
 		globalColorComponent.setEntityTypeColor(target, color);
@@ -168,8 +180,19 @@ public class ColoredGlowLibAPI {
 	}
 
 	/**
-	 * Sets the custom glow color of an EntityTyèe to rainbow.
-	 * This will make the entitis of that type glow every color periodically like a _jeb sheep
+	 * Sets the custom glow color of an Entity to a random, the entity will glow a different color each tick.
+	 *
+	 * See {@link #setColor(Entity, String)} for more information
+	 *
+	 * @param target The Entity that will glow the specified color
+	 * */
+	public void setRandomColor(Entity target){
+		setColor(target, "random");
+	}
+
+	/**
+	 * Sets the custom glow color of an EntityType to rainbow.
+	 * This will make the entities of that type glow every color periodically like a _jeb sheep
 	 *
 	 * See {@link #setColor(EntityType, String)} for more information
 	 *
@@ -177,6 +200,17 @@ public class ColoredGlowLibAPI {
 	 * */
 	public void setRainbowColor(EntityType<?> target){
 		setColor(target, "rainbow");
+	}
+
+	/**
+	 * Sets the custom glow color of an Entity to a random, the entity will glow a different color each tick.
+	 *
+	 * See {@link #setColor(EntityType, String)} for more information
+	 *
+	 * @param target The EntityType that will glow the specified color
+	 * */
+	public void setRandomColor(EntityType<?> target){
+		setColor(target, "random");
 	}
 
 
@@ -220,8 +254,9 @@ public class ColoredGlowLibAPI {
 	 * Gets the custom glow color of an Entity.
 	 *
 	 * The result could be "#ffffff" meaning it does not have a custom color and is using
-	 * the vanilla one, or "rainbow" meaning its glowing rainbow, or another hexadeciaml
-	 * string color.
+	 * the vanilla one, or "rainbow" meaning its glowing rainbow,
+	 * or "random" meaning its glowing a random color each tick,
+	 * or another hexadecimal string color.
 	 *
 	 * If you need a color value instead you can use {@link me.emafire003.dev.coloredglowlib.util.ColorUtils} to manipulate it
  	 *
@@ -237,8 +272,9 @@ public class ColoredGlowLibAPI {
 	 * Gets the custom glow color of an EntityType.
 	 *
 	 * The result could be "#ffffff" meaning it does not have a custom color and is using
-	 * the vanilla one, or "rainbow" meaning its glowing rainbow, or another hexadecimal
-	 * string color.
+	 * the vanilla one, or "rainbow" meaning its glowing rainbow,
+	 * or "random" meaning its glowing a random color each tick,
+	 * or another hexadecimal string color.
 	 *
 	 * If you need a color value instead you can use {@link me.emafire003.dev.coloredglowlib.util.ColorUtils} to manipulate it
 	 *
@@ -313,10 +349,21 @@ public class ColoredGlowLibAPI {
 	 *
 	 * @param target The EntityType to check the rainbow color for
 	 *
-	 * @return Returns true if the color associated to that EntityType<?> is rainbow
+	 * @return Returns true if the color associated to that EntityType is rainbow
 	 * */
 	public boolean hasRainbowColor(EntityType<?> target){
 		return globalColorComponent.getEntityTypeColor(target).equalsIgnoreCase("rainbow");
+	}
+
+	/**
+	 * Checks is the custom color of EntityType is random
+	 *
+	 * @param target The EntityType to check the random color for
+	 *
+	 * @return Returns true if the color associated to that EntityType is random
+	 * */
+	public boolean hasRandomColor(EntityType<?> target){
+		return globalColorComponent.getEntityTypeColor(target).equalsIgnoreCase("random");
 	}
 
 	/**
@@ -328,6 +375,17 @@ public class ColoredGlowLibAPI {
 	 * */
 	public boolean hasRainbowColor(Entity target){
 		return COLOR_COMPONENT.get(target).getColor().equalsIgnoreCase("rainbow");
+	}
+
+	/**
+	 * Checks is the custom color of Entity is random
+	 *
+	 * @param target The Entity to check the random color for
+	 *
+	 * @return Returns true if the color associated to that Entity is random
+	 * */
+	public boolean hasRandomColor(Entity target){
+		return COLOR_COMPONENT.get(target).getColor().equalsIgnoreCase("random");
 	}
 
 }

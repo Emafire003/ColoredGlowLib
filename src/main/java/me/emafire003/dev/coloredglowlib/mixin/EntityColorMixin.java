@@ -1,5 +1,6 @@
 package me.emafire003.dev.coloredglowlib.mixin;
 
+import me.emafire003.dev.coloredglowlib.ColoredGlowLibAPI;
 import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
 import me.emafire003.dev.coloredglowlib.component.ColorComponent;
 import me.emafire003.dev.coloredglowlib.component.GlobalColorComponent;
@@ -8,6 +9,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.Entity;
 import net.minecraft.scoreboard.Team;
+import net.minecraft.util.crash.CrashReportSection;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,8 +26,6 @@ import static me.emafire003.dev.coloredglowlib.ColoredGlowLibMod.*;
 public abstract class EntityColorMixin {
 
     @Shadow @Nullable public abstract Team getScoreboardTeam();
-
-    @Shadow public abstract boolean equals(Object o);
 
     private final Entity entity = ((Entity)(Object)this);
 
@@ -40,11 +42,24 @@ public abstract class EntityColorMixin {
         return rainbowColor.getColorValue();
     }
 
+    int random_delay_counter = 0;
+    int prev_random_color = ColorUtils.toColorValue(ColorUtils.WHITE);
+
+    private int randomColor(){
+        Random r = entity.getWorld().getRandom();
+        if(random_delay_counter == 10){
+            random_delay_counter = 0;
+            prev_random_color = ColorUtils.toColorValue(r.nextBetween(0, 255), r.nextBetween(0, 255), r.nextBetween(0, 255));
+        }else{
+            random_delay_counter++;
+        }
+        return prev_random_color;
+    }
+
     @Inject(method = "getTeamColorValue", at = @At("RETURN"), cancellable = true)
     public void injectChangeColorValue(CallbackInfoReturnable<Integer> cir){
 
         ColorComponent component = COLOR_COMPONENT.get(entity);
-        //TODO VERYFY IT DOESNT MESS UP BETWEEN WORLDS
         GlobalColorComponent globalComponent = GLOBAL_COLOR_COMPONENT.get(entity.getEntityWorld().getScoreboard());
 
         if(this.getScoreboardTeam() == null || globalComponent.getOverrideTeamColors()) {
@@ -67,15 +82,16 @@ public abstract class EntityColorMixin {
 
                 //Checks if the global color is rainbow.
                 if(color.equalsIgnoreCase("rainbow")){
-
                     cir.setReturnValue(getRainbowColor());
                     return;
-                }else{
+                }else if(color.equalsIgnoreCase("random")){
+                    cir.setReturnValue(randomColor());
+                    return;
+                } else{
                     cir.setReturnValue(ColorUtils.toColorValue(color));
                     return;
                 }
             }
-
 
             /**Checks if there is the EntityType color overrides the Entity's one
              *
@@ -83,8 +99,12 @@ public abstract class EntityColorMixin {
              * */
             if(globalComponent.getEntityTypeOverridesEntityColor()){
                 //Checks if the entitytype should glow rainbow
-                if(globalComponent.getEntityTypeColor(entity.getType()).equalsIgnoreCase("rainbow")){
+                String color = globalComponent.getEntityTypeColor(entity.getType());
+                if(color.equalsIgnoreCase("rainbow")){
                     cir.setReturnValue(getRainbowColor());
+                    return;
+                } else if(color.equalsIgnoreCase("random")){
+                    cir.setReturnValue(randomColor());
                     return;
                 }
                 cir.setReturnValue(ColorUtils.toColorValue(globalComponent.getEntityTypeColor(entity.getType())));
@@ -99,11 +119,13 @@ public abstract class EntityColorMixin {
             if(ColoredGlowLibMod.getAPI() != null && ColoredGlowLibMod.getAPI().hasCustomColor(entity)){
                 //If the entity type's color is the default one as well, returns the default color
                 String type_col = globalComponent.getEntityTypeColor(entity.getType());
-
                 if(ColoredGlowLibMod.getAPI().hasCustomColor(entity.getType())){
                     if(type_col.equalsIgnoreCase("rainbow")){
-                        //Checks if the entitytype is rainbow colored
+                        //Checks if the entitytype is rainbow or random colored
                         cir.setReturnValue(getRainbowColor());
+                        return;
+                    }else if(type_col.equalsIgnoreCase("random")){
+                        cir.setReturnValue(randomColor());
                         return;
                     }else{
                         cir.setReturnValue(ColorUtils.toColorValue(type_col));
@@ -115,6 +137,9 @@ public abstract class EntityColorMixin {
                 if(globalComponent.getDefaultColor().equalsIgnoreCase("rainbow")){
                     cir.setReturnValue(getRainbowColor());
                     return;
+                }else if(globalComponent.getDefaultColor().equalsIgnoreCase("random")){
+                    cir.setReturnValue(randomColor());
+                    return;
                 }else{
                     cir.setReturnValue(ColorUtils.toColorValue(globalComponent.getDefaultColor()));
                     return;
@@ -125,7 +150,11 @@ public abstract class EntityColorMixin {
             if(entity_col.equalsIgnoreCase("rainbow")){
                 cir.setReturnValue(getRainbowColor());
                 return;
+            }else if(entity_col.equalsIgnoreCase("random")){
+                cir.setReturnValue(randomColor());
+                return;
             }
+
             /**If it hasn't returned yet, it means that the entity has a specific color, so it returns it*/
             cir.setReturnValue(ColorUtils.toColorValue(entity_col));
         }

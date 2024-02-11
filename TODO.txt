@@ -1,4 +1,6 @@
-Probably recode everything from stracth. Use just the hex string and store values with Cardinal Components, then
+Probably recode everything from scratch. Use just the hex string and store values with Cardinal Components, then
 use architectury to multiplatform
 
-Add permissions to use commands
+
+Add DataDriven animation and maybe triggers, like names or team or whatever. Like a sequence of blue red white that with white staing on for 3 seconds and the other ones for 1 etc.
+They would work like "rainbow" and "random"

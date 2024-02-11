@@ -5,7 +5,6 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import me.emafire003.dev.coloredglowlib.ColoredGlowLibAPI;
 import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
 import me.emafire003.dev.coloredglowlib.compat.permissions.PermissionsChecker;
 import me.emafire003.dev.coloredglowlib.util.ColorUtils;
@@ -24,17 +23,29 @@ import java.util.Collection;
 
 public class SetGlowColorCommand implements CGLCommand {
 
+
+    public static boolean isValidColor(String color){
+        return (ColorUtils.isHexColor(color) || color.equalsIgnoreCase("#rainbow") || color.equalsIgnoreCase("#random"));
+    }
+
     private int setGlowColor(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         Collection<? extends Entity> targets = EntityArgumentType.getEntities(context, "targets");
         String color = "#"+StringArgumentType.getString(context, "color");
         ServerCommandSource source = context.getSource();
 
-        if(ColorUtils.isHexColor(color) || color.equalsIgnoreCase("#rainbow")){
+        if(isValidColor(color)){
             for (Entity entity : targets) {
                 if(color.equalsIgnoreCase("#rainbow")){
-
                     if (ColoredGlowLibMod.getAPI() != null) {
                         ColoredGlowLibMod.getAPI().setRainbowColor(entity);
+                    }else{
+                        source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"§cAn error has occurred. The API hasn't yet been initialised!"));
+                        return 1;
+                    }
+                }else if(color.equalsIgnoreCase("#random")){
+
+                    if (ColoredGlowLibMod.getAPI() != null) {
+                        ColoredGlowLibMod.getAPI().setRandomColor(entity);
                     }else{
                         source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"§cAn error has occurred. The API hasn't yet been initialised!"));
                         return 1;
@@ -54,7 +65,7 @@ public class SetGlowColorCommand implements CGLCommand {
             return targets.size();
         }else{
             //source.sendError(new TranslatableText("commands.setglowcolor.notcolor"));
-            source.sendError((Text.literal(ColoredGlowLibMod.PREFIX+"Error! The value you have specified is not valid! It should be RRGGBB (without '#') or 'rainbow'")));
+            source.sendError((Text.literal(ColoredGlowLibMod.PREFIX+"Error! The value you have specified is not valid! It should be RRGGBB (without '#') or 'rainbow' or 'random'")));
             return 0;
         }
     }
@@ -63,11 +74,19 @@ public class SetGlowColorCommand implements CGLCommand {
         String color = "#"+StringArgumentType.getString(context, "color");
         ServerCommandSource source = context.getSource();
 
-        if(ColorUtils.isHexColor(color) || color.equalsIgnoreCase("#rainbow")){
+        if(isValidColor(color)){
             EntityType<?> type = RegistryEntryArgumentType.getSummonableEntityType(context, "entity").value();
             if(color.equalsIgnoreCase("#rainbow")){
                 if (ColoredGlowLibMod.getAPI() != null) {
                     ColoredGlowLibMod.getAPI().setRainbowColor(type);
+                }else{
+                    source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"§cAn error has occurred. The API hasn't yet been initialised!"));
+                    return 1;
+                }
+            }else if(color.equalsIgnoreCase("#random")){
+
+                if (ColoredGlowLibMod.getAPI() != null) {
+                    ColoredGlowLibMod.getAPI().setRandomColor(type);
                 }else{
                     source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"§cAn error has occurred. The API hasn't yet been initialised!"));
                     return 1;
@@ -86,20 +105,28 @@ public class SetGlowColorCommand implements CGLCommand {
             return 1;
         }else{
             //source.sendError(new TranslatableText("commands.setglowcolor.notcolor"));
-            source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"Error! The value you have specified is not valid! It should be RRGGBB (without '#') or 'rainbow'"));
+            source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"Error! The value you have specified is not valid! It should be RRGGBB (without '#') or 'rainbow' or 'random'"));
             return 0;
         }
     }
+
 
     private int setDefaultGlowColor(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         try {
             String color = "#"+StringArgumentType.getString(context, "color");
             ServerCommandSource source = context.getSource();
 
-            if(ColorUtils.isHexColor(color) || color.equalsIgnoreCase("#rainbow")){
+            if(isValidColor(color)){
                 if(color.equalsIgnoreCase("#rainbow")){
                     if (ColoredGlowLibMod.getAPI() != null) {
                         ColoredGlowLibMod.getAPI().setGlobalRainbow();
+                    }else{
+                        source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"§cAn error has occurred. The API hasn't yet been initialised!"));
+                        return 1;
+                    }
+                }else if(color.equalsIgnoreCase("#random")){
+                    if (ColoredGlowLibMod.getAPI() != null) {
+                        ColoredGlowLibMod.getAPI().setGlobalRandom();
                     }else{
                         source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"§cAn error has occurred. The API hasn't yet been initialised!"));
                         return 1;
@@ -117,7 +144,7 @@ public class SetGlowColorCommand implements CGLCommand {
                 return 1;
             }else{
                 //source.sendError(new TranslatableText("commands.setglowcolor.notcolor"));
-                source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"Error! The value you have specified is not valid! It should be RRGGBB (without '#') or 'rainbow'"));
+                source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"Error! The value you have specified is not valid! It should be RRGGBB (without '#') or 'rainbow' or 'random'"));
                 return 0;
             }
         }catch (Exception e){

@@ -162,6 +162,7 @@ public class GlobalColorComponent implements ComponentV3, AutoSyncedComponent, C
         this.default_color = ColorUtils.WHITE;
         this.typeOverridesEntityColor = false;
         this.defaultOverridesAll = false;
+        this.overrideTeamColors = false;
         this.entityTypeColorMap = new NbtCompound();
         ColoredGlowLibMod.GLOBAL_COLOR_COMPONENT.sync(scoreboard);
     }
