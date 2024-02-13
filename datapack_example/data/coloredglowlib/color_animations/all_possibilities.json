@@ -1,0 +1,29 @@
+{
+  "name": "all_possibilities",
+  "colors": [
+    {
+      "color": "rainbow",
+      "active_for": 170
+    },
+	{
+      "color": "random",
+      "active_for": 53
+    },
+	{
+      "color": "da1ee8",
+      "active_for": 20
+    },
+	{
+      "color": "#da1ee8",
+      "active_for": 20
+    },
+	{
+      "color": "marine",
+      "active_for": 170
+    },
+	{
+      "color": "0f0",
+      "active_for": 17
+    }
+  ]
+}
