@@ -7,7 +7,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
 import me.emafire003.dev.coloredglowlib.compat.permissions.PermissionsChecker;
-import me.emafire003.dev.coloredglowlib.util.ColorUtils;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.command.argument.RegistryEntryArgumentType;
@@ -21,19 +20,17 @@ import net.minecraft.text.Text;
 
 import java.util.Collection;
 
+import static me.emafire003.dev.coloredglowlib.util.ColorUtils.isValidColorOrCustom;
+
 public class SetGlowColorCommand implements CGLCommand {
-
-
-    public static boolean isValidColor(String color){
-        return (ColorUtils.isHexColor(color) || color.equalsIgnoreCase("#rainbow") || color.equalsIgnoreCase("#random"));
-    }
+    
 
     private int setGlowColor(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         Collection<? extends Entity> targets = EntityArgumentType.getEntities(context, "targets");
         String color = "#"+StringArgumentType.getString(context, "color");
         ServerCommandSource source = context.getSource();
 
-        if(isValidColor(color)){
+        if(isValidColorOrCustom(color)){
             for (Entity entity : targets) {
                 if(color.equalsIgnoreCase("#rainbow")){
                     if (ColoredGlowLibMod.getAPI() != null) {
@@ -61,11 +58,11 @@ public class SetGlowColorCommand implements CGLCommand {
             }
 
             //source.sendFeedback(new TranslatableText("commands.setglowcolor.success1").append(color).append(new TranslatableText("commands.setglowcolor.success2")), true);
-            source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"Setted color '" + color + "' to the selected entity/entities!"), false);
+            source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"§7Setted color '§b" + color + "§7' to the selected entity/entities!"), false);
             return targets.size();
         }else{
             //source.sendError(new TranslatableText("commands.setglowcolor.notcolor"));
-            source.sendError((Text.literal(ColoredGlowLibMod.PREFIX+"Error! The value you have specified is not valid! It should be RRGGBB (without '#') or 'rainbow' or 'random'")));
+            source.sendError((Text.literal(ColoredGlowLibMod.PREFIX+"Error! The value you have specified is not §cvalid! It should be RRGGBB (without '#') or 'rainbow' or 'random' or a custom animation name!")));
             return 0;
         }
     }
@@ -74,7 +71,7 @@ public class SetGlowColorCommand implements CGLCommand {
         String color = "#"+StringArgumentType.getString(context, "color");
         ServerCommandSource source = context.getSource();
 
-        if(isValidColor(color)){
+        if(isValidColorOrCustom(color)){
             EntityType<?> type = RegistryEntryArgumentType.getSummonableEntityType(context, "entity").value();
             if(color.equalsIgnoreCase("#rainbow")){
                 if (ColoredGlowLibMod.getAPI() != null) {
@@ -101,11 +98,11 @@ public class SetGlowColorCommand implements CGLCommand {
             }
 
             //source.sendFeedback(new TranslatableText("commands.setglowcolor.success1").append(color).append(new TranslatableText("commands.setglowcolor.success2")), true);
-            source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"Setted color '" + color + "' to the selected entity/entities!"), false);
+            source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"§7Setted color '" + color + "' to the selected entity/entities!"), false);
             return 1;
         }else{
             //source.sendError(new TranslatableText("commands.setglowcolor.notcolor"));
-            source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"Error! The value you have specified is not valid! It should be RRGGBB (without '#') or 'rainbow' or 'random'"));
+            source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"Error! The value you have specified is not §cvalid! It should be RRGGBB (without '#') or 'rainbow' or 'random' or a custom animation name!"));
             return 0;
         }
     }
@@ -116,7 +113,7 @@ public class SetGlowColorCommand implements CGLCommand {
             String color = "#"+StringArgumentType.getString(context, "color");
             ServerCommandSource source = context.getSource();
 
-            if(isValidColor(color)){
+            if(isValidColorOrCustom(color)){
                 if(color.equalsIgnoreCase("#rainbow")){
                     if (ColoredGlowLibMod.getAPI() != null) {
                         ColoredGlowLibMod.getAPI().setGlobalRainbow();
@@ -140,11 +137,11 @@ public class SetGlowColorCommand implements CGLCommand {
                     }
                 }
 
-                source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"Setted color '" + color + "' as the default color!"), false);
+                source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"§7Setted color '§b" + color + "§7' as the default color!"), false);
                 return 1;
             }else{
                 //source.sendError(new TranslatableText("commands.setglowcolor.notcolor"));
-                source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"Error! The value you have specified is not valid! It should be RRGGBB (without '#') or 'rainbow' or 'random'"));
+                source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"Error! The value you have specified is not §cvalid! It should be RRGGBB (without '#') or 'rainbow' or 'random' or a custom animation name!"));
                 return 0;
             }
         }catch (Exception e){

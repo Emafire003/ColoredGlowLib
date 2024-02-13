@@ -1,0 +1,37 @@
+{
+  "name": "marine",
+  "colors": [
+    {
+      "color": "#00aaee",
+      "active_for": 18
+    },
+    {
+      "color": "#00bbdd",
+      "active_for": 18
+    },
+	{
+      "color": "#00cccc",
+      "active_for": 18
+    },
+	{
+      "color": "#00ddbb",
+      "active_for": 18
+    },
+	{
+      "color": "#00eeaa",
+      "active_for": 18
+    },
+	{
+      "color": "#00ddbb",
+      "active_for": 18
+    },
+	{
+      "color": "#00cccc",
+      "active_for": 18
+    },
+	{
+      "color": "#00bbdd",
+      "active_for": 18
+    }
+  ]
+}

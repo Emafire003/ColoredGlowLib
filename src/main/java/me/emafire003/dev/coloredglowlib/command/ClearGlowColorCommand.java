@@ -1,7 +1,6 @@
 package me.emafire003.dev.coloredglowlib.command;
 
 import com.mojang.brigadier.arguments.BoolArgumentType;
-import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.LiteralCommandNode;
@@ -33,7 +32,7 @@ public class ClearGlowColorCommand implements CGLCommand {
             source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"§cAn error has occurred. The API hasn't yet been initialised!"));
             return 1;
         }
-        source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"Resetted the default color to white!"), false);
+        source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"§7Resetted the default color to white!"), false);
         return 1;
 
     }
@@ -58,7 +57,7 @@ public class ClearGlowColorCommand implements CGLCommand {
             }
         }
 
-        source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"Cleared the color from the selected entity/entities!"), true);
+        source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"§7Cleared the color from the selected entity/entities!"), true);
         return targets.size();
     }
 
@@ -80,7 +79,7 @@ public class ClearGlowColorCommand implements CGLCommand {
             return 1;
         }
 
-        source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"Cleared color from the selected entity/entities!"), false);
+        source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"§7Cleared color from the selected entity/entities!"), false);
         return 1;
     }
 
@@ -96,7 +95,7 @@ public class ClearGlowColorCommand implements CGLCommand {
             return 1;
         }
 
-        source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"All settings have been reset to default values!"), false);
+        source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"§7All settings have been reset to default values!"), false);
         return 1;
     }
 
@@ -105,8 +104,8 @@ public class ClearGlowColorCommand implements CGLCommand {
         GlobalColorComponent globalColorComponent = ColoredGlowLibMod.GLOBAL_COLOR_COMPONENT.get(source.getServer().getScoreboard());
         globalColorComponent.clear();
 
-        source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"All settings and entitytype/default/global colors have been reset to default values!"), false);
-        source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"If you want to clear entity-specifc colors as well use /cgl clear @e!"), false);
+        source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"§7All settings and entitytype/default/global colors have been reset to default values!"), false);
+        source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"§7If you want to clear entity-specifc colors as well use /cgl clear @e!"), false);
 
         return 1;
     }

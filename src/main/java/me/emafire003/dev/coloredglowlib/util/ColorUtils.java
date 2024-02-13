@@ -1,5 +1,8 @@
 package me.emafire003.dev.coloredglowlib.util;
 
+import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
+import me.emafire003.dev.coloredglowlib.custom_data_animations.CustomColorAnimation;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -170,6 +173,38 @@ public class ColorUtils {
                 return;
             }
         }
+    }
+
+    /**Checks is a given string is actually a valid color
+     *
+     * It's here instead of in the API because it is sometimes needed before the server loads
+     * */
+    public static boolean isValidColor(String color){
+        if(color.startsWith("#")){
+            color = color.replaceAll("#", "");
+        }
+        return (ColorUtils.isHexColor(color) || color.equalsIgnoreCase("rainbow") || color.equalsIgnoreCase("random"));
+    }
+
+    /**Checks is a given string is actually a valid color
+     *
+     * It's here instead of in the API because it is sometimes needed before the server loads
+     * */
+    public static boolean isValidColorOrCustom(String color){
+        if(color.startsWith("#")){
+            color = color.replaceAll("#", "");
+        }
+        return isValidColor(color) || isCustomAnimation(color);
+    }
+
+    /** Checks if a given color is a custom animation added by a datapack */
+    public static boolean isCustomAnimation(String color){
+        for(CustomColorAnimation animation : ColoredGlowLibMod.getCustomColorAnimations()){
+            if(color.equalsIgnoreCase(animation.getName())){
+                return true;
+            }
+        }
+        return false;
     }
 
 }

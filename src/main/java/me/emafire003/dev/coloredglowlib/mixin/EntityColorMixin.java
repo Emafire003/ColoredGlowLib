@@ -4,6 +4,7 @@ import me.emafire003.dev.coloredglowlib.ColoredGlowLibAPI;
 import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
 import me.emafire003.dev.coloredglowlib.component.ColorComponent;
 import me.emafire003.dev.coloredglowlib.component.GlobalColorComponent;
+import me.emafire003.dev.coloredglowlib.custom_data_animations.CustomColorAnimation;
 import me.emafire003.dev.coloredglowlib.util.ColorUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -27,12 +28,56 @@ public abstract class EntityColorMixin {
 
     @Shadow @Nullable public abstract Team getScoreboardTeam();
 
+    @Shadow public abstract boolean canHit();
+
+    @Shadow public abstract boolean removeCommandTag(String tag);
+
     private final Entity entity = ((Entity)(Object)this);
 
     /*public int nameSpecificColor(Entity entity){
         Maybe i'll add it maybe not
     }*/
 
+    public int handleCustomColor(String color){
+        if(color.startsWith("#")){
+            color = color.replaceAll("#", "");
+        }
+        for(CustomColorAnimation customColorAnimation : ColoredGlowLibMod.getCustomColorAnimations()){
+            if(color.equalsIgnoreCase(customColorAnimation.getName())){
+                int color_index = customColorAnimation.getCurrentColorIndex();
+                int current_ticks = customColorAnimation.getCurrentTicks();
+
+                if(current_ticks > customColorAnimation.getColorAnimations().get(color_index).getActiveFor()){
+                    color_index++;
+                    current_ticks = 0;
+                }
+                if(color_index > customColorAnimation.getColorAnimations().size()-1){
+                    color_index = 0;
+                }
+
+                //Sets the new values for the animation to proceed
+                current_ticks++;
+                customColorAnimation.setCurrentColorIndex(color_index);
+                customColorAnimation.setCurrentTicks(current_ticks);
+                //Returns the color from the color at index number "color_index"
+
+                String custom_color = customColorAnimation.getColorAnimations().get(color_index).getColor();
+
+                //Checks if it's a random/rainbow or custom color animation.
+                if(custom_color.equalsIgnoreCase("rainbow")){
+                    return getRainbowColor();
+                }else if(custom_color.equalsIgnoreCase("random")){
+                    return randomColor();
+                }else if(!custom_color.equalsIgnoreCase(customColorAnimation.getName()) && ColorUtils.isCustomAnimation(custom_color)){
+                    return handleCustomColor(custom_color);
+                }
+
+                //If nothing else has been found, it means it's an RGB color so returning it.
+                return ColorUtils.toColorValue(custom_color);
+            }
+        }
+        return -1;
+    }
 
     private final ColorUtils.RainbowChanger rainbowColor = new ColorUtils.RainbowChanger(255, 0, 0);
 
@@ -87,7 +132,12 @@ public abstract class EntityColorMixin {
                 }else if(color.equalsIgnoreCase("random")){
                     cir.setReturnValue(randomColor());
                     return;
-                } else{
+                }else{
+                    int custom = handleCustomColor(color);
+                    if(custom != -1){
+                        cir.setReturnValue(custom);
+                        return;
+                    }
                     cir.setReturnValue(ColorUtils.toColorValue(color));
                     return;
                 }
@@ -105,6 +155,11 @@ public abstract class EntityColorMixin {
                     return;
                 } else if(color.equalsIgnoreCase("random")){
                     cir.setReturnValue(randomColor());
+                    return;
+                }
+                int custom = handleCustomColor(color);
+                if(custom != -1){
+                    cir.setReturnValue(custom);
                     return;
                 }
                 cir.setReturnValue(ColorUtils.toColorValue(globalComponent.getEntityTypeColor(entity.getType())));
@@ -128,6 +183,11 @@ public abstract class EntityColorMixin {
                         cir.setReturnValue(randomColor());
                         return;
                     }else{
+                        int custom = handleCustomColor(type_col);
+                        if(custom != -1){
+                            cir.setReturnValue(custom);
+                            return;
+                        }
                         cir.setReturnValue(ColorUtils.toColorValue(type_col));
                         return;
                     }
@@ -141,6 +201,11 @@ public abstract class EntityColorMixin {
                     cir.setReturnValue(randomColor());
                     return;
                 }else{
+                    int custom = handleCustomColor(globalComponent.getDefaultColor());
+                    if(custom != -1){
+                        cir.setReturnValue(custom);
+                        return;
+                    }
                     cir.setReturnValue(ColorUtils.toColorValue(globalComponent.getDefaultColor()));
                     return;
                 }
@@ -153,6 +218,12 @@ public abstract class EntityColorMixin {
             }else if(entity_col.equalsIgnoreCase("random")){
                 cir.setReturnValue(randomColor());
                 return;
+            }else{
+                int custom = handleCustomColor(entity_col);
+                if(custom != -1){
+                    cir.setReturnValue(custom);
+                    return;
+                }
             }
 
             /**If it hasn't returned yet, it means that the entity has a specific color, so it returns it*/

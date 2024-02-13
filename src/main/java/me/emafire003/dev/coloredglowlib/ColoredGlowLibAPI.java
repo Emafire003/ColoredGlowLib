@@ -2,6 +2,7 @@ package me.emafire003.dev.coloredglowlib;
 
 import me.emafire003.dev.coloredglowlib.component.ColorComponent;
 import me.emafire003.dev.coloredglowlib.component.GlobalColorComponent;
+import me.emafire003.dev.coloredglowlib.custom_data_animations.CustomColorAnimation;
 import me.emafire003.dev.coloredglowlib.util.ColorUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -94,7 +95,9 @@ public class ColoredGlowLibAPI {
 	 * If an entity has another color assigned to its EntityType, or itself it will glow that color
 	 * instead of this one, unless {@link #setDefaultOverridesAll(boolean)} method is used.
 	 *
-	 * @param color An hexadecimal color value String, like <b>"#RRGGBB"</b>, or <b>"rainbow"</b> to make the rainbow color, or <b>"random"</b> to make a random color every tick.
+	 * @param color An hexadecimal color value String, like <b>"#RRGGBB"</b>, or <b>"rainbow"</b> to make the rainbow color,
+	 *                 or <b>"random"</b> to make a random color each tick.
+	 *                 It can also be a custom color animation name added by a datapack
 	 */
 	public void setGlobalColor(String color){
 		globalColorComponent.setDefaultColor(color);
@@ -141,7 +144,9 @@ public class ColoredGlowLibAPI {
 	 * If no color is specified, but an EntityType<?> or default color is, the entity will glow that color.
 	 *
 	 * @param target The Entity that will glow the specified color
-	 * @param color An hexadecimal color value String, like <b>"#RRGGBB"</b>, or <b>"rainbow"</b> to make the rainbow color, or <b>"random"</b> to make a random color
+	 * @param color An hexadecimal color value String, like <b>"#RRGGBB"</b>, or <b>"rainbow"</b> to make the rainbow color,
+	 *                 or <b>"random"</b> to make a random color each tick.
+	 *                 It can also be a custom color animation name added by a datapack
 	 */
 	public void setColor(Entity target, String color){
 		ColorComponent component = COLOR_COMPONENT.get(target);
@@ -161,7 +166,9 @@ public class ColoredGlowLibAPI {
 	 * If no color is specified, but a default color is, the entities will glow that color.
 	 *
 	 * @param target The EntityType that will glow the specified color
-	 * @param color An hexadecimal color value String, like <b>"#RRGGBB"</b>, or <b>"rainbow"</b> to make the rainbow color, or <b>"random"</b> to make a random color each tick
+	 * @param color An hexadecimal color value String, like <b>"#RRGGBB"</b>, or <b>"rainbow"</b> to make the rainbow color,
+	 *                 or <b>"random"</b> to make a random color each tick.
+	 *                 It can also be a custom color animation name added by a datapack
 	 */
 	public void setColor(EntityType<?> target, String color){
 		globalColorComponent.setEntityTypeColor(target, color);
@@ -236,7 +243,7 @@ public class ColoredGlowLibAPI {
 	 * you specified will be used. The default color is the same one that would be applied globally
 	 * if {@link #setDefaultOverridesAll(boolean)} is used.
 	 *
-	 * This will also clear the rainbow color!
+	 * This will also clear the rainbow/random/custom color!
 	 *
 	 * @param entityType The EntityType that will be cleared from the color
 	 * @param useDefaultColorInstead Weather or not to use the default color or #ffffff
@@ -258,6 +265,8 @@ public class ColoredGlowLibAPI {
 	 * or "random" meaning its glowing a random color each tick,
 	 * or another hexadecimal string color.
 	 *
+	 * It can also return a custom animation name if they are added by a datapack
+	 *
 	 * If you need a color value instead you can use {@link me.emafire003.dev.coloredglowlib.util.ColorUtils} to manipulate it
  	 *
 	 * @param target The Entity to check the color for
@@ -276,6 +285,8 @@ public class ColoredGlowLibAPI {
 	 * or "random" meaning its glowing a random color each tick,
 	 * or another hexadecimal string color.
 	 *
+	 * It can also return a custom animation name if they are added by a datapack
+	 *
 	 * If you need a color value instead you can use {@link me.emafire003.dev.coloredglowlib.util.ColorUtils} to manipulate it
 	 *
 	 * @param target The EntityType to check the color for
@@ -290,6 +301,9 @@ public class ColoredGlowLibAPI {
 	/**
 	 * Checks if an EntityType<?> has a custom glow color or not.
 	 * This is done by checking if its color is <i>"#ffffff"</i> or not.
+	 *
+	 * <b>WARNING! This doesn't mean necessarily mean it has a custom color added by a datapack
+	 * but that it has a color that is different from the default value of white!</b>
 	 *
 	 * Warning! If you used {@link #clearColor(EntityType, boolean)} with <i>useDefaultColorInstead</i> to true,
 	 * you may want to use: {@link #hasCustomOrDefaultColor(EntityType)}
@@ -306,6 +320,9 @@ public class ColoredGlowLibAPI {
 	 * Checks if an EntityType has a custom glow color or not.
 	 * This is done by checking if its color is <i>"#ffffff"</i> or if it's the defaultColor specified using {@link #setDefaultColor(String)
 	 *
+	 * <b>WARNING! This doesn't mean necessarily mean it has a custom color added by a datapack
+	 * but that it has a color that is different from the default value of white!</b>
+	 *
 	 * @param target The EntityType to check the color for
 	 *
 	 * @return Returns true if the EntityType has a custom glow color associated to it that differs from the defaultColor.
@@ -318,6 +335,9 @@ public class ColoredGlowLibAPI {
 	/**
 	 * Checks if an Entity has a custom glow color or not.
 	 * This is done by checking if its color is <i>"#ffffff"</i> or not.
+	 *
+	 * <b>WARNING! This doesn't mean necessarily mean it has a custom color added by a datapack
+	 * but that it has a color that is different from the default value of white!</b>
 	 *
 	 * Warning! If you used {@link #clearColor(Entity, boolean)} with <i>useDefaultColorInstead</i> to true,
 	 * you may want to use: {@link #hasCustomOrDefaultColor(Entity)}
@@ -333,6 +353,9 @@ public class ColoredGlowLibAPI {
 	/**
 	 * Checks if an Entity has a custom glow color or not.
 	 * This is done by checking if its color is <i>"#ffffff"</i> or if it's the defaultColor specified using {@link #setDefaultColor(String)
+	 *
+	 * <b>WARNING! This doesn't mean necessarily mean it has a custom color added by a datapack
+	 * but that it has a color that is different from the default value of white!</b>
 	 *
 	 * @param target The Entity to check the color for
 	 *
@@ -387,5 +410,36 @@ public class ColoredGlowLibAPI {
 	public boolean hasRandomColor(Entity target){
 		return COLOR_COMPONENT.get(target).getColor().equalsIgnoreCase("random");
 	}
+
+	/**
+	 * Checks is the custom color of EntityType is a custom animation added through a datapack
+	 *
+	 * @param target The EntityType to check the rainbow color for
+	 *
+	 * @return Returns true if the color associated to that EntityType is added by a datapack
+	 * */
+	public boolean hasCustomColorAnimation(EntityType<?> target){
+		String target_color = globalColorComponent.getEntityTypeColor(target);
+		for(CustomColorAnimation animation : ColoredGlowLibMod.getCustomColorAnimations()){
+			if(target_color.equalsIgnoreCase(animation.getName())){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Checks is the custom color of EntityType is a custom animation added through a datapack
+	 *
+	 * @param target The Entity to check the random color for
+	 *
+	 * @return Returns true if the color associated to that Entity is added by a datapack
+	 * */
+	public boolean hasCustomColorAnimation(Entity target){
+		String target_color = COLOR_COMPONENT.get(target).getColor();
+
+		return false;
+	}
+
 
 }
