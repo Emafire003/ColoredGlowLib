@@ -55,7 +55,6 @@ public class ColoredGlowLibMod implements ModInitializer, EntityComponentInitial
 
         LOGGER.info("Initializing...");
 
-
         ServerLifecycleEvents.SERVER_STARTED.register(server -> coloredGlowLib = new ColoredGlowLibAPI(server.getScoreboard()));
 
         LocalDate currentDate = LocalDate.now();

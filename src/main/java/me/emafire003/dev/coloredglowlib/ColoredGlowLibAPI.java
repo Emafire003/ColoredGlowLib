@@ -299,6 +299,33 @@ public class ColoredGlowLibAPI {
 
 
 	/**
+	 * Gets the global/default custom glow color
+	 *
+	 * The result could be "#ffffff" meaning it does not have a custom color and is using
+	 * the vanilla one, or "rainbow" meaning its glowing rainbow,
+	 * or "random" meaning its glowing a random color each tick,
+	 * or another hexadecimal string color.
+	 *
+	 * It can also return a custom animation name if they are added by a datapack
+	 *
+	 * If you need a color value instead you can use {@link me.emafire003.dev.coloredglowlib.util.ColorUtils} to manipulate it
+	 *
+	 * @return The color string associated to the global color
+	 * */
+	public String getGlobalColor(){
+		return globalColorComponent.getDefaultColor();
+	}
+
+	/**
+	 * An alias of {@link #getGlobalColor()}
+	 *
+	 * @return The color string associated to the global color
+	 * */
+	public String getDefaultColor(){
+		return globalColorComponent.getDefaultColor();
+	}
+
+	/**
 	 * Checks if an EntityType<?> has a custom glow color or not.
 	 * This is done by checking if its color is <i>"#ffffff"</i> or not.
 	 *
