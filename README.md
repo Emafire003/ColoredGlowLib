@@ -19,24 +19,38 @@ The `entity/type/defaylt` parameter is what you want to target, so @p, Emafire00
 
 The `color` parameter is a hexadecimal color code (like #ff85ab, #750711, #abc, #123, #a7e ecc, search "color picker" online to get them) without the `#` since minecraft interprets it as a beginning of a tag (which is not what it should be doing in this case). In alternative you can provide the word `rainbow` that will make the entity glow, you guessed it, rainbow. You can also use `random` to make an entity glow a different random color every half a second, or another string that represents a custom animation added via datapack!
 
-You can interact with the config directly in game. For example if you want to override the default team colors (the ones minecraft assigns) with the command:
+There also are some settings you can tweak. For example if you want to override the default team colors (the ones minecraft assigns) with the command:
 
-`/cgl config set overrideTeamColors <true/false>`
+`/cgl settings set overrideTeamColors <true/false>`
 
 You can also get the current value of the setting, like so: 
 
-`/cgl config get overrideTeamColors`
+`/cgl settings get overrideTeamColors`
+
+To remove a color you can use: 
+
+`/cgl clear <entity/type/default> [useDefault]`
+
+`useDefault` is an optional true/false parameter. If set to true, the default color will be used instead of setting the color for entities to white. 
 
 More of this in the wiki!
 
 [![bisecthosting](https://www.bisecthosting.com/images/CF/ColoredGlowLib/BH_NU_PROMO.png)](https://www.bisecthosting.com/LightDev)
+
+## Custom color animations
+You can add custom animations via a datapack, you can find an example of one here. After you created the datapack, you can use it as a color, corresponding to the *name* parameter you have set inside the datapack.
+
+For example you can use:
+`/cgl setglowcolor @p marine`
+
+More info in the wiki.
 
 ## Setup
 ### For normal users:
 Just drag and drop this mod into your mod folder and enjoy! (Make sure you are downloading the correct file for the correct loader tho!)
 
 ### For developers:
-Include this library into your `build.gradle` as a dependency
+Add this library into your `build.gradle` as a dependency
 ```gradle
 repositories {
     maven {
@@ -54,8 +68,10 @@ dependencies {
 ```
 
 You can find the correct version in the [versions page](https://modrinth.com/mod/coloredglowlib/versions) on [Modrinth](https://modrinth.com/mod/coloredglowlib). 
-If you want the forge version, add a +forge to the number version
+If you want the forge version, add a +forge to the number version. (NOTE: Not currently availbale for 3.0.0)
 
+If you already need CardinalComponetsAPI modules in your mod, consider downloading the version of the mod that doesn't already include them, by adding a +nocca in the version format. 
+The modules needed are: base, entity, scoreboard. 
 
 #### You can find more information on the [wiki](https://github.com/Emafire003/ColoredGlowLib/wiki)! 
 
