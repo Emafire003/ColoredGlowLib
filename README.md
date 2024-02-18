@@ -5,8 +5,6 @@ This library mod enables you to make entities glow different colors other than p
 
 For normal users, you can use the commands to set custom colors, and datapacks to add custom animation, while developers can use the API and the javadoc as guide. There is also a wiki.
 
-
-TODO change this
 ![coloredglowlib-with-player](https://user-images.githubusercontent.com/29462910/157507551-dfc4ee7e-66fb-4dae-9578-e17ca64e3b44.png)
 
 #### Commands
@@ -76,7 +74,7 @@ The modules needed are: base, entity, scoreboard.
 
 #### You can find more information on the [wiki](https://github.com/Emafire003/ColoredGlowLib/wiki)! 
 
-You can find examples of this lib being used in my [FoxGlow](https://github.com/Emafire003/FoxGlow) and [Glowful World](https://github.com/Emafire003/GlowfulWorld) mod.
+You can find examples of this lib being used in my [FoxGlow](https://github.com/Emafire003/FoxGlow) and [LightWithin](https://modrinth.com/mod/LightWithin) mod.
 
 ![luma-shaders-coloredglowlib](https://user-images.githubusercontent.com/29462910/157507676-576d3fb5-e24b-41f7-a7f0-6956d7ae4e29.png)
 
@@ -90,3 +88,11 @@ If you would like to offer me a coffee, here you go.
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/S6S88307C)
 
 For modpack devs: You are permitted to use this mod without directly asking, but please credit me somewhere, it would help! (Also, I'm kind of a curious person so maybe send me a message when you include it into your modpack, and I'd like to check it out)
+
+## My other projects:
+- [LightWithin](https://modrinth.com/mod/LightWithin): a mod adding player-unique magicalish fancy powers that activate when the player is in danger!
+- [FoxGlow](https://modrinth.com/mod/foxglow): a mod that makes foxes and player glow whenever you eat the Glow Berry, or other glowy foods!
+- [BeamPass](https://modrinth.com/mod/beampass): makes the beacom beam pass through selectable blocks, even if they are solid!
+- [StructurePlacerAPI](https://modrinth.com/mod/structureplacerapi): an API that allows developers to easly place NBT structures in the world, and to restore it afterwards!
+- [Seedlight Riftways](https://modrinth.com/mod/seedlight-riftways): An experimental mod to travel seamlessly from worlds to servers and viceversa though portals!
+- And others! Check them out over my [profile](https://www.curseforge.com/members/emafire003/projects) [page](https://modrinth.com/user/Emafire003)!
