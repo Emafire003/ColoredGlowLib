@@ -1,9 +1,10 @@
 # ColoredGlow Lib
-![Modrinth](https://img.shields.io/modrinth/dt/coloredglowlib?color=green&label=Modrinth%20downloads&style=flat-square)
-
 This library mod enables you to make entities glow different colors other than plain white or Minecraft vanilla's Team colors. You can also add custom color animation, a set of colors that will change overtime, like a rainbow!
 
-For normal users, you can use the commands to set custom colros, and datapacks to add custom animation, while developers can use the API and the javadoc as guide. There is also a wiki.
+![BH_NU_HEADER](https://github.com/Emafire003/ColoredGlowLib/assets/29462910/9346b836-2cd7-47a0-8364-e09bd66e3c37)
+
+For normal users, you can use the commands to set custom colors, and datapacks to add custom animation, while developers can use the API and the javadoc as guide. There is also a wiki.
+
 
 TODO change this
 ![coloredglowlib-with-player](https://user-images.githubusercontent.com/29462910/157507551-dfc4ee7e-66fb-4dae-9578-e17ca64e3b44.png)
@@ -35,7 +36,7 @@ To remove a color you can use:
 
 More of this in the wiki!
 
-[![bisecthosting](https://www.bisecthosting.com/images/CF/ColoredGlowLib/BH_NU_PROMO.png)](https://www.bisecthosting.com/LightDev)
+[![bisecthosting](https://github.com/Emafire003/ColoredGlowLib/assets/29462910/973c0c1a-062c-4c4a-aa04-f02e184fd5d7)](https://www.bisecthosting.com/LightDev)
 
 ## Custom color animations
 You can add custom animations via a datapack, you can find an example of one here. After you created the datapack, you can use it as a color, corresponding to the *name* parameter you have set inside the datapack.
