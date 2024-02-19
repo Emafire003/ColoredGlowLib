@@ -8,7 +8,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.scoreboard.Scoreboard;
 
-import static me.emafire003.dev.coloredglowlib.ColoredGlowLibMod.*;
+import static me.emafire003.dev.coloredglowlib.component.ColorComponent.COLOR_COMPONENT;
 
 public class ColoredGlowLibAPI {
 
@@ -21,7 +21,7 @@ public class ColoredGlowLibAPI {
 	 * @param scoreboard An instance of the server/worlds scoreboard that will be used to get
 	 *                      server-wide settings such as defaultColor the EntityType's colors and so on*/
 	public ColoredGlowLibAPI(Scoreboard scoreboard){
-		this.globalColorComponent = GLOBAL_COLOR_COMPONENT.get(scoreboard);
+		this.globalColorComponent = GlobalColorComponent.GLOBAL_COLOR_COMPONENT.get(scoreboard);
 
 	}
 

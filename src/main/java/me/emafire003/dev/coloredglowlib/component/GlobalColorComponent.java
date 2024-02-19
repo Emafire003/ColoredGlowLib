@@ -1,13 +1,15 @@
 package me.emafire003.dev.coloredglowlib.component;
 
+import dev.onyxstudios.cca.api.v3.component.ComponentKey;
+import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
 import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
-import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
 import me.emafire003.dev.coloredglowlib.util.ColorUtils;
 import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -15,8 +17,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+import static me.emafire003.dev.coloredglowlib.ColoredGlowLibMod.MOD_ID;
+
 public class GlobalColorComponent implements ComponentV3, AutoSyncedComponent, CGLComponent {
 
+    public static final ComponentKey<GlobalColorComponent> GLOBAL_COLOR_COMPONENT =
+            ComponentRegistry.getOrCreate(new Identifier(MOD_ID, "global_color_component"), GlobalColorComponent.class);
 
     private final Scoreboard scoreboard;
 
@@ -92,7 +98,7 @@ public class GlobalColorComponent implements ComponentV3, AutoSyncedComponent, C
      * @param color A hex color or "rainbow"*/
     public void addEntityTypeColor(EntityType<?> type, String color){
         entityTypeColorMap.putString(type.toString(), color);
-        ColoredGlowLibMod.GLOBAL_COLOR_COMPONENT.sync(scoreboard);
+        GLOBAL_COLOR_COMPONENT.sync(scoreboard);
     }
 
     /**
@@ -111,7 +117,7 @@ public class GlobalColorComponent implements ComponentV3, AutoSyncedComponent, C
 
     public void clearEntityTypeColor(EntityType<?> type){
         entityTypeColorMap.remove(type.toString());
-        ColoredGlowLibMod.GLOBAL_COLOR_COMPONENT.sync(scoreboard);
+        GLOBAL_COLOR_COMPONENT.sync(scoreboard);
     }
 
     public String getEntityTypeColor(EntityType<?> type){
@@ -128,7 +134,7 @@ public class GlobalColorComponent implements ComponentV3, AutoSyncedComponent, C
 
     public void setDefaultColor(String default_color) {
         this.default_color = default_color;
-        ColoredGlowLibMod.GLOBAL_COLOR_COMPONENT.sync(scoreboard);
+        GLOBAL_COLOR_COMPONENT.sync(scoreboard);
     }
 
     public boolean getEntityTypeOverridesEntityColor() {
@@ -137,7 +143,7 @@ public class GlobalColorComponent implements ComponentV3, AutoSyncedComponent, C
 
     public void setTypeOverridesEntityColor(boolean b) {
         this.typeOverridesEntityColor = b;
-        ColoredGlowLibMod.GLOBAL_COLOR_COMPONENT.sync(scoreboard);
+        GLOBAL_COLOR_COMPONENT.sync(scoreboard);
     }
 
     public boolean getDefaultOverridesAll() {
@@ -146,7 +152,7 @@ public class GlobalColorComponent implements ComponentV3, AutoSyncedComponent, C
 
     public void setDefaultOverridesAll(boolean b) {
         this.defaultOverridesAll = b;
-        ColoredGlowLibMod.GLOBAL_COLOR_COMPONENT.sync(scoreboard);
+        GLOBAL_COLOR_COMPONENT.sync(scoreboard);
     }
 
     public boolean getOverrideTeamColors() {
@@ -155,7 +161,7 @@ public class GlobalColorComponent implements ComponentV3, AutoSyncedComponent, C
 
     public void setOverrideTeamColors(boolean b) {
         this.overrideTeamColors = b;
-        ColoredGlowLibMod.GLOBAL_COLOR_COMPONENT.sync(scoreboard);
+        GLOBAL_COLOR_COMPONENT.sync(scoreboard);
     }
 
     public void clear(){
@@ -164,7 +170,7 @@ public class GlobalColorComponent implements ComponentV3, AutoSyncedComponent, C
         this.defaultOverridesAll = false;
         this.overrideTeamColors = false;
         this.entityTypeColorMap = new NbtCompound();
-        ColoredGlowLibMod.GLOBAL_COLOR_COMPONENT.sync(scoreboard);
+        GLOBAL_COLOR_COMPONENT.sync(scoreboard);
     }
 
 }

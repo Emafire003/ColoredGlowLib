@@ -4,7 +4,7 @@
   "version": "${version}",
 
   "name": "ColoredGlowLib",
-  "description": "This mod/library allows you to make entities glow any color, not just the vanilla ones!",
+  "description": "This mod/library allows you to make entities glow any color, not just the vanilla ones! You can also use custom color animations!",
   "authors": [
     "Emafire003"
   ],

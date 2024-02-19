@@ -101,7 +101,7 @@ public class ClearGlowColorCommand implements CGLCommand {
 
     private int resetAll(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         ServerCommandSource source = context.getSource();
-        GlobalColorComponent globalColorComponent = ColoredGlowLibMod.GLOBAL_COLOR_COMPONENT.get(source.getServer().getScoreboard());
+        GlobalColorComponent globalColorComponent = GlobalColorComponent.GLOBAL_COLOR_COMPONENT.get(source.getServer().getScoreboard());
         globalColorComponent.clear();
 
         source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"§7All settings and entitytype/default/global colors have been reset to default values!"), false);

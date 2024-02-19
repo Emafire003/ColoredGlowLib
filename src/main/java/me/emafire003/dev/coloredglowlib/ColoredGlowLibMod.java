@@ -27,6 +27,8 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
+import static me.emafire003.dev.coloredglowlib.component.ColorComponent.COLOR_COMPONENT;
+import static me.emafire003.dev.coloredglowlib.component.GlobalColorComponent.GLOBAL_COLOR_COMPONENT;
 import static me.emafire003.dev.coloredglowlib.util.ColorUtils.isValidColorOrCustom;
 
 public class ColoredGlowLibMod implements ModInitializer, EntityComponentInitializer, ScoreboardComponentInitializer {
@@ -37,13 +39,6 @@ public class ColoredGlowLibMod implements ModInitializer, EntityComponentInitial
         // Old prefix: "§f[§1C§2o§3l§4o§5r§6e§7d§8G§9l§ao§bw§cL§di§eb§f] §r";
 
     private static ColoredGlowLibAPI coloredGlowLib;
-
-    public static final ComponentKey<ColorComponent> COLOR_COMPONENT =
-            ComponentRegistry.getOrCreate(new Identifier(MOD_ID, "color_component"), ColorComponent.class);
-
-    public static final ComponentKey<GlobalColorComponent> GLOBAL_COLOR_COMPONENT =
-            ComponentRegistry.getOrCreate(new Identifier(MOD_ID, "global_color_component"), GlobalColorComponent.class);
-
     public static boolean isAp1 = false;
 
 

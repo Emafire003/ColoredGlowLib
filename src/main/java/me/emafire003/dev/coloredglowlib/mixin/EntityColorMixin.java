@@ -7,11 +7,8 @@ import me.emafire003.dev.coloredglowlib.util.ColorUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.Entity;
-import net.minecraft.scoreboard.Team;
 import net.minecraft.util.math.random.Random;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -21,8 +18,6 @@ import static me.emafire003.dev.coloredglowlib.ColoredGlowLibMod.*;
 @Environment(EnvType.CLIENT)
 @Mixin(Entity.class)
 public abstract class EntityColorMixin {
-
-    @Shadow @Nullable public abstract Team getScoreboardTeam();
     private final Entity entity = ((Entity)(Object)this);
 
     /*public int nameSpecificColor(Entity entity){
@@ -101,7 +96,7 @@ public abstract class EntityColorMixin {
             return;
         }
 
-        if(this.getScoreboardTeam() == null || cgl.getOverrideTeamColors()) {
+        if(entity.getScoreboardTeam() == null || cgl.getOverrideTeamColors()) {
 
             /**Checks if it's april 1st for jokes*/
             if(ColoredGlowLibMod.isAp1){
@@ -220,6 +215,9 @@ public abstract class EntityColorMixin {
                 }
             }
 
+
+            //TODO maybe set back to white if the color animation gets removed?
+            
             /**If it hasn't returned yet, it means that the entity has a specific color, so it returns it*/
             cir.setReturnValue(ColorUtils.toColorValue(entity_col));
         }
