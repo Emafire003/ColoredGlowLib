@@ -15,7 +15,7 @@
   },
 
   "license": "GNU LGPL3",
-  "icon": "assets/coloredglowlib/icon.jpg",
+  "icon": "assets/coloredglowlib/icon.png",
 
   "environment": "*",
   "entrypoints": {
