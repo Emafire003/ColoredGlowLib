@@ -66,6 +66,22 @@ dependencies {
 }
 ```
 
+**NOTE** there currently is a f***ing annoying bug that I can't seem to fix, requiring you to add CardinalComponentsAPI to your project as well, and you can do that by adding these as dependencies:
+```gradle
+repositories {
+    maven {
+        name = "Ladysnake Mods"
+        url = 'https://maven.ladysnake.org/releases'
+    }
+}
+
+dependencies {
+    modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-base:5.4.0")
+	modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:5.4.0")
+	modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-scoreboard:5.4.0")
+}
+```
+
 You can find the correct version in the [versions page](https://modrinth.com/mod/coloredglowlib/versions) on [Modrinth](https://modrinth.com/mod/coloredglowlib). 
 If you want the forge version, add a +forge to the number version. (NOTE: Not currently availbale for 3.0.0)
 
