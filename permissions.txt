@@ -1,4 +1,5 @@
 coloredglowlib.commands
 coloredglowlib.commands.setglowcolor
 coloredglowlib.commands.clearcolor
+coloredglowlib.commands.clearcolor.all
 coloredglowlib.commands.settings

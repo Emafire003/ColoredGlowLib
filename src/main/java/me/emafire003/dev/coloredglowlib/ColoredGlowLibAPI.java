@@ -76,7 +76,7 @@ public class ColoredGlowLibAPI {
 	}
 
 	/**
-	 * Gets the current override status of EntityType<?> color over Entity Color
+	 * Gets the current override status of EntityType color over Entity Color
 	 *
 	 * @return Returns true if the EntityType-specific color overrides the Entity-specific one
 	 * */
@@ -141,7 +141,7 @@ public class ColoredGlowLibAPI {
 	 * This glow color can be overridden by other methods, such as:
 	 * {@link #setDefaultOverridesAll(boolean)} and {@link #setEntityTypeColorOverridesEntityColor(boolean)}
 	 *
-	 * If no color is specified, but an EntityType<?> or default color is, the entity will glow that color.
+	 * If no color is specified, but an EntityType or default color is, the entity will glow that color.
 	 *
 	 * @param target The Entity that will glow the specified color
 	 * @param color An hexadecimal color value String, like <b>"#RRGGBB"</b>, or <b>"rainbow"</b> to make the rainbow color,
@@ -155,7 +155,7 @@ public class ColoredGlowLibAPI {
 
 	/**
 	 * Sets a custom glow color for an EntityType.
-	 * All entities of the specified EntityType<?> will now glow the specified color instead of vanilla minecraft's one.
+	 * All entities of the specified EntityType will now glow the specified color instead of vanilla minecraft's one.
 	 *
 	 * This glow color can be overridden by other methods, such as:
 	 * {@link #setDefaultOverridesAll(boolean)}
@@ -326,7 +326,7 @@ public class ColoredGlowLibAPI {
 	}
 
 	/**
-	 * Checks if an EntityType<?> has a custom glow color or not.
+	 * Checks if an EntityType has a custom glow color or not.
 	 * This is done by checking if its color is <i>"#ffffff"</i> or not.
 	 *
 	 * <b>WARNING! This doesn't mean necessarily mean it has a custom color added by a datapack
@@ -335,9 +335,9 @@ public class ColoredGlowLibAPI {
 	 * Warning! If you used {@link #clearColor(EntityType, boolean)} with <i>useDefaultColorInstead</i> to true,
 	 * you may want to use: {@link #hasCustomOrDefaultColor(EntityType)}
 	 *
-	 * @param target The EntityType<?> to check the color for
+	 * @param target The EntityType to check the color for
 	 *
-	 * @return Returns true if the EntityType<?> has a custom glow color associated to it.
+	 * @return Returns true if the EntityType has a custom glow color associated to it.
 	 */
 	public boolean hasCustomColor(EntityType<?> target){
 		return !ColorUtils.checkDefault(globalColorComponent.getEntityTypeColor(target));
@@ -345,7 +345,7 @@ public class ColoredGlowLibAPI {
 
 	/**
 	 * Checks if an EntityType has a custom glow color or not.
-	 * This is done by checking if its color is <i>"#ffffff"</i> or if it's the defaultColor specified using {@link #setDefaultColor(String)
+	 * This is done by checking if its color is <i>"#ffffff"</i> or if it's the defaultColor specified using {@link #setDefaultColor(String)}
 	 *
 	 * <b>WARNING! This doesn't mean necessarily mean it has a custom color added by a datapack
 	 * but that it has a color that is different from the default value of white!</b>
@@ -379,7 +379,7 @@ public class ColoredGlowLibAPI {
 
 	/**
 	 * Checks if an Entity has a custom glow color or not.
-	 * This is done by checking if its color is <i>"#ffffff"</i> or if it's the defaultColor specified using {@link #setDefaultColor(String)
+	 * This is done by checking if its color is <i>"#ffffff"</i> or if it's the defaultColor specified using {@link #setDefaultColor(String)}
 	 *
 	 * <b>WARNING! This doesn't mean necessarily mean it has a custom color added by a datapack
 	 * but that it has a color that is different from the default value of white!</b>
