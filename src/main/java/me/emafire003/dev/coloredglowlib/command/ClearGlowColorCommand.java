@@ -9,13 +9,13 @@ import me.emafire003.dev.coloredglowlib.compat.permissions.PermissionsChecker;
 import me.emafire003.dev.coloredglowlib.component.GlobalColorComponent;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.EntityArgumentType;
-import net.minecraft.command.argument.RegistryEntryArgumentType;
+import net.minecraft.command.argument.EntitySummonArgumentType;
 import net.minecraft.command.suggestion.SuggestionProviders;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.command.SummonCommand;
 import net.minecraft.text.Text;
 
 import java.util.Collection;
@@ -32,7 +32,7 @@ public class ClearGlowColorCommand implements CGLCommand {
             source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"§cAn error has occurred. The API hasn't yet been initialised!"));
             return 1;
         }
-        source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"§7Resetted the default color to white!"), false);
+        source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"§7Resetted the default color to white!"), false);
         return 1;
 
     }
@@ -57,12 +57,12 @@ public class ClearGlowColorCommand implements CGLCommand {
             }
         }
 
-        source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"§7Cleared the color from the selected entity/entities!"), true);
+        source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"§7Cleared the color from the selected entity/entities!"), true);
         return targets.size();
     }
 
     private int clearEntityTypeColor(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        EntityType<?> type = RegistryEntryArgumentType.getSummonableEntityType(context, "entity").value();
+        EntityType<?> type = EntityType.get(String.valueOf(EntitySummonArgumentType.getEntitySummon(context, "entity"))).get();
         ServerCommandSource source = context.getSource();
 
         boolean useDefault;
@@ -79,7 +79,7 @@ public class ClearGlowColorCommand implements CGLCommand {
             return 1;
         }
 
-        source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"§7Cleared color from the selected entity/entities!"), false);
+        source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"§7Cleared color from the selected entity/entities!"), false);
         return 1;
     }
 
@@ -95,7 +95,7 @@ public class ClearGlowColorCommand implements CGLCommand {
             return 1;
         }
 
-        source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"§7All settings have been reset to default values!"), false);
+        source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"§7All settings have been reset to default values!"), false);
         return 1;
     }
 
@@ -104,8 +104,8 @@ public class ClearGlowColorCommand implements CGLCommand {
         GlobalColorComponent globalColorComponent = GlobalColorComponent.GLOBAL_COLOR_COMPONENT.get(source.getServer().getScoreboard());
         globalColorComponent.clear();
 
-        source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"§7All settings and entitytype/default/global colors have been reset to default values!"), false);
-        source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"§7If you want to clear entity-specifc colors as well use /cgl clear @e!"), false);
+        source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"§7All settings and entitytype/default/global colors have been reset to default values!"), false);
+        source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"§7If you want to clear entity-specifc colors as well use /cgl clear @e!"), false);
 
         return 1;
     }
@@ -123,7 +123,7 @@ public class ClearGlowColorCommand implements CGLCommand {
                                 )
                 )
                 .then(
-                        CommandManager.argument("entity", RegistryEntryArgumentType.registryEntry(registryAccess, RegistryKeys.ENTITY_TYPE)).suggests(SuggestionProviders.SUMMONABLE_ENTITIES)
+                        CommandManager.argument("entity", EntitySummonArgumentType.entitySummon()).suggests(SuggestionProviders.SUMMONABLE_ENTITIES)
                                 .executes(this::clearEntityTypeColor)
                                 .then(
                                         CommandManager.argument("useDefaultColor", BoolArgumentType.bool())
