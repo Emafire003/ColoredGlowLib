@@ -42,7 +42,7 @@
   },
   "depends": {
     "fabricloader": ">=0.15.1",
-    "minecraft": ">=1.20-",
+    "minecraft": ">=1.19.2",
     "java": ">=16",
     "cardinal-components-base": ">=3.0.0-0",
     "cardinal-components-entity": ">=3.0.0-0",
