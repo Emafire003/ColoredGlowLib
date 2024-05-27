@@ -1,9 +1,10 @@
 package me.emafire003.dev.coloredglowlib.component;
 
-import dev.onyxstudios.cca.api.v3.component.ComponentKey;
-import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
-import dev.onyxstudios.cca.api.v3.component.ComponentV3;
-import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
+import net.minecraft.registry.RegistryWrapper;
+import org.ladysnake.cca.api.v3.component.ComponentKey;
+import org.ladysnake.cca.api.v3.component.ComponentRegistry;
+import org.ladysnake.cca.api.v3.component.ComponentV3;
+import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
 import me.emafire003.dev.coloredglowlib.util.ColorUtils;
 import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.NbtCompound;
@@ -19,7 +20,7 @@ import java.util.Optional;
 
 import static me.emafire003.dev.coloredglowlib.ColoredGlowLibMod.MOD_ID;
 
-public class GlobalColorComponent implements ComponentV3, AutoSyncedComponent, CGLComponent {
+public class GlobalColorComponent implements ComponentV3, AutoSyncedComponent{
 
     public static final ComponentKey<GlobalColorComponent> GLOBAL_COLOR_COMPONENT =
             ComponentRegistry.getOrCreate(new Identifier(MOD_ID, "global_color_component"), GlobalColorComponent.class);
@@ -39,7 +40,7 @@ public class GlobalColorComponent implements ComponentV3, AutoSyncedComponent, C
     }
 
     @Override
-    public void readFromNbt(NbtCompound tag) {
+    public void readFromNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
 
         if(tag.contains("defaultColor")){
             this.default_color = tag.getString("defaultColor");
@@ -73,7 +74,7 @@ public class GlobalColorComponent implements ComponentV3, AutoSyncedComponent, C
     }
 
     @Override
-    public void writeToNbt(NbtCompound tag) {
+    public void writeToNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
         tag.putString("defaultColor", this.default_color);
         tag.putBoolean("typeOverridesEntityColor", this.typeOverridesEntityColor);
         tag.putBoolean("defaultOverridesAll", this.defaultOverridesAll);
@@ -172,5 +173,4 @@ public class GlobalColorComponent implements ComponentV3, AutoSyncedComponent, C
         this.entityTypeColorMap = new NbtCompound();
         GLOBAL_COLOR_COMPONENT.sync(scoreboard);
     }
-
 }

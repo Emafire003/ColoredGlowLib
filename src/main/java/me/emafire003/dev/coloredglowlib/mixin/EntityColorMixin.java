@@ -9,6 +9,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.random.Random;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -18,12 +19,14 @@ import static me.emafire003.dev.coloredglowlib.ColoredGlowLibMod.*;
 @Environment(EnvType.CLIENT)
 @Mixin(Entity.class)
 public abstract class EntityColorMixin {
+    @Unique
     private final Entity entity = ((Entity)(Object)this);
 
     /*public int nameSpecificColor(Entity entity){
         Maybe i'll add it maybe not
     }*/
 
+    @Unique
     public int handleCustomColor(String color){
         if(color.startsWith("#")){
             color = color.replaceAll("#", "");
@@ -65,17 +68,22 @@ public abstract class EntityColorMixin {
         return -1;
     }
 
+    @Unique
     private final ColorUtils.RainbowChanger rainbowColor = new ColorUtils.RainbowChanger(255, 0, 0);
 
     /**Returns the rainbow color*/
+    @Unique
     private int getRainbowColor(){
         rainbowColor.setRainbowColor(10);
         return rainbowColor.getColorValue();
     }
 
+    @Unique
     int random_delay_counter = 0;
+    @Unique
     int prev_random_color = ColorUtils.toColorValue(ColorUtils.WHITE);
 
+    @Unique
     private int randomColor(){
         Random r = entity.getWorld().getRandom();
         if(random_delay_counter == 10){
@@ -92,7 +100,7 @@ public abstract class EntityColorMixin {
         ColoredGlowLibAPI cgl = ColoredGlowLibMod.getAPI();
 
         if(cgl == null){
-            LOGGER.warn("The coloredglowlib api instance is null!");
+            LOGGER.warn("The ColoredGlowLib API instance is null!");
             return;
         }
 
@@ -133,7 +141,7 @@ public abstract class EntityColorMixin {
             }
 
             /**Checks if there is the EntityType color overrides the Entity's one
-             *
+             *<p>
              * If ( EntityType >> Entity-specific ) do stuff
              * */
             if(cgl.getEntityTypeColorOverridesEntityColor()){
@@ -159,10 +167,11 @@ public abstract class EntityColorMixin {
              * If it's the default one, it will check its entitytype, then the default color*/
             String entity_col = cgl.getColor(entity);
 
-            //TODO make configurable? Like using the default color instead. The has custom color i mean
-            if(ColoredGlowLibMod.getAPI() != null && ColoredGlowLibMod.getAPI().hasCustomColor(entity)){
+            //If the entity does not have a custom color, it will check for other things, like default color and entitytype color
+            if(ColoredGlowLibMod.getAPI() != null && !ColoredGlowLibMod.getAPI().hasCustomColor(entity)){
                 //If the entity type's color is the default one as well, returns the default color
                 String type_col = cgl.getColor(entity.getType());
+                //Checking if the enttiy has a custom color
                 if(ColoredGlowLibMod.getAPI().hasCustomColor(entity.getType())){
                     if(type_col.equalsIgnoreCase("rainbow")){
                         //Checks if the entitytype is rainbow or random colored
@@ -200,6 +209,7 @@ public abstract class EntityColorMixin {
                 }
             }
 
+            //It should be ending up here if the entity actually has a custom color, which entity_col
             /**Checks if the entity color is rainbow*/
             if(entity_col.equalsIgnoreCase("rainbow")){
                 cir.setReturnValue(getRainbowColor());
@@ -217,7 +227,7 @@ public abstract class EntityColorMixin {
 
 
             //TODO maybe set back to white if the color animation gets removed?
-            
+
             /**If it hasn't returned yet, it means that the entity has a specific color, so it returns it*/
             cir.setReturnValue(ColorUtils.toColorValue(entity_col));
         }

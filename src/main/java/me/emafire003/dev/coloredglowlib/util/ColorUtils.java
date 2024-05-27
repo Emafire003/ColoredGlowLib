@@ -6,6 +6,7 @@ import me.emafire003.dev.coloredglowlib.custom_data_animations.CustomColorAnimat
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@SuppressWarnings("unused")
 public class ColorUtils {
 
     public static final String WHITE = "#ffffff";
@@ -64,13 +65,11 @@ public class ColorUtils {
         return Integer.decode(hex);
     }
 
-    //TODO needs testing
     /** Converts a given integer Color value to an */
     public static String toHex(int colorValue){
         return "#"+Integer.toHexString(colorValue).substring(2);
     }
 
-    //TODO needs testing
     public static String toHex(int r, int g, int b){
         return "#"+Integer.toHexString(toColorValue(r,g,b)).substring(2);
     }
@@ -176,7 +175,7 @@ public class ColorUtils {
     }
 
     /**Checks is a given string is actually a valid color
-     *
+     *<p>
      * It's here instead of in the API because it is sometimes needed before the server loads
      * */
     public static boolean isValidColor(String color){
@@ -187,7 +186,7 @@ public class ColorUtils {
     }
 
     /**Checks is a given string is actually a valid color
-     *
+     *<p>
      * It's here instead of in the API because it is sometimes needed before the server loads
      * */
     public static boolean isValidColorOrCustom(String color){

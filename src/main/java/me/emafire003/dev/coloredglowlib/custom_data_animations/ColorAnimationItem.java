@@ -14,8 +14,8 @@ public class ColorAnimationItem {
                             )
                             .apply(instance, ColorAnimationItem::new));
 
-    private String color;
-    private int active_for;
+    private final String color;
+    private final int active_for;
 
 
     public ColorAnimationItem(String color, int active_for){

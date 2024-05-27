@@ -1,12 +1,11 @@
 package me.emafire003.dev.coloredglowlib;
 
-import dev.onyxstudios.cca.api.v3.component.ComponentKey;
-import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
-import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry;
-import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer;
-import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy;
-import dev.onyxstudios.cca.api.v3.scoreboard.ScoreboardComponentFactoryRegistry;
-import dev.onyxstudios.cca.api.v3.scoreboard.ScoreboardComponentInitializer;
+import net.minecraft.entity.Entity;
+import org.ladysnake.cca.api.v3.entity.EntityComponentFactoryRegistry;
+import org.ladysnake.cca.api.v3.entity.EntityComponentInitializer;
+import org.ladysnake.cca.api.v3.entity.RespawnCopyStrategy;
+import org.ladysnake.cca.api.v3.scoreboard.ScoreboardComponentFactoryRegistry;
+import org.ladysnake.cca.api.v3.scoreboard.ScoreboardComponentInitializer;
 import me.emafire003.dev.coloredglowlib.command.CGLCommands;
 import me.emafire003.dev.coloredglowlib.component.ColorComponent;
 import me.emafire003.dev.coloredglowlib.component.GlobalColorComponent;
@@ -16,8 +15,6 @@ import me.emafire003.dev.coloredglowlib.custom_data_animations.CustomColorAnimat
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,9 +66,9 @@ public class ColoredGlowLibMod implements ModInitializer, EntityComponentInitial
     /**
      * Use this to get the ColoredGlowLib API instance and
      * use the methods to set colors and such
-     *
+     * <p>
      * It will return null if the server hasn't started yet.
-     *
+     * <p>
      * Aliases: {@link #getColoredGlowLib()} , {@link #getLib()}
      * */
     @Nullable
@@ -82,9 +79,9 @@ public class ColoredGlowLibMod implements ModInitializer, EntityComponentInitial
     /**
      * Use this to get the ColoredGlowLib API instance and
      * use the methods to set colors and such
-     *
+     *<p>
      * It will return null if the server hasn't started yet.
-     *
+     *<p>
      * Aliases: {@link #getAPI()} , {@link #getLib()}
      * */
     @Nullable
@@ -95,9 +92,9 @@ public class ColoredGlowLibMod implements ModInitializer, EntityComponentInitial
     /**
      * Use this to get the ColoredGlowLib API instance and
      * use the methods to set colors and such
-     *
+     * <p>
      * It will return null if the server hasn't started yet.
-     *
+     *<p>
      * Aliases: {@link #getAPI()} , {@link #getAPI()}
      * */
     @Nullable
@@ -117,7 +114,7 @@ public class ColoredGlowLibMod implements ModInitializer, EntityComponentInitial
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
         registry.registerForPlayers(COLOR_COMPONENT, ColorComponent::new, RespawnCopyStrategy.ALWAYS_COPY);
-        registry.registerFor(LivingEntity.class, COLOR_COMPONENT, ColorComponent::new);
+        registry.registerFor(Entity.class, COLOR_COMPONENT, ColorComponent::new);
     }
 
     /**
@@ -139,7 +136,7 @@ public class ColoredGlowLibMod implements ModInitializer, EntityComponentInitial
 
     /**
      * Returns false if there were issues reading colors
-     *
+     *<p>
      * */
     public static boolean loadCustomColorAnimation(CustomColorAnimation animation){
         for(CustomColorAnimation customColorAnimation : custom_color_animations){
@@ -160,6 +157,7 @@ public class ColoredGlowLibMod implements ModInitializer, EntityComponentInitial
             }
         }
         custom_color_animations.add(animation);
+        //TODO move to .debug?
         LOGGER.info("The custom color animation '" + animation.getName() + "' was loaded successfully!");
         return true;
     }
@@ -179,6 +177,7 @@ public class ColoredGlowLibMod implements ModInitializer, EntityComponentInitial
             }
             if(should_add){
                 custom_color_animations.add(animation);
+                //TODO move to .debug?
                 LOGGER.info("The custom color animation '" + animation.getName() + "' was loaded successfully!");
             }
         }

@@ -10,6 +10,7 @@ import net.minecraft.scoreboard.Scoreboard;
 
 import static me.emafire003.dev.coloredglowlib.component.ColorComponent.COLOR_COMPONENT;
 
+@SuppressWarnings("unused")
 public class ColoredGlowLibAPI {
 
 
@@ -28,7 +29,7 @@ public class ColoredGlowLibAPI {
 
 	/**Set this to true to override the default minecraft team colors
 	 * even of the entity is in a team.
-	 *
+	 * <p>
 	 * By default this option is set to <i>false</i>
 	 *
 	 * @param b The value to assing to overrideTeamColors*/
@@ -45,7 +46,7 @@ public class ColoredGlowLibAPI {
 	}
 
 	/** Makes the Default color override a potential Entity-specific or EntityType-specific color.
-	 *
+	 * <p>
 	 * By default this option is <i>false</i>
 	 *
 	 * @param b Set to true to enable overriding, set false to disable it.
@@ -66,7 +67,7 @@ public class ColoredGlowLibAPI {
 	/**
 	 * Makes the EntityType-specific color override a potential
 	 * Entity-specific color.
-	 *
+	 * <p>
 	 * By default this option is <i>false</i>
 	 *
 	 * @param b Set to true to enable overriding, set false to disable it.
@@ -91,7 +92,7 @@ public class ColoredGlowLibAPI {
 
 
 	/** Sets a default global color. The one used by default is <b>"#ffffff</b>, same as vanilla Minecraft.
-	 *
+	 * <p>
 	 * If an entity has another color assigned to its EntityType, or itself it will glow that color
 	 * instead of this one, unless {@link #setDefaultOverridesAll(boolean)} method is used.
 	 *
@@ -105,7 +106,7 @@ public class ColoredGlowLibAPI {
 
 	/** Makes the default color to be "rainbow", so every entity will by default
 	 * glow in rainbow colors, kinda like a _jeb sheep.
-	 *
+	 * <p>
 	 * If an entity has another color assigned to its EntityType, or itself it will glow that color
 	 * instead of this one, unless {@link #setDefaultOverridesAll(boolean)} method is used.
 	 */
@@ -115,7 +116,7 @@ public class ColoredGlowLibAPI {
 
 	/** Makes the default color to be "random", so every entity will by default
 	 * glow in a random color each tick.
-	 *
+	 * <p>
 	 * If an entity has another color assigned to its EntityType, or itself it will glow that color
 	 * instead of this one, unless {@link #setDefaultOverridesAll(boolean)} method is used.
 	 */
@@ -137,7 +138,7 @@ public class ColoredGlowLibAPI {
 	/**
 	 * Sets a custom glow color for an Entity.
 	 * The entity will now glow the specified color instead of vanilla minecraft's one.
-	 *
+	 * <p>
 	 * This glow color can be overridden by other methods, such as:
 	 * {@link #setDefaultOverridesAll(boolean)} and {@link #setEntityTypeColorOverridesEntityColor(boolean)}
 	 *
@@ -156,13 +157,13 @@ public class ColoredGlowLibAPI {
 	/**
 	 * Sets a custom glow color for an EntityType.
 	 * All entities of the specified EntityType will now glow the specified color instead of vanilla minecraft's one.
-	 *
+	 * <p>
 	 * This glow color can be overridden by other methods, such as:
 	 * {@link #setDefaultOverridesAll(boolean)}
 	 *
 	 * If an Entity has a color which is different from its EntityType's one it will glow that color unless
 	 * {@link #setEntityTypeColorOverridesEntityColor(boolean)} is enabled
-	 *
+	 *<p>
 	 * If no color is specified, but a default color is, the entities will glow that color.
 	 *
 	 * @param target The EntityType that will glow the specified color
@@ -177,7 +178,7 @@ public class ColoredGlowLibAPI {
 	/**
 	 * Sets the custom glow color of an Entity to rainbow.
 	 * This will make the entity glow every color periodically like a _jeb sheep
-	 *
+	 *<p>
 	 * See {@link #setColor(Entity, String)} for more information
 	 *
 	 * @param target The Entity that will glow the specified color
@@ -188,7 +189,7 @@ public class ColoredGlowLibAPI {
 
 	/**
 	 * Sets the custom glow color of an Entity to a random, the entity will glow a different color each tick.
-	 *
+	 *<p>
 	 * See {@link #setColor(Entity, String)} for more information
 	 *
 	 * @param target The Entity that will glow the specified color
@@ -200,7 +201,7 @@ public class ColoredGlowLibAPI {
 	/**
 	 * Sets the custom glow color of an EntityType to rainbow.
 	 * This will make the entities of that type glow every color periodically like a _jeb sheep
-	 *
+	 *<p>
 	 * See {@link #setColor(EntityType, String)} for more information
 	 *
 	 * @param target The EntityType that will glow the specified color
@@ -211,7 +212,7 @@ public class ColoredGlowLibAPI {
 
 	/**
 	 * Sets the custom glow color of an Entity to a random, the entity will glow a different color each tick.
-	 *
+	 *<p>
 	 * See {@link #setColor(EntityType, String)} for more information
 	 *
 	 * @param target The EntityType that will glow the specified color
@@ -242,7 +243,7 @@ public class ColoredGlowLibAPI {
 	 * unless <b>useDefaultColorInstead</b> is true, in which case the default color
 	 * you specified will be used. The default color is the same one that would be applied globally
 	 * if {@link #setDefaultOverridesAll(boolean)} is used.
-	 *
+	 *<p>
 	 * This will also clear the rainbow/random/custom color!
 	 *
 	 * @param entityType The EntityType that will be cleared from the color
@@ -259,14 +260,14 @@ public class ColoredGlowLibAPI {
 
 	/**
 	 * Gets the custom glow color of an Entity.
-	 *
+	 *<p>
 	 * The result could be "#ffffff" meaning it does not have a custom color and is using
 	 * the vanilla one, or "rainbow" meaning its glowing rainbow,
 	 * or "random" meaning its glowing a random color each tick,
 	 * or another hexadecimal string color.
-	 *
+	 *<p>
 	 * It can also return a custom animation name if they are added by a datapack
-	 *
+	 *<p>
 	 * If you need a color value instead you can use {@link me.emafire003.dev.coloredglowlib.util.ColorUtils} to manipulate it
  	 *
 	 * @param target The Entity to check the color for
@@ -279,14 +280,14 @@ public class ColoredGlowLibAPI {
 
 	/**
 	 * Gets the custom glow color of an EntityType.
-	 *
+	 *<p>
 	 * The result could be "#ffffff" meaning it does not have a custom color and is using
 	 * the vanilla one, or "rainbow" meaning its glowing rainbow,
 	 * or "random" meaning its glowing a random color each tick,
 	 * or another hexadecimal string color.
-	 *
+	 *<p>
 	 * It can also return a custom animation name if they are added by a datapack
-	 *
+	 *<p>
 	 * If you need a color value instead you can use {@link me.emafire003.dev.coloredglowlib.util.ColorUtils} to manipulate it
 	 *
 	 * @param target The EntityType to check the color for
@@ -300,14 +301,14 @@ public class ColoredGlowLibAPI {
 
 	/**
 	 * Gets the global/default custom glow color
-	 *
+	 *<p>
 	 * The result could be "#ffffff" meaning it does not have a custom color and is using
 	 * the vanilla one, or "rainbow" meaning its glowing rainbow,
 	 * or "random" meaning its glowing a random color each tick,
 	 * or another hexadecimal string color.
-	 *
+	 *<p>
 	 * It can also return a custom animation name if they are added by a datapack
-	 *
+	 *<p>
 	 * If you need a color value instead you can use {@link me.emafire003.dev.coloredglowlib.util.ColorUtils} to manipulate it
 	 *
 	 * @return The color string associated to the global color
@@ -327,11 +328,11 @@ public class ColoredGlowLibAPI {
 
 	/**
 	 * Checks if an EntityType has a custom glow color or not.
-	 * This is done by checking if its color is <i>"#ffffff"</i> or not.
-	 *
+	 * This is done by checking if its color (stored in the global component) is <i>"#ffffff"</i> or not.
+	 *<p>
 	 * <b>WARNING! This doesn't mean necessarily mean it has a custom color added by a datapack
 	 * but that it has a color that is different from the default value of white!</b>
-	 *
+	 *<p>
 	 * Warning! If you used {@link #clearColor(EntityType, boolean)} with <i>useDefaultColorInstead</i> to true,
 	 * you may want to use: {@link #hasCustomOrDefaultColor(EntityType)}
 	 *
@@ -361,20 +362,21 @@ public class ColoredGlowLibAPI {
 
 	/**
 	 * Checks if an Entity has a custom glow color or not.
-	 * This is done by checking if its color is <i>"#ffffff"</i> or not.
-	 *
+	 * This is done by checking if its color (stored in the component) is <i>"#ffffff"</i> or not.
+	 *<p>
 	 * <b>WARNING! This doesn't mean necessarily mean it has a custom color added by a datapack
 	 * but that it has a color that is different from the default value of white!</b>
-	 *
+	 *<p>
 	 * Warning! If you used {@link #clearColor(Entity, boolean)} with <i>useDefaultColorInstead</i> to true,
 	 * you may want to use: {@link #hasCustomOrDefaultColor(Entity)}
-	 *
+	 *<p>
 	 * @param target The Entity to check the color for
 	 *
 	 * @return Returns true if the Entity has a custom glow color associated to it.
 	 */
+	//TODO make configurable? Like using the default color instead. The has custom color i mean
 	public boolean hasCustomColor(Entity target){
-		return ColorUtils.checkDefault(COLOR_COMPONENT.get(target).getColor());
+		return !ColorUtils.checkDefault(COLOR_COMPONENT.get(target).getColor());
 	}
 
 	/**
@@ -463,8 +465,12 @@ public class ColoredGlowLibAPI {
 	 * @return Returns true if the color associated to that Entity is added by a datapack
 	 * */
 	public boolean hasCustomColorAnimation(Entity target){
-		String target_color = COLOR_COMPONENT.get(target).getColor();
-
+		String color = COLOR_COMPONENT.get(target).getColor();
+		for(CustomColorAnimation customColorAnimation : ColoredGlowLibMod.getCustomColorAnimations()){
+			if(color.equalsIgnoreCase(customColorAnimation.getName())){
+				return true;
+			}
+		}
 		return false;
 	}
 
