@@ -19,8 +19,6 @@ import static me.emafire003.dev.coloredglowlib.ColoredGlowLibMod.*;
 @Environment(EnvType.CLIENT)
 @Mixin(Entity.class)
 public abstract class EntityColorMixin {
-    @Unique
-    private final Entity entity = ((Entity)(Object)this);
 
     /*public int nameSpecificColor(Entity entity){
         Maybe i'll add it maybe not
@@ -85,6 +83,7 @@ public abstract class EntityColorMixin {
 
     @Unique
     private int randomColor(){
+        Entity entity = ((Entity)(Object)this);
         Random r = entity.getWorld().getRandom();
         if(random_delay_counter == 10){
             random_delay_counter = 0;
@@ -97,10 +96,16 @@ public abstract class EntityColorMixin {
 
     @Inject(method = "getTeamColorValue", at = @At("RETURN"), cancellable = true)
     public void injectChangeColorValue(CallbackInfoReturnable<Integer> cir){
+        Entity entity = ((Entity)(Object)this);
         ColoredGlowLibAPI cgl = ColoredGlowLibMod.getAPI();
 
         if(cgl == null){
             LOGGER.warn("The ColoredGlowLib API instance is null!");
+            return;
+        }
+
+        if(entity == null){
+            LOGGER.warn("The entity is null! Can't display the custom color!");
             return;
         }
 

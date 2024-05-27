@@ -1,6 +1,8 @@
-Probably recode everything from scratch. Use just the hex string and store values with Cardinal Components, then
-use architectury to multiplatform
+Coloredglowlib: Visible by aggiungere un nuovo component che contiene sia il color che il target che può essere un player specifico, un team, o un party e simili.
+Per le entity type e global probabilmente devo fare un'altro component dentro al component che ha il corrsipettivo target, emitter e colore.
 
+Also fare un sistema di chace per non leggere sempre dall'nbt? Forse?
 
-Add DataDriven animation and maybe triggers, like names or team or whatever. Like a sequence of blue red white that with white staing on for 3 seconds and the other ones for 1 etc.
-They would work like "rainbow" and "random"
+Also splittare in vari moduli magari tipo solo la API e la API extension
+per questa roba qua forse? Oddio un po' complesso siccome sarebbe un mixin
+del mixin
