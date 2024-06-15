@@ -1,6 +1,7 @@
 package me.emafire003.dev.coloredglowlib;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.util.Identifier;
 import org.ladysnake.cca.api.v3.entity.EntityComponentFactoryRegistry;
 import org.ladysnake.cca.api.v3.entity.EntityComponentInitializer;
 import org.ladysnake.cca.api.v3.entity.RespawnCopyStrategy;
@@ -61,6 +62,11 @@ public class ColoredGlowLibMod implements ModInitializer, EntityComponentInitial
         CommandRegistrationCallback.EVENT.register(CGLCommands::registerCommands);
 
         LOGGER.info("Complete!");
+    }
+
+    /**Used (internally) to get an identifier with this mod's namespace*/
+    public static Identifier getIdentifier(String path){
+        return Identifier.of(MOD_ID, path);
     }
 
     /**

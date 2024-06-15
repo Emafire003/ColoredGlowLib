@@ -1,5 +1,6 @@
 package me.emafire003.dev.coloredglowlib.component;
 
+import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
 import net.minecraft.registry.RegistryWrapper;
 import org.ladysnake.cca.api.v3.component.ComponentKey;
 import org.ladysnake.cca.api.v3.component.ComponentRegistry;
@@ -10,7 +11,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -18,12 +18,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-import static me.emafire003.dev.coloredglowlib.ColoredGlowLibMod.MOD_ID;
-
 public class GlobalColorComponent implements ComponentV3, AutoSyncedComponent{
 
     public static final ComponentKey<GlobalColorComponent> GLOBAL_COLOR_COMPONENT =
-            ComponentRegistry.getOrCreate(new Identifier(MOD_ID, "global_color_component"), GlobalColorComponent.class);
+            ComponentRegistry.getOrCreate(ColoredGlowLibMod.getIdentifier("global_color_component"), GlobalColorComponent.class);
 
     private final Scoreboard scoreboard;
 

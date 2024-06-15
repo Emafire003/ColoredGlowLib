@@ -26,7 +26,7 @@ public class CGLResourceManager {
 
             @Override
             public Identifier getFabricId() {
-                return new Identifier(ColoredGlowLibMod.MOD_ID, RESOURCE_PATH);
+                return ColoredGlowLibMod.getIdentifier(RESOURCE_PATH);
             }
 
             @Override

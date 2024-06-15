@@ -1,5 +1,6 @@
 package me.emafire003.dev.coloredglowlib.component;
 
+import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
 import net.minecraft.entity.Entity;
 import net.minecraft.registry.RegistryWrapper;
 import org.ladysnake.cca.api.v3.component.ComponentKey;
@@ -8,14 +9,11 @@ import org.ladysnake.cca.api.v3.component.ComponentV3;
 import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
 import me.emafire003.dev.coloredglowlib.util.ColorUtils;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.Identifier;
-
-import static me.emafire003.dev.coloredglowlib.ColoredGlowLibMod.MOD_ID;
 
 public class ColorComponent implements ComponentV3, AutoSyncedComponent{
 
     public static final ComponentKey<ColorComponent> COLOR_COMPONENT =
-            ComponentRegistry.getOrCreate(new Identifier(MOD_ID, "color_component"), ColorComponent.class);
+            ComponentRegistry.getOrCreate(ColoredGlowLibMod.getIdentifier("color_component"), ColorComponent.class);
 
     private final Entity self;
 
