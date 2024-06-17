@@ -1,4 +1,5 @@
-# ColoredGlow Lib
+![cgl_2k](https://github.com/Emafire003/ColoredGlowLib/assets/29462910/3d70385d-4e4d-49e9-bb87-10b82902ff05)
+#
 This library mod enables you to make entities glow different colors other than plain white or Minecraft vanilla's Team colors. You can also add custom color animation, a set of colors that will change overtime, like a rainbow!
 
 ![BH_NU_HEADER](https://github.com/Emafire003/ColoredGlowLib/assets/29462910/9346b836-2cd7-47a0-8364-e09bd66e3c37)
