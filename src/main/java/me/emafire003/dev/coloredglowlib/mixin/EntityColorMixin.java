@@ -196,7 +196,21 @@ public abstract class EntityColorMixin {
 
 
             /**But before that let's check if it has a color specific the the client player*/
-            if(getAPI() != null && getAPI().hasExclusiveCustomOrDefaultColorFor(entity, Objects.requireNonNull(player))){
+            if(cgl.hasExclusiveForTeam(entity, player.getScoreboardTeam())){
+
+            }
+            if(cgl.hasExclusiveForTeam(entity.getScoreboardTeam(), player.getScoreboardTeam())){
+                entity.getScoreboardTeam().getName();
+            }
+            if(cgl.hasExclusiveForTeam(entity.getScoreboardTeam(), player)){
+
+            }
+
+            //TODO so i need:
+            // entities that have a specific color for a team
+            // teams that have specific colors for an entity
+            // teams that have specific colors for other teams
+            if(cgl.hasExclusiveCustomOrDefaultColorFor(entity, Objects.requireNonNull(player))){
                 String exclusiveColor = getAPI().getExclusiveColorFor(entity, player);
                 if(exclusiveColor.equalsIgnoreCase("rainbow")){
                     //Checks if the color is rainbow or random colored

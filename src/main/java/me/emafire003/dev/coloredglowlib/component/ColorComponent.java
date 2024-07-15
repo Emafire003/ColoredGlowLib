@@ -21,6 +21,8 @@ public class ColorComponent implements ComponentV3, AutoSyncedComponent{
 
     protected String color = ColorUtils.WHITE;
     protected NbtCompound exclusiveTargetColorMap = new NbtCompound();
+    protected NbtCompound exclusiveTeamColorMap = new NbtCompound();
+
 
     public ColorComponent(Entity entity) {
         this.self = entity;
@@ -39,12 +41,19 @@ public class ColorComponent implements ComponentV3, AutoSyncedComponent{
         }else{
             this.exclusiveTargetColorMap = new NbtCompound();
         }
+
+        if(tag.contains("exclusiveTeamColorMap")){
+            this.exclusiveTargetColorMap = tag.getCompound("exclusiveTeamColorMap");
+        }else{
+            this.exclusiveTargetColorMap = new NbtCompound();
+        }
     }
 
     @Override
     public void writeToNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
         tag.putString("color", this.color);
         tag.put("exclusiveTargetColorMap", exclusiveTargetColorMap);
+        tag.put("exclusiveTeamColorMap", exclusiveTeamColorMap);
     }
 
     /**
@@ -108,9 +117,58 @@ public class ColorComponent implements ComponentV3, AutoSyncedComponent{
         return exclusiveTargetColorMap.getString(uuid.toString());
     }
 
+
+
+    public HashMap<String, String> getExclusiveTeamColorMap(){
+        HashMap<String, String> map = new HashMap<>();
+        List<String> keys = new ArrayList<>(this.exclusiveTeamColorMap.getKeys());
+        keys.forEach((key) -> {
+            //key == team name
+            String color = this.exclusiveTeamColorMap.getString(key);
+            map.put(key, color);
+        });
+        return map;
+    }
+
+    /**
+     * @param teamName The name of the team that will see the specific color
+     * @param color A hex color or "rainbow"*/
+    public void addExclusiveColorForTeam(String teamName, String color){
+        exclusiveTeamColorMap.putString(teamName, color);
+        COLOR_COMPONENT.sync(self);
+    }
+
+    /**
+     *
+     * WARNING! THIS CANNOT BE USED TO CLEAR A TYPE! USE clearExclusiveColor INSTEAD!
+     *
+     * @param teamName The name of the team that will see the specific color
+     * @param color A hex color or "rainbow"*/
+    public void setExclusiveColorForTeam(String teamName, String color){
+        if(exclusiveTeamColorMap.contains(teamName)){
+            exclusiveTeamColorMap.remove(teamName);
+        }
+        //This other method calls the sync
+        addExclusiveColorForTeam(teamName, color);
+    }
+
+    public void clearExclusiveColorForTeam(String teamName){
+        exclusiveTeamColorMap.remove(teamName);
+        COLOR_COMPONENT.sync(self);
+    }
+
+    public String getExclusiveColorForTeam(String teamName){
+        String color = exclusiveTeamColorMap.getString(teamName);
+        if(color == null || color.equalsIgnoreCase("")){
+            return ColorUtils.WHITE;
+        }
+        return exclusiveTeamColorMap.getString(teamName);
+    }
+
     public void clear(){
         this.color = ColorUtils.WHITE;
         this.exclusiveTargetColorMap = new NbtCompound();
+        this.exclusiveTeamColorMap = new NbtCompound();
         COLOR_COMPONENT.sync(self);
     }
 }
