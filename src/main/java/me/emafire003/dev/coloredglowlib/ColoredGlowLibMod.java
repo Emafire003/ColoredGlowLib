@@ -1,7 +1,14 @@
 package me.emafire003.dev.coloredglowlib;
 
+import me.emafire003.dev.coloredglowlib.networking.ColorAnimationsPayloadS2C;
+import me.emafire003.dev.coloredglowlib.networking.PlayerJoinEvent;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.Entity;
 import net.minecraft.scoreboard.Scoreboard;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import org.ladysnake.cca.api.v3.entity.EntityComponentFactoryRegistry;
 import org.ladysnake.cca.api.v3.entity.EntityComponentInitializer;
@@ -54,9 +61,7 @@ public class ColoredGlowLibMod implements ModInitializer, EntityComponentInitial
 
         LOGGER.info("Initializing...");
 
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-            coloredGlowLib = new ColoredGlowLibAPI(server.getScoreboard());
-        }
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> coloredGlowLib = new ColoredGlowLibAPI(server.getScoreboard())
         );
 
         LocalDate currentDate = LocalDate.now();
@@ -66,7 +71,16 @@ public class ColoredGlowLibMod implements ModInitializer, EntityComponentInitial
             isAp1 = true;
         }
 
+        PayloadTypeRegistry.playS2C().register(ColorAnimationsPayloadS2C.ID, ColorAnimationsPayloadS2C.PACKET_CODEC);
         CGLResourceManager.register();
+
+        //If this is a server only instance, it will send stuff to the player when they connect. If not it means it's singleplayer so no problem.
+        if(FabricLoader.getInstance().getEnvironmentType().equals(EnvType.SERVER)){
+            PlayerJoinEvent.EVENT.register((player, server) -> {
+                ServerPlayNetworking.send(player, new ColorAnimationsPayloadS2C(getCustomColorAnimations()));
+                return ActionResult.PASS;
+            });
+        }
 
         CommandRegistrationCallback.EVENT.register(CGLCommands::registerCommands);
 
@@ -161,7 +175,7 @@ public class ColoredGlowLibMod implements ModInitializer, EntityComponentInitial
     public static boolean loadCustomColorAnimation(CustomColorAnimation animation){
         for(CustomColorAnimation customColorAnimation : custom_color_animations){
             if(animation.getName().equalsIgnoreCase(customColorAnimation.getName())){
-                LOGGER.error("The color animation '" + animation.getName() + "' wasn't loaded because there already is an animation with that name!!");
+                LOGGER.warn("The color animation '" + animation.getName() + "' wasn't loaded because there already is an animation with that name!!");
                 return false;
             }
         }

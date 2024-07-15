@@ -2,6 +2,10 @@ package me.emafire003.dev.coloredglowlib.custom_data_animations;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.netty.buffer.ByteBuf;
+import me.emafire003.dev.coloredglowlib.networking.ListedPacketCodecs;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +18,20 @@ public class CustomColorAnimation {
                             ColorAnimationItem.CODEC.listOf().fieldOf("colors").forGetter(CustomColorAnimation::getColorAnimations))
                     .apply(instance, CustomColorAnimation::new)
     );
+
+    public static final PacketCodec<ByteBuf, CustomColorAnimation> PACKET_CODEC = new PacketCodec<>() {
+        @Override
+        public CustomColorAnimation decode(ByteBuf buf) {
+            return new CustomColorAnimation(PacketCodecs.STRING.decode(buf), ListedPacketCodecs.ANIMATION_ITEMS.decode(buf));
+        }
+
+        @Override
+        public void encode(ByteBuf buf, CustomColorAnimation value) {
+            PacketCodecs.STRING.encode(buf, value.name);
+            ListedPacketCodecs.ANIMATION_ITEMS.encode(buf, value.colors);
+        }
+    };
+
 
     private final String name;
     private final List<ColorAnimationItem> colors;

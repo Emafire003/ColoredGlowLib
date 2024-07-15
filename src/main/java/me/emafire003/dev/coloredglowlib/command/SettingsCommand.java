@@ -26,7 +26,7 @@ public class SettingsCommand implements CGLCommand {
             ColoredGlowLibMod.getAPI().setOverrideTeamColors(b);
         }else{
             source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"§cAn error has occurred. The API hasn't yet been initialised!"));
-            return 1;
+            return 0;
         }
 
         if(b){
@@ -44,7 +44,7 @@ public class SettingsCommand implements CGLCommand {
             b = ColoredGlowLibMod.getAPI().getOverrideTeamColors();
         }else{
             source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"§cAn error has occurred. The API hasn't yet been initialised!"));
-            return 1;
+            return 0;
         }
 
         if(b){
@@ -63,7 +63,7 @@ public class SettingsCommand implements CGLCommand {
            ColoredGlowLibMod.getAPI().setEntityTypeColorOverridesEntityColor(b);
         }else{
             source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"§cAn error has occurred. The API hasn't yet been initialised!"));
-            return 1;
+            return 0;
         }
 
         if(b){
@@ -82,7 +82,7 @@ public class SettingsCommand implements CGLCommand {
             b = ColoredGlowLibMod.getAPI().getEntityTypeColorOverridesEntityColor();
         }else{
             source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"§cAn error has occurred. The API hasn't yet been initialised!"));
-            return 1;
+            return 0;
         }
 
         if(b){
@@ -101,7 +101,7 @@ public class SettingsCommand implements CGLCommand {
             ColoredGlowLibMod.getAPI().setDefaultOverridesAll(b);
         }else{
             source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"§cAn error has occurred. The API hasn't yet been initialised!"));
-            return 1;
+            return 0;
         }
 
         if(b){
@@ -120,7 +120,7 @@ public class SettingsCommand implements CGLCommand {
             b = ColoredGlowLibMod.getAPI().getDefaultOverridesAll();
         }else{
             source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"§cAn error has occurred. The API hasn't yet been initialised!"));
-            return 1;
+            return 0;
         }
 
         if(b){

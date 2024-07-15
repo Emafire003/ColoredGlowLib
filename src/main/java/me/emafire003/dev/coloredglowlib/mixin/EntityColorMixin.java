@@ -9,10 +9,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.math.random.Random;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -35,6 +33,7 @@ public abstract class EntityColorMixin {
         if(color.startsWith("#")){
             color = color.replaceAll("#", "");
         }
+
         for(CustomColorAnimation customColorAnimation : getCustomColorAnimations()){
             if(color.equalsIgnoreCase(customColorAnimation.getName())){
                 int color_index = customColorAnimation.getCurrentColorIndex();
@@ -73,11 +72,15 @@ public abstract class EntityColorMixin {
     }
 
     @Unique
-    private final ColorUtils.RainbowChanger rainbowColor = new ColorUtils.RainbowChanger(255, 0, 0);
+    private ColorUtils.RainbowChanger rainbowColor = new ColorUtils.RainbowChanger(255, 0, 0);
 
     /**Returns the rainbow color*/
     @Unique
     private int getRainbowColor(){
+        if(rainbowColor == null){
+            LOGGER.warn("rainbowColor was null, reinitialising");
+            this.rainbowColor = new ColorUtils.RainbowChanger(255, 0, 0);
+        }
         rainbowColor.setRainbowColor(10);
         return rainbowColor.getColorValue();
     }

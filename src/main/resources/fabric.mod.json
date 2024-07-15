@@ -23,6 +23,7 @@
       "me.emafire003.dev.coloredglowlib.ColoredGlowLibMod"
     ],
     "client": [
+      "me.emafire003.dev.coloredglowlib.ColoredGlowLibModClient"
     ],
     "cardinal-components-entity": [
       "me.emafire003.dev.coloredglowlib.ColoredGlowLibMod"
@@ -42,7 +43,7 @@
   },
   "depends": {
     "fabricloader": ">=0.15.11",
-    "minecraft": ">=1.20.5",
+    "minecraft": ">=1.21",
     "java": ">=16",
     "cardinal-components-base": ">=6.0.0-0",
     "cardinal-components-entity": ">=6.0.0-0",

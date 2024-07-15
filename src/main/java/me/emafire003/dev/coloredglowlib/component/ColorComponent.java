@@ -71,8 +71,6 @@ public class ColorComponent implements ComponentV3, AutoSyncedComponent{
         return map;
     }
 
-    //TODO maybe add dedicated team things
-
     /**
      * @param uuid The uuid of the player that will see the specific color
      * @param color A hex color or "rainbow"*/

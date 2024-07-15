@@ -31,7 +31,7 @@ public class ClearGlowColorCommand implements CGLCommand {
             ColoredGlowLibMod.getAPI().clearGlobalColor();
         }else{
             source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"§cAn error has occurred. The API hasn't yet been initialised!"));
-            return 1;
+            return 0;
         }
         source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"§7Resetted the default color to white!"), false);
         return 1;
@@ -88,34 +88,6 @@ public class ClearGlowColorCommand implements CGLCommand {
         return targets.size();
     }
 
-    //TODO actually implement
-    //TODO maybe move to dedicated team things
-    private int clearEntityColorForTeam(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        Collection<? extends Entity> targets = EntityArgumentType.getEntities(context, "targets");
-        ServerCommandSource source = context.getSource();
-        ServerPlayerEntity player = EntityArgumentType.getPlayer(context, "visibleToPlayer");
-
-        boolean useDefault;
-        try{
-            useDefault = BoolArgumentType.getBool(context, "useDefaultColor");
-        }catch (Exception e){
-            useDefault = false;
-        }
-
-        for (Entity entity : targets) {
-            if (ColoredGlowLibMod.getAPI() != null) {
-                ColoredGlowLibMod.getAPI().clearExclusiveColorFor(entity, player, useDefault);
-            }else{
-                source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"§cAn error has occurred. The API hasn't yet been initialised!"));
-                return 1;
-            }
-        }
-
-        source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"§7Cleared the color visible only to " + player.getName().getString() + "from the selected entity/entities!"), true);
-        return targets.size();
-    }
-
-
     private int clearEntityTypeColor(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         EntityType<?> type = RegistryEntryReferenceArgumentType.getSummonableEntityType(context, "entity").value();
         ServerCommandSource source = context.getSource();
@@ -131,7 +103,7 @@ public class ClearGlowColorCommand implements CGLCommand {
             ColoredGlowLibMod.getAPI().clearColor(type, useDefault);
         }else{
             source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"§cAn error has occurred. The API hasn't yet been initialised!"));
-            return 1;
+            return 0;
         }
 
         source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"§7Cleared color from the selected entity/entities!"), false);
@@ -147,7 +119,7 @@ public class ClearGlowColorCommand implements CGLCommand {
             ColoredGlowLibMod.getAPI().setOverrideTeamColors(false);
         }else{
             source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"§cAn error has occurred. The API hasn't yet been initialised!"));
-            return 1;
+            return 0;
         }
 
         source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"§7All settings have been reset to default values!"), false);
@@ -177,7 +149,6 @@ public class ClearGlowColorCommand implements CGLCommand {
                                 .executes(this::clearEntityColor)
                                 )
                 )
-                //TODO i'm working on this
                 .then(
                         CommandManager.argument("targets", EntityArgumentType.entities())
                                 .executes(this::clearEntityColor).then(

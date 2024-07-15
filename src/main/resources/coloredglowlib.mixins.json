@@ -4,6 +4,7 @@
   "package": "me.emafire003.dev.coloredglowlib.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
+    "PlayerJoinMixin"
   ],
   "server": [
   ],
