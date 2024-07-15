@@ -10,12 +10,15 @@ import me.emafire003.dev.coloredglowlib.compat.permissions.PermissionsChecker;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.command.argument.RegistryEntryReferenceArgumentType;
+import net.minecraft.command.argument.TeamArgumentType;
 import net.minecraft.command.suggestion.SuggestionProviders;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.RegistryKeys;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.scoreboard.Team;
+import net.minecraft.server.command.*;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
 import java.util.Collection;
@@ -59,6 +62,104 @@ public class SetGlowColorCommand implements CGLCommand {
 
             //source.sendFeedback(new TranslatableText("commands.setglowcolor.success1").append(color).append(new TranslatableText("commands.setglowcolor.success2")), true);
             source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"§7Setted color '§b" + color + "§7' to the selected entity/entities!"), false);
+            return targets.size();
+        }else{
+            //source.sendError(new TranslatableText("commands.setglowcolor.notcolor"));
+            source.sendError((Text.literal(ColoredGlowLibMod.PREFIX+"Error! The value you have specified is not §cvalid! It should be RRGGBB (without '#') or 'rainbow' or 'random' or a custom animation name!")));
+            return 0;
+        }
+    }
+
+    private int setGlowColorFor(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        ServerCommandSource source = context.getSource();
+        Collection<? extends Entity> targets = EntityArgumentType.getEntities(context, "targets");
+        String color = "#"+StringArgumentType.getString(context, "color");
+        source.sendMessage(Text.literal("Are you excecuting this?"));
+        PlayerEntity player = EntityArgumentType.getPlayer(context, "visibleOnlyToPlayer");
+
+
+        if(isValidColorOrCustom(color)){
+            for (Entity entity : targets) {
+                if(color.equalsIgnoreCase("#rainbow")){
+                    if (ColoredGlowLibMod.getAPI() != null) {
+                        ColoredGlowLibMod.getAPI().setExclusiveColorFor(entity, "rainbow", player);
+                    }else{
+                        source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"§cAn error has occurred. The API hasn't yet been initialised!"));
+                        return 1;
+                    }
+                }else if(color.equalsIgnoreCase("#random")){
+
+                    if (ColoredGlowLibMod.getAPI() != null) {
+                        ColoredGlowLibMod.getAPI().setExclusiveColorFor(entity, "random", player);
+                    }else{
+                        source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"§cAn error has occurred. The API hasn't yet been initialised!"));
+                        return 1;
+                    }
+                }else{
+                    if (ColoredGlowLibMod.getAPI() != null) {
+                        ColoredGlowLibMod.getAPI().setExclusiveColorFor(entity, color, player);
+                    }else{
+                        source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"§cAn error has occurred. The API hasn't yet been initialised!"));
+                        return 1;
+                    }
+                }
+            }
+
+            //source.sendFeedback(new TranslatableText("commands.setglowcolor.success1").append(color).append(new TranslatableText("commands.setglowcolor.success2")), true);
+            source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"§7Setted color '§b" + color + "§7' to the selected entity/entities, visible only to §b" + player.getName().getString() + "!"), false);
+            return targets.size();
+        }else{
+            //source.sendError(new TranslatableText("commands.setglowcolor.notcolor"));
+            source.sendError((Text.literal(ColoredGlowLibMod.PREFIX+"Error! The value you have specified is not §cvalid! It should be RRGGBB (without '#') or 'rainbow' or 'random' or a custom animation name!")));
+            return 0;
+        }
+    }
+
+    //TODO maybe move to dedicated team things
+    private int setGlowColorForTeam(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        Collection<? extends Entity> targets = EntityArgumentType.getEntities(context, "targets");
+        String color = "#"+StringArgumentType.getString(context, "color");
+        Team team = TeamArgumentType.getTeam(context, "visibleOnlyToTeam");
+        ServerCommandSource source = context.getSource();
+
+        if(isValidColorOrCustom(color)){
+            for(String playerName : team.getPlayerList()){
+                ServerPlayerEntity player = context.getSource().getServer().getPlayerManager().getPlayer(playerName);
+
+                if(player == null){
+                    source.sendError((Text.literal(ColoredGlowLibMod.PREFIX+"Error! Can't find the specified player!")));
+                    return 1;
+                }
+
+                for (Entity entity : targets) {
+                    if(color.equalsIgnoreCase("#rainbow")){
+                        if (ColoredGlowLibMod.getAPI() != null) {
+                            ColoredGlowLibMod.getAPI().setExclusiveColorFor(entity, "rainbow", player);
+                        }else{
+                            source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"§cAn error has occurred. The API hasn't yet been initialised!"));
+                            return 1;
+                        }
+                    }else if(color.equalsIgnoreCase("#random")){
+
+                        if (ColoredGlowLibMod.getAPI() != null) {
+                            ColoredGlowLibMod.getAPI().setExclusiveColorFor(entity, "random", player);
+                        }else{
+                            source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"§cAn error has occurred. The API hasn't yet been initialised!"));
+                            return 1;
+                        }
+                    }else{
+                        if (ColoredGlowLibMod.getAPI() != null) {
+                            ColoredGlowLibMod.getAPI().setExclusiveColorFor(entity, color, player);
+                        }else{
+                            source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"§cAn error has occurred. The API hasn't yet been initialised!"));
+                            return 1;
+                        }
+                    }
+                }
+            }
+
+            //source.sendFeedback(new TranslatableText("commands.setglowcolor.success1").append(color).append(new TranslatableText("commands.setglowcolor.success2")), true);
+            source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"§7Setted color '§b" + color + "§7' to the selected entity/entities, visible only to team").append(team.getName()).formatted(team.getColor()).append("!"), false);
             return targets.size();
         }else{
             //source.sendError(new TranslatableText("commands.setglowcolor.notcolor"));
@@ -197,6 +298,33 @@ public class SetGlowColorCommand implements CGLCommand {
                                 .executes(this::setGlowColor)
                                 )
                 )
+                .then(
+                        CommandManager.argument("targets", EntityArgumentType.entities())
+                                .then(
+                                        CommandManager.argument("color", StringArgumentType.string())
+                                                .then(
+                                                        CommandManager.argument("visibleOnlyToPlayer", EntityArgumentType.players()
+                                                        ).executes(this::setGlowColorFor)
+                                                )
+
+                                )
+                )
+
+                .then(
+                        CommandManager.argument("targets", EntityArgumentType.entities())
+                                .then(
+                                        CommandManager.argument("color", StringArgumentType.string())
+                                                .then(CommandManager.literal("forTeam")
+                                                        .then(
+                                                                CommandManager.argument("visibleOnlyToTeam", TeamArgumentType.team())
+                                                                        .executes(this::setGlowColorForTeam)
+                                                        )
+                                                )
+
+
+                                )
+                )
+
                 .then(
                         CommandManager.argument("entity", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.ENTITY_TYPE)).suggests(SuggestionProviders.SUMMONABLE_ENTITIES)
                                 .then(

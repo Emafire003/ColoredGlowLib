@@ -6,13 +6,19 @@ import me.emafire003.dev.coloredglowlib.custom_data_animations.CustomColorAnimat
 import me.emafire003.dev.coloredglowlib.util.ColorUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.math.random.Random;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.Objects;
 
 import static me.emafire003.dev.coloredglowlib.ColoredGlowLibMod.*;
 
@@ -29,7 +35,7 @@ public abstract class EntityColorMixin {
         if(color.startsWith("#")){
             color = color.replaceAll("#", "");
         }
-        for(CustomColorAnimation customColorAnimation : ColoredGlowLibMod.getCustomColorAnimations()){
+        for(CustomColorAnimation customColorAnimation : getCustomColorAnimations()){
             if(color.equalsIgnoreCase(customColorAnimation.getName())){
                 int color_index = customColorAnimation.getCurrentColorIndex();
                 int current_ticks = customColorAnimation.getCurrentTicks();
@@ -96,11 +102,27 @@ public abstract class EntityColorMixin {
 
     @Inject(method = "getTeamColorValue", at = @At("RETURN"), cancellable = true)
     public void injectChangeColorValue(CallbackInfoReturnable<Integer> cir){
+        if(SHUTDOWN){
+            return;
+        }
+
+        PlayerEntity player = MinecraftClient.getInstance().player;
+
+        if(player == null){
+            //TODO remvoe?
+            LOGGER.warn("ERROR! THE PLAYER UUID IS NULL!");
+        }
+
         Entity entity = ((Entity)(Object)this);
-        ColoredGlowLibAPI cgl = ColoredGlowLibMod.getAPI();
+        ColoredGlowLibAPI cgl = getAPI();
 
         if(cgl == null){
-            LOGGER.warn("The ColoredGlowLib API instance is null!");
+            LOGGER.warn("The ColoredGlowLib API instance is null! Trying to reinitialize it!");
+            TRIES_BEFORE_SHUTDOWN = (short) (TRIES_BEFORE_SHUTDOWN + 1);
+            ColoredGlowLibMod.reInitAPIInstance(entity.getWorld().getScoreboard());
+            if(TRIES_BEFORE_SHUTDOWN >= MAX_TRIES){
+                LOGGER.error("Disabling the mod, can't get the API instance to work!");
+            }
             return;
         }
 
@@ -112,7 +134,7 @@ public abstract class EntityColorMixin {
         if(entity.getScoreboardTeam() == null || cgl.getOverrideTeamColors()) {
 
             /**Checks if it's april 1st for jokes*/
-            if(ColoredGlowLibMod.isAp1){
+            if(isAp1){
                 cir.setReturnValue(ColorUtils.toColorValue(255, 0, 174));
                 return;
             }
@@ -172,12 +194,35 @@ public abstract class EntityColorMixin {
              * If it's the default one, it will check its entitytype, then the default color*/
             String entity_col = cgl.getColor(entity);
 
+
+            /**But before that let's check if it has a color specific the the client player*/
+            if(getAPI() != null && getAPI().hasExclusiveCustomOrDefaultColorFor(entity, Objects.requireNonNull(player))){
+                String exclusiveColor = getAPI().getExclusiveColorFor(entity, player);
+                if(exclusiveColor.equalsIgnoreCase("rainbow")){
+                    //Checks if the color is rainbow or random colored
+                    cir.setReturnValue(getRainbowColor());
+                    return;
+                }else if(exclusiveColor.equalsIgnoreCase("random")){
+                    cir.setReturnValue(randomColor());
+                    return;
+                }else{
+                    int custom = handleCustomColor(exclusiveColor);
+                    if(custom != -1){
+                        cir.setReturnValue(custom);
+                        return;
+                    }
+                    cir.setReturnValue(ColorUtils.toColorValue(exclusiveColor));
+                    return;
+                }
+            }
+
+
             //If the entity does not have a custom color, it will check for other things, like default color and entitytype color
-            if(ColoredGlowLibMod.getAPI() != null && !ColoredGlowLibMod.getAPI().hasCustomColor(entity)){
+            if(getAPI() != null && !getAPI().hasCustomColor(entity)){
                 //If the entity type's color is the default one as well, returns the default color
                 String type_col = cgl.getColor(entity.getType());
                 //Checking if the enttiy has a custom color
-                if(ColoredGlowLibMod.getAPI().hasCustomColor(entity.getType())){
+                if(getAPI().hasCustomColor(entity.getType())){
                     if(type_col.equalsIgnoreCase("rainbow")){
                         //Checks if the entitytype is rainbow or random colored
                         cir.setReturnValue(getRainbowColor());

@@ -16,6 +16,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
 import java.util.Collection;
@@ -60,6 +61,60 @@ public class ClearGlowColorCommand implements CGLCommand {
         source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"§7Cleared the color from the selected entity/entities!"), true);
         return targets.size();
     }
+
+
+    private int clearEntityColorFor(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        Collection<? extends Entity> targets = EntityArgumentType.getEntities(context, "targets");
+        ServerCommandSource source = context.getSource();
+        ServerPlayerEntity player = EntityArgumentType.getPlayer(context, "visibleToPlayer");
+
+        boolean useDefault;
+        try{
+            useDefault = BoolArgumentType.getBool(context, "useDefaultColor");
+        }catch (Exception e){
+            useDefault = false;
+        }
+
+        for (Entity entity : targets) {
+            if (ColoredGlowLibMod.getAPI() != null) {
+                ColoredGlowLibMod.getAPI().clearExclusiveColorFor(entity, player, useDefault);
+            }else{
+                source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"§cAn error has occurred. The API hasn't yet been initialised!"));
+                return 1;
+            }
+        }
+
+        source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"§7Cleared the color visible only to " + player.getName().getString() + "from the selected entity/entities!"), true);
+        return targets.size();
+    }
+
+    //TODO actually implement
+    //TODO maybe move to dedicated team things
+    private int clearEntityColorForTeam(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        Collection<? extends Entity> targets = EntityArgumentType.getEntities(context, "targets");
+        ServerCommandSource source = context.getSource();
+        ServerPlayerEntity player = EntityArgumentType.getPlayer(context, "visibleToPlayer");
+
+        boolean useDefault;
+        try{
+            useDefault = BoolArgumentType.getBool(context, "useDefaultColor");
+        }catch (Exception e){
+            useDefault = false;
+        }
+
+        for (Entity entity : targets) {
+            if (ColoredGlowLibMod.getAPI() != null) {
+                ColoredGlowLibMod.getAPI().clearExclusiveColorFor(entity, player, useDefault);
+            }else{
+                source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"§cAn error has occurred. The API hasn't yet been initialised!"));
+                return 1;
+            }
+        }
+
+        source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"§7Cleared the color visible only to " + player.getName().getString() + "from the selected entity/entities!"), true);
+        return targets.size();
+    }
+
 
     private int clearEntityTypeColor(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         EntityType<?> type = RegistryEntryReferenceArgumentType.getSummonableEntityType(context, "entity").value();
@@ -122,6 +177,19 @@ public class ClearGlowColorCommand implements CGLCommand {
                                 .executes(this::clearEntityColor)
                                 )
                 )
+                //TODO i'm working on this
+                .then(
+                        CommandManager.argument("targets", EntityArgumentType.entities())
+                                .executes(this::clearEntityColor).then(
+                                       CommandManager.argument("visibleToPlayer", EntityArgumentType.players())
+                                               .then(
+                                                       CommandManager.argument("useDefaultColor", BoolArgumentType.bool())
+                                                               .executes(this::clearEntityColorFor)
+                                               )
+                                )
+
+                )
+
                 .then(
                         CommandManager.argument("entity", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.ENTITY_TYPE)).suggests(SuggestionProviders.SUMMONABLE_ENTITIES)
                                 .executes(this::clearEntityTypeColor)

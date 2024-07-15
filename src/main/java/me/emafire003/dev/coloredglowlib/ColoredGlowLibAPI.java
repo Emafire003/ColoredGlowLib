@@ -6,6 +6,7 @@ import me.emafire003.dev.coloredglowlib.custom_data_animations.CustomColorAnimat
 import me.emafire003.dev.coloredglowlib.util.ColorUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.scoreboard.Scoreboard;
 
 import static me.emafire003.dev.coloredglowlib.component.ColorComponent.COLOR_COMPONENT;
@@ -391,8 +392,8 @@ public class ColoredGlowLibAPI {
 	 * @return Returns true if the Entity has a custom glow color associated to it that differs from the defaultColor.
 	 */
 	public  boolean hasCustomOrDefaultColor(Entity target){
-		return ColorUtils.checkDefault(COLOR_COMPONENT.get(target).getColor())
-				|| ColorUtils.checkSameColor(COLOR_COMPONENT.get(target).getColor(), globalColorComponent.getDefaultColor()) ;
+		return !(ColorUtils.checkDefault(COLOR_COMPONENT.get(target).getColor())
+				|| ColorUtils.checkSameColor(COLOR_COMPONENT.get(target).getColor(), globalColorComponent.getDefaultColor())) ;
 	}
 
 
@@ -475,4 +476,101 @@ public class ColoredGlowLibAPI {
 	}
 
 
+	//new stuff
+
+	/**
+	 * Sets a custom glow color for an Entity, visible only to another player.
+	 * The entity will now glow the specified color instead of vanilla minecraft's one.
+	 * <p>
+	 * This glow color can be overridden by other methods, such as:
+	 * {@link #setDefaultOverridesAll(boolean)} and {@link #setEntityTypeColorOverridesEntityColor(boolean)}
+	 *
+	 * If no color is specified, but an EntityType or default color is, the entity will glow that color.
+	 *
+	 * @param target The Entity that will glow the specified color
+	 * @param color An hexadecimal color value String, like <b>"#RRGGBB"</b>, or <b>"rainbow"</b> to make the rainbow color,
+	 *                 or <b>"random"</b> to make a random color each tick.
+	 *                 It can also be a custom color animation name added by a datapack
+	 * @param colorViewer The only Player who will see the specified color
+	 */
+	public void setExclusiveColorFor(Entity target, String color, PlayerEntity colorViewer){
+		ColorComponent component = COLOR_COMPONENT.get(target);
+		component.setExclusiveColorFor(colorViewer.getUuid(), color);
+	}
+
+	/**Removes the custom color from an entity visible to a certain player. It will be set back to "#fffff",
+	 * unless <b>useDefaultColorInstead</b> is true, in which case the default color
+	 * you specified will be used. The default color is the same one that would be applied globally
+	 * if {@link #setDefaultOverridesAll(boolean)} is used
+	 * <p>
+	 * <b>IT WILL ONLY CLEAR THE COLOR SET BY {@link #setExclusiveColorFor(Entity, String, PlayerEntity)} </b>
+	 *
+	 * @param entity The entity that will be cleared from the color
+	 * @param colorViewer The player that is currently seeing the custom exclusive color
+	 * @param useDefaultColorInstead Weather or not to use the default color or #ffffff
+	 * */
+	public void clearExclusiveColorFor(Entity entity, PlayerEntity colorViewer, boolean useDefaultColorInstead){
+		ColorComponent component = COLOR_COMPONENT.get(entity);
+		if(useDefaultColorInstead){
+			component.setExclusiveColorFor(colorViewer.getUuid(), globalColorComponent.getDefaultColor());
+			return;
+		}
+		component.clearExclusiveColorFor(colorViewer.getUuid());
+	}
+
+
+	/**
+	 * Gets the custom glow color of an Entity that only the specified player sees.
+	 *<p>
+	 * The result could be "#ffffff" meaning it does not have a custom color and is using
+	 * the vanilla one, or "rainbow" meaning its glowing rainbow,
+	 * or "random" meaning its glowing a random color each tick,
+	 * or another hexadecimal string color.
+	 *<p>
+	 * It can also return a custom animation name if they are added by a datapack
+	 *<p>
+	 * If you need a color value instead you can use {@link me.emafire003.dev.coloredglowlib.util.ColorUtils} to manipulate it
+	 *
+	 * @param target The Entity to check the color for
+	 * @param colorViewer The player that is viewing the custom exclusive color
+	 *
+	 * @return The color string associated to that entity
+	 * */
+	public String getExclusiveColorFor(Entity target, PlayerEntity colorViewer){
+		return COLOR_COMPONENT.get(target).getExclusiveColorFor(colorViewer.getUuid());
+	}
+
+	/**
+	 * Checks if an Entity has a custom glow color visible only to another player or not.
+	 *<p>
+	 * <b>WARNING! This doesn't mean necessarily mean it has a custom color added by a datapack
+	 * but that it has a color that is different from the default value of white!</b>
+	 *<p>
+	 * Warning! If you used {@link #clearColor(EntityType, boolean)} with <i>useDefaultColorInstead</i> to true,
+	 * you may want to use: {@link #hasExclusiveCustomOrDefaultColorFor(Entity, PlayerEntity)}
+	 *
+	 * @param target The EntityType to check the color for
+	 * @param colorViewer The player that could be seeing the custom exclusive color
+	 *
+	 * @return Returns true if the Entity has a custom glow color associated to the player.
+	 */
+	public boolean hasExclusiveCustomColorFor(Entity target, PlayerEntity colorViewer){
+		return !ColorUtils.checkDefault(COLOR_COMPONENT.get(target).getExclusiveColorFor(colorViewer.getUuid()));
+	}
+
+	/**
+	 * Checks if an Entity has a custom glow color visible only to the specified player or not.
+	 * <p>
+	 * <b>WARNING! This doesn't mean necessarily mean it has a custom color added by a datapack
+	 * but that it has a color that is different from the default value of white!</b>
+	 *
+	 * @param target The Entity to check the color for
+	 * @param colorViewer The player that could be seeing the custom exclusive color
+	 *
+	 * @return Returns true if the Entity has a custom glow color associated to it that differs from the defaultColor.
+	 */
+	public  boolean hasExclusiveCustomOrDefaultColorFor(Entity target, PlayerEntity colorViewer){
+		return !(ColorUtils.checkDefault(COLOR_COMPONENT.get(target).getExclusiveColorFor(colorViewer.getUuid()))
+				|| ColorUtils.checkSameColor(COLOR_COMPONENT.get(target).getExclusiveColorFor(colorViewer.getUuid()), globalColorComponent.getDefaultColor())) ;
+	}
 }

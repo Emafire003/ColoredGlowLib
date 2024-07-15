@@ -9,12 +9,11 @@ import java.util.List;
 public class CustomColorAnimation {
 
     public static final Codec<CustomColorAnimation> CODEC = RecordCodecBuilder.create(
-            instance ->
-                    instance.group(Codec.STRING.fieldOf("name")
-                                    .forGetter(CustomColorAnimation::getName),
-                                    ColorAnimationItem.CODEC.listOf().fieldOf("colors")
-                                            .forGetter(CustomColorAnimation::getColorAnimations))
-            .apply(instance, CustomColorAnimation::new));
+            instance -> instance.group(
+                    Codec.STRING.fieldOf("name").forGetter(CustomColorAnimation::getName),
+                            ColorAnimationItem.CODEC.listOf().fieldOf("colors").forGetter(CustomColorAnimation::getColorAnimations))
+                    .apply(instance, CustomColorAnimation::new)
+    );
 
     private final String name;
     private final List<ColorAnimationItem> colors;

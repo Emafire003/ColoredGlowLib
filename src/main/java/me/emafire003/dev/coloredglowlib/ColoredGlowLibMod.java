@@ -1,6 +1,7 @@
 package me.emafire003.dev.coloredglowlib;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.Identifier;
 import org.ladysnake.cca.api.v3.entity.EntityComponentFactoryRegistry;
 import org.ladysnake.cca.api.v3.entity.EntityComponentInitializer;
@@ -39,6 +40,11 @@ public class ColoredGlowLibMod implements ModInitializer, EntityComponentInitial
     private static ColoredGlowLibAPI coloredGlowLib;
     public static boolean isAp1 = false;
 
+    /**DO NOT TOUCH THESE PLEASE :D */
+    public static short TRIES_BEFORE_SHUTDOWN = 0;
+    public static final short MAX_TRIES = 5;
+    public static final boolean SHUTDOWN = false;
+
 
     @Override
     public void onInitialize() {
@@ -48,7 +54,10 @@ public class ColoredGlowLibMod implements ModInitializer, EntityComponentInitial
 
         LOGGER.info("Initializing...");
 
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> coloredGlowLib = new ColoredGlowLibAPI(server.getScoreboard()));
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+            coloredGlowLib = new ColoredGlowLibAPI(server.getScoreboard());
+        }
+        );
 
         LocalDate currentDate = LocalDate.now();
         int day = currentDate.getDayOfMonth();
@@ -62,6 +71,11 @@ public class ColoredGlowLibMod implements ModInitializer, EntityComponentInitial
         CommandRegistrationCallback.EVENT.register(CGLCommands::registerCommands);
 
         LOGGER.info("Complete!");
+    }
+
+    /**Re-initialises the api instance. Watch out! May modify the Global Color component stuff!*/
+    public static void reInitAPIInstance(Scoreboard scoreboard){
+        coloredGlowLib = new ColoredGlowLibAPI(scoreboard);
     }
 
     /**Used (internally) to get an identifier with this mod's namespace*/
