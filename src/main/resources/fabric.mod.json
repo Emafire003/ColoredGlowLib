@@ -42,12 +42,12 @@
     ]
   },
   "depends": {
-    "fabricloader": ">=0.15.11",
-    "minecraft": ">=1.21",
+    "fabricloader": ">=0.15.3",
+    "minecraft": ">=1.20",
     "java": ">=16",
-    "cardinal-components-base": ">=6.0.0-0",
-    "cardinal-components-entity": ">=6.0.0-0",
-    "cardinal-components-scoreboard": ">=6.0.0-0"
+    "cardinal-components-base": ">=5.0.0-0",
+    "cardinal-components-entity": ">=5.0.0-0",
+    "cardinal-components-scoreboard": ">=5.0.0-0"
   },
   "suggests": {
     "another-mod": "*"

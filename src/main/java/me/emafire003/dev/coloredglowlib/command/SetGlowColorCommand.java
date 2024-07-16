@@ -9,7 +9,7 @@ import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
 import me.emafire003.dev.coloredglowlib.compat.permissions.PermissionsChecker;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.EntityArgumentType;
-import net.minecraft.command.argument.RegistryEntryReferenceArgumentType;
+import net.minecraft.command.argument.RegistryEntryArgumentType;
 import net.minecraft.command.suggestion.SuggestionProviders;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -117,7 +117,7 @@ public class SetGlowColorCommand implements CGLCommand {
         ServerCommandSource source = context.getSource();
 
         if(isValidColorOrCustom(color)){
-            EntityType<?> type = RegistryEntryReferenceArgumentType.getSummonableEntityType(context, "entity").value();
+            EntityType<?> type = RegistryEntryArgumentType.getSummonableEntityType(context, "entity").value();
             if(color.equalsIgnoreCase("#rainbow")){
                 if (ColoredGlowLibMod.getAPI() != null) {
                     ColoredGlowLibMod.getAPI().setRainbowColor(type);
@@ -216,7 +216,7 @@ public class SetGlowColorCommand implements CGLCommand {
 
     private int clearEntityTypeColor(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         boolean useDefault = BoolArgumentType.getBool(context, "useDefaultColor");
-        EntityType<?> type = RegistryEntryReferenceArgumentType.getSummonableEntityType(context, "entity").value();
+        EntityType<?> type = RegistryEntryArgumentType.getSummonableEntityType(context, "entity").value();
 
         ServerCommandSource source = context.getSource();
 
@@ -254,7 +254,7 @@ public class SetGlowColorCommand implements CGLCommand {
                                 )
                 )
                 .then(
-                        CommandManager.argument("entity", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.ENTITY_TYPE)).suggests(SuggestionProviders.SUMMONABLE_ENTITIES)
+                        CommandManager.argument("entity", RegistryEntryArgumentType.registryEntry(registryAccess, RegistryKeys.ENTITY_TYPE)).suggests(SuggestionProviders.SUMMONABLE_ENTITIES)
                                 .then(
                                         CommandManager.argument("color", StringArgumentType.string())
                                                 .executes(this::setTypeGlowColor)

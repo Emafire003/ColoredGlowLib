@@ -46,7 +46,7 @@ public class CGLResourceManager {
 
                         ColoredGlowLibMod.LOGGER.debug("Processing file: " + id);
 
-                        CustomColorAnimation groupOutput = result.getOrThrow();
+                        CustomColorAnimation groupOutput = result.getOrThrow(false, ColoredGlowLibMod.LOGGER::warn);
 
                         ColoredGlowLibMod.loadCustomColorAnimation(groupOutput);
 

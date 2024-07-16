@@ -2,11 +2,10 @@ package me.emafire003.dev.coloredglowlib.component;
 
 import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
 import net.minecraft.entity.Entity;
-import net.minecraft.registry.RegistryWrapper;
-import org.ladysnake.cca.api.v3.component.ComponentKey;
-import org.ladysnake.cca.api.v3.component.ComponentRegistry;
-import org.ladysnake.cca.api.v3.component.ComponentV3;
-import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
+import dev.onyxstudios.cca.api.v3.component.ComponentKey;
+import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
+import dev.onyxstudios.cca.api.v3.component.ComponentV3;
+import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import me.emafire003.dev.coloredglowlib.util.ColorUtils;
 import net.minecraft.nbt.NbtCompound;
 
@@ -26,9 +25,8 @@ public class ColorComponent implements ComponentV3, AutoSyncedComponent{
         this.self = entity;
     }
 
-
     @Override
-    public void readFromNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
+    public void readFromNbt(NbtCompound tag) {
         if(tag.contains("color")){
             this.color = tag.getString("color");
         }else{
@@ -42,7 +40,7 @@ public class ColorComponent implements ComponentV3, AutoSyncedComponent{
     }
 
     @Override
-    public void writeToNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
+    public void writeToNbt(NbtCompound tag) {
         tag.putString("color", this.color);
         tag.put("exclusiveTargetColorMap", exclusiveTargetColorMap);
     }

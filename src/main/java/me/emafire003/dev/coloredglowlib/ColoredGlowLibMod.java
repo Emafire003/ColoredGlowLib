@@ -1,20 +1,19 @@
 package me.emafire003.dev.coloredglowlib;
 
-import me.emafire003.dev.coloredglowlib.networking.ColorAnimationsPayloadS2C;
+import me.emafire003.dev.coloredglowlib.networking.ColorAnimationPacketS2C;
 import me.emafire003.dev.coloredglowlib.networking.PlayerJoinEvent;
 import net.fabricmc.api.EnvType;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.Entity;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
-import org.ladysnake.cca.api.v3.entity.EntityComponentFactoryRegistry;
-import org.ladysnake.cca.api.v3.entity.EntityComponentInitializer;
-import org.ladysnake.cca.api.v3.entity.RespawnCopyStrategy;
-import org.ladysnake.cca.api.v3.scoreboard.ScoreboardComponentFactoryRegistry;
-import org.ladysnake.cca.api.v3.scoreboard.ScoreboardComponentInitializer;
+import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry;
+import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer;
+import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy;
+import dev.onyxstudios.cca.api.v3.scoreboard.ScoreboardComponentFactoryRegistry;
+import dev.onyxstudios.cca.api.v3.scoreboard.ScoreboardComponentInitializer;
 import me.emafire003.dev.coloredglowlib.command.CGLCommands;
 import me.emafire003.dev.coloredglowlib.component.ColorComponent;
 import me.emafire003.dev.coloredglowlib.component.GlobalColorComponent;
@@ -71,13 +70,16 @@ public class ColoredGlowLibMod implements ModInitializer, EntityComponentInitial
             isAp1 = true;
         }
 
-        PayloadTypeRegistry.playS2C().register(ColorAnimationsPayloadS2C.ID, ColorAnimationsPayloadS2C.PACKET_CODEC);
         CGLResourceManager.register();
 
         //If this is a server only instance, it will send stuff to the player when they connect. If not it means it's singleplayer so no problem.
+        //TODO send this on reload of the datapack as well
         if(FabricLoader.getInstance().getEnvironmentType().equals(EnvType.SERVER)){
             PlayerJoinEvent.EVENT.register((player, server) -> {
-                ServerPlayNetworking.send(player, new ColorAnimationsPayloadS2C(getCustomColorAnimations()));
+                //Sends over a new packet for each animation
+                for(CustomColorAnimation animation : getCustomColorAnimations()){
+                    ServerPlayNetworking.send(player, ColorAnimationPacketS2C.ID, new ColorAnimationPacketS2C(animation));
+                }
                 return ActionResult.PASS;
             });
         }
