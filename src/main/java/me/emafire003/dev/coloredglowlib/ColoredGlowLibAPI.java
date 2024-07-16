@@ -375,7 +375,6 @@ public class ColoredGlowLibAPI {
 	 *
 	 * @return Returns true if the Entity has a custom glow color associated to it.
 	 */
-	//TODO make configurable? Like using the default color instead. The has custom color i mean
 	public boolean hasCustomColor(Entity target){
 		return !ColorUtils.checkDefault(COLOR_COMPONENT.get(target).getColor());
 	}

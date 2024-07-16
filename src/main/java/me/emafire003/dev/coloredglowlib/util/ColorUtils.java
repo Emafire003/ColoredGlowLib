@@ -35,7 +35,6 @@ public class ColorUtils {
         return matcher.matches();
     }
 
-    //TODO should work but needs testing
     /** Converts RGB decimal numbers into a single Color value
      *
      * @param r The red RGB value (0-255)

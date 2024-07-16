@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.Entity;
 import net.minecraft.scoreboard.Scoreboard;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry;
@@ -51,6 +52,8 @@ public class ColoredGlowLibMod implements ModInitializer, EntityComponentInitial
     public static final short MAX_TRIES = 5;
     public static final boolean SHUTDOWN = false;
 
+    private static MinecraftServer mcserver = null;
+
 
     @Override
     public void onInitialize() {
@@ -60,8 +63,10 @@ public class ColoredGlowLibMod implements ModInitializer, EntityComponentInitial
 
         LOGGER.info("Initializing...");
 
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> coloredGlowLib = new ColoredGlowLibAPI(server.getScoreboard())
-        );
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+                    coloredGlowLib = new ColoredGlowLibAPI(server.getScoreboard());
+                    mcserver = server;
+        });
 
         LocalDate currentDate = LocalDate.now();
         int day = currentDate.getDayOfMonth();
@@ -73,7 +78,6 @@ public class ColoredGlowLibMod implements ModInitializer, EntityComponentInitial
         CGLResourceManager.register();
 
         //If this is a server only instance, it will send stuff to the player when they connect. If not it means it's singleplayer so no problem.
-        //TODO send this on reload of the datapack as well
         if(FabricLoader.getInstance().getEnvironmentType().equals(EnvType.SERVER)){
             PlayerJoinEvent.EVENT.register((player, server) -> {
                 //Sends over a new packet for each animation
@@ -97,6 +101,12 @@ public class ColoredGlowLibMod implements ModInitializer, EntityComponentInitial
     /**Used (internally) to get an identifier with this mod's namespace*/
     public static Identifier getIdentifier(String path){
         return Identifier.of(MOD_ID, path);
+    }
+
+    /**Returns a server instance. Make sure you are getting this after the server has started!*/
+    @Nullable
+    public static MinecraftServer getServerInstance(){
+        return mcserver;
     }
 
     /**
