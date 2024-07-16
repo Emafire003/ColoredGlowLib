@@ -9,17 +9,17 @@ import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
 import me.emafire003.dev.coloredglowlib.compat.permissions.PermissionsChecker;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.EntityArgumentType;
-import net.minecraft.command.argument.RegistryEntryArgumentType;
+import net.minecraft.command.argument.EntitySummonArgumentType;
 import net.minecraft.command.suggestion.SuggestionProviders;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 
 import java.util.Collection;
+import java.util.Optional;
 
 import static me.emafire003.dev.coloredglowlib.util.ColorUtils.isValidColorOrCustom;
 
@@ -59,7 +59,7 @@ public class SetGlowColorCommand implements CGLCommand {
             }
 
             //source.sendFeedback(new TranslatableText("commands.setglowcolor.success1").append(color).append(new TranslatableText("commands.setglowcolor.success2")), true);
-            source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"§7Setted color '§b" + color + "§7' to the selected entity/entities!"), false);
+            source.sendFeedback( Text.literal(ColoredGlowLibMod.PREFIX+"§7Setted color '§b" + color + "§7' to the selected entity/entities!"), false);
             return targets.size();
         }else{
             //source.sendError(new TranslatableText("commands.setglowcolor.notcolor"));
@@ -103,7 +103,7 @@ public class SetGlowColorCommand implements CGLCommand {
             }
 
             //source.sendFeedback(new TranslatableText("commands.setglowcolor.success1").append(color).append(new TranslatableText("commands.setglowcolor.success2")), true);
-            source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"§7Setted color '§b" + color + "§7' to the selected entity/entities, visible only to §b" + player.getName().getString() + "!"), false);
+            source.sendFeedback( Text.literal(ColoredGlowLibMod.PREFIX+"§7Setted color '§b" + color + "§7' to the selected entity/entities, visible only to §b" + player.getName().getString() + "!"), false);
             return targets.size();
         }else{
             //source.sendError(new TranslatableText("commands.setglowcolor.notcolor"));
@@ -117,10 +117,15 @@ public class SetGlowColorCommand implements CGLCommand {
         ServerCommandSource source = context.getSource();
 
         if(isValidColorOrCustom(color)){
-            EntityType<?> type = RegistryEntryArgumentType.getSummonableEntityType(context, "entity").value();
+            Optional<EntityType<?>> type = EntityType.get(EntitySummonArgumentType.getEntitySummon(context, "entity").toString());
+
+            if(type.isEmpty()){
+                source.sendError(Text.literal("The EntityType you have specified does not exist!"));
+                return 0;
+            }
             if(color.equalsIgnoreCase("#rainbow")){
                 if (ColoredGlowLibMod.getAPI() != null) {
-                    ColoredGlowLibMod.getAPI().setRainbowColor(type);
+                    ColoredGlowLibMod.getAPI().setRainbowColor(type.get());
                 }else{
                     source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"§cAn error has occurred. The API hasn't yet been initialised!"));
                     return 1;
@@ -128,14 +133,14 @@ public class SetGlowColorCommand implements CGLCommand {
             }else if(color.equalsIgnoreCase("#random")){
 
                 if (ColoredGlowLibMod.getAPI() != null) {
-                    ColoredGlowLibMod.getAPI().setRandomColor(type);
+                    ColoredGlowLibMod.getAPI().setRandomColor(type.get());
                 }else{
                     source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"§cAn error has occurred. The API hasn't yet been initialised!"));
                     return 1;
                 }
             }else{
                 if (ColoredGlowLibMod.getAPI() != null) {
-                    ColoredGlowLibMod.getAPI().setColor(type, color);
+                    ColoredGlowLibMod.getAPI().setColor(type.get(), color);
                 }else{
                     source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"§cAn error has occurred. The API hasn't yet been initialised!"));
                     return 1;
@@ -143,7 +148,7 @@ public class SetGlowColorCommand implements CGLCommand {
             }
 
             //source.sendFeedback(new TranslatableText("commands.setglowcolor.success1").append(color).append(new TranslatableText("commands.setglowcolor.success2")), true);
-            source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"§7Setted color '" + color + "' to the selected entity/entities!"), false);
+            source.sendFeedback( Text.literal(ColoredGlowLibMod.PREFIX+"§7Setted color '" + color + "' to the selected entity/entities!"), false);
             return 1;
         }else{
             //source.sendError(new TranslatableText("commands.setglowcolor.notcolor"));
@@ -182,7 +187,7 @@ public class SetGlowColorCommand implements CGLCommand {
                     }
                 }
 
-                source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"§7Setted color '§b" + color + "§7' as the default color!"), false);
+                source.sendFeedback( Text.literal(ColoredGlowLibMod.PREFIX+"§7Setted color '§b" + color + "§7' as the default color!"), false);
                 return 1;
             }else{
                 //source.sendError(new TranslatableText("commands.setglowcolor.notcolor"));
@@ -210,24 +215,29 @@ public class SetGlowColorCommand implements CGLCommand {
             }
         }
 
-        source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"Cleared the color from the selected entity/entities!"), true);
+        source.sendFeedback( Text.literal(ColoredGlowLibMod.PREFIX+"Cleared the color from the selected entity/entities!"), true);
         return targets.size();
     }
 
     private int clearEntityTypeColor(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         boolean useDefault = BoolArgumentType.getBool(context, "useDefaultColor");
-        EntityType<?> type = RegistryEntryArgumentType.getSummonableEntityType(context, "entity").value();
+        Optional<EntityType<?>> type = EntityType.get(EntitySummonArgumentType.getEntitySummon(context, "entity").toString());
 
         ServerCommandSource source = context.getSource();
 
+        if(type.isEmpty()){
+            source.sendError(Text.literal("The EntityType you have specified does not exist!"));
+            return 0;
+        }
+
         if (ColoredGlowLibMod.getAPI() != null) {
-            ColoredGlowLibMod.getAPI().clearColor(type, useDefault);
+            ColoredGlowLibMod.getAPI().clearColor(type.get(), useDefault);
         }else{
             source.sendError(Text.literal(ColoredGlowLibMod.PREFIX+"§cAn error has occurred. The API hasn't yet been initialised!"));
             return 1;
         }
 
-        source.sendFeedback(() -> Text.literal(ColoredGlowLibMod.PREFIX+"Cleared color from the selected entity/entities!"), false);
+        source.sendFeedback( Text.literal(ColoredGlowLibMod.PREFIX+"Cleared color from the selected entity/entities!"), false);
         return 1;
     }
 
@@ -254,7 +264,7 @@ public class SetGlowColorCommand implements CGLCommand {
                                 )
                 )
                 .then(
-                        CommandManager.argument("entity", RegistryEntryArgumentType.registryEntry(registryAccess, RegistryKeys.ENTITY_TYPE)).suggests(SuggestionProviders.SUMMONABLE_ENTITIES)
+                        CommandManager.argument("entity", EntitySummonArgumentType.entitySummon()).suggests(SuggestionProviders.SUMMONABLE_ENTITIES)
                                 .then(
                                         CommandManager.argument("color", StringArgumentType.string())
                                                 .executes(this::setTypeGlowColor)

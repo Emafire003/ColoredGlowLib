@@ -30,9 +30,9 @@ public class SettingsCommand implements CGLCommand {
         }
 
         if(b){
-            source.sendFeedback(() ->Text.literal(ColoredGlowLibMod.PREFIX+"§aThe color set by the mod will a have priority over the vanilla team color! (Override Team Colors : Enabled) "), true);
+            source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"§aThe color set by the mod will a have priority over the vanilla team color! (Override Team Colors : Enabled) "), true);
         }else{
-            source.sendFeedback(() ->Text.literal(ColoredGlowLibMod.PREFIX+"§cThe color of the vanilla team will have priority over the one set by the mod! (Override Team Colors : Disabled)"), true);
+            source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"§cThe color of the vanilla team will have priority over the one set by the mod! (Override Team Colors : Disabled)"), true);
         }
         return 1;
     }
@@ -48,9 +48,9 @@ public class SettingsCommand implements CGLCommand {
         }
 
         if(b){
-            source.sendFeedback(() ->Text.literal(ColoredGlowLibMod.PREFIX+"§aThe color set by the mod has priority over the vanilla team color! (Override Team Colors : Enabled) "), false);
+            source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"§aThe color set by the mod has priority over the vanilla team color! (Override Team Colors : Enabled) "), false);
         }else{
-            source.sendFeedback(() ->Text.literal(ColoredGlowLibMod.PREFIX+"§cThe color of the vanilla team has priority over the one set by the mod! (Override Team Colors : Disabled)"), false);
+            source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"§cThe color of the vanilla team has priority over the one set by the mod! (Override Team Colors : Disabled)"), false);
         }
         return 1;
     }
@@ -67,9 +67,9 @@ public class SettingsCommand implements CGLCommand {
         }
 
         if(b){
-            source.sendFeedback(() ->Text.literal(ColoredGlowLibMod.PREFIX+"§aEntityType glow color is now predominant over Entity-specific color! (EntityType >> Entity) "), true);
+            source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"§aEntityType glow color is now predominant over Entity-specific color! (EntityType >> Entity) "), true);
         }else{
-            source.sendFeedback(() ->Text.literal(ColoredGlowLibMod.PREFIX+"§cEntityType glow color will now be overridden by Entity-specific color! (Entity >> EntityType) "), true);
+            source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"§cEntityType glow color will now be overridden by Entity-specific color! (Entity >> EntityType) "), true);
         }
         return 1;
     }
@@ -86,9 +86,9 @@ public class SettingsCommand implements CGLCommand {
         }
 
         if(b){
-            source.sendFeedback(() ->Text.literal(ColoredGlowLibMod.PREFIX+"§aEntityTypes glow color is currently predominant over Entity-specific color. (EntityType >> Entity) "), false);
+            source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"§aEntityTypes glow color is currently predominant over Entity-specific color. (EntityType >> Entity) "), false);
         }else{
-            source.sendFeedback(() ->Text.literal(ColoredGlowLibMod.PREFIX+"§cEntity glow color is currently predominant over EntityType color. (Entity >> EntityType)"), false);
+            source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"§cEntity glow color is currently predominant over EntityType color. (Entity >> EntityType)"), false);
         }
         return 1;
     }
@@ -105,9 +105,9 @@ public class SettingsCommand implements CGLCommand {
         }
 
         if(b){
-            source.sendFeedback(() ->Text.literal(ColoredGlowLibMod.PREFIX+"§aGlobal/Default glow color is now predominant over Entity or EntityType colors! (Global >> everything else) "), true);
+            source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"§aGlobal/Default glow color is now predominant over Entity or EntityType colors! (Global >> everything else) "), true);
         }else{
-            source.sendFeedback(() ->Text.literal(ColoredGlowLibMod.PREFIX+"§cEntityType or Entity color is now predominant over Global/Default color! (everything else >> Global) "), true);
+            source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"§cEntityType or Entity color is now predominant over Global/Default color! (everything else >> Global) "), true);
         }
         return 1;
     }
@@ -124,9 +124,9 @@ public class SettingsCommand implements CGLCommand {
         }
 
         if(b){
-            source.sendFeedback(() ->Text.literal(ColoredGlowLibMod.PREFIX+"§aGlobal/Default glow color is currently predominant over Entity or EntityType colors! (Global >> everything else) "), false);
+            source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"§aGlobal/Default glow color is currently predominant over Entity or EntityType colors! (Global >> everything else) "), false);
         }else{
-            source.sendFeedback(() ->Text.literal(ColoredGlowLibMod.PREFIX+"§cEntityType or Entity color is currently predominant over Global/Default color! (everything else >> Global)"), false);
+            source.sendFeedback(Text.literal(ColoredGlowLibMod.PREFIX+"§cEntityType or Entity color is currently predominant over Global/Default color! (everything else >> Global)"), false);
         }
         return 1;
     }
