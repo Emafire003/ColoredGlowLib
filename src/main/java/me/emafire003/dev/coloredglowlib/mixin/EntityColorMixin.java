@@ -126,7 +126,12 @@ public abstract class EntityColorMixin {
             if(TRIES_BEFORE_SHUTDOWN >= MAX_TRIES){
                 LOGGER.error("Disabling the mod, can't get the API instance to work!");
             }
-            return;
+            cgl = getAPI();
+
+            if(cgl==null){
+                return;
+            }
+
         }
 
         if(entity == null){

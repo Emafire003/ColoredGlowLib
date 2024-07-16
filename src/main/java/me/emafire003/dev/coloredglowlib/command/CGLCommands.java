@@ -18,7 +18,6 @@ public class CGLCommands {
 
         LiteralCommandNode<ServerCommandSource> alias = CommandManager
                 .literal("coloredglowlib")
-                //TODO make sure it doesn't crash withouth the dependency
                 .requires(PermissionsChecker.hasPerms("coloredglowlib.commands", 2))
                 .build();
 
