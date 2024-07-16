@@ -126,8 +126,12 @@ public abstract class EntityColorMixin {
             if(TRIES_BEFORE_SHUTDOWN >= MAX_TRIES){
                 LOGGER.error("Disabling the mod, can't get the API instance to work!");
             }
-            //TODO remove this return in 3.2.1 for all the versions, it shows things as white by default.
-            return;
+            cgl = getAPI();
+
+            if(cgl==null){
+                return;
+            }
+
         }
 
         if(entity == null){
