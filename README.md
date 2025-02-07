@@ -35,8 +35,6 @@ To remove a color you can use:
 
 More of this in the wiki!
 
-[![bisecthosting](https://github.com/Emafire003/ColoredGlowLib/assets/29462910/973c0c1a-062c-4c4a-aa04-f02e184fd5d7)](https://www.bisecthosting.com/LightDev)
-
 ## Custom color animations
 You can add custom animations via a datapack, you can find an example of one here. After you created the datapack, you can use it as a color, corresponding to the *name* parameter you have set inside the datapack.
 
