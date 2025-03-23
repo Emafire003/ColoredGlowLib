@@ -1,0 +1,34 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+license="GNU LGLP3"
+
+[properties]
+"connector:placeholder"=true
+
+[[mods]]
+modId="coloredglowlib"
+version="3.2.1+1.21.4"
+displayName="coloredglowlib"
+authors="Emafire003"
+description='''This mod/library allows you to make entities glow any color, not just the vanilla ones! You can also use custom color animations!'''
+
+[[dependencies.coloredglowlib]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21.1,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.coloredglowlib]]
+modId="minecraft"
+mandatory=true
+versionRange="*"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.coloredglowlib]]
+modId="connector"
+mandatory=true
+versionRange="*"
+ordering="NONE"
+side="BOTH"
