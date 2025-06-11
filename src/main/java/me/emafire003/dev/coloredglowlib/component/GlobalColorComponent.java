@@ -41,31 +41,31 @@ public class GlobalColorComponent implements ComponentV3, AutoSyncedComponent{
     public void readFromNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
 
         if(tag.contains("defaultColor")){
-            this.default_color = tag.getString("defaultColor");
+            this.default_color = tag.getString("defaultColor", "#ffffff");
         }else{
             this.default_color = ColorUtils.WHITE;
         }
 
         if(tag.contains("typeOverridesEntityColor")){
-            this.typeOverridesEntityColor = tag.getBoolean("typeOverridesEntityColor");
+            this.typeOverridesEntityColor = tag.getBoolean("typeOverridesEntityColor", false);
         }else{
             this.typeOverridesEntityColor = false;
         }
 
         if(tag.contains("defaultOverridesAll")){
-            this.defaultOverridesAll= tag.getBoolean("defaultOverridesAll");
+            this.defaultOverridesAll= tag.getBoolean("defaultOverridesAll", false);
         }else{
             this.defaultOverridesAll = false;
         }
 
         if(tag.contains("overrideTeamColors")){
-            this.overrideTeamColors = tag.getBoolean("overrideTeamColors");
+            this.overrideTeamColors = tag.getBoolean("overrideTeamColors", false);
         }else{
             this.overrideTeamColors = false;
         }
 
         if(tag.contains("entityTypeColorMap")){
-            this.entityTypeColorMap = tag.getCompound("entityTypeColorMap");
+            this.entityTypeColorMap = tag.getCompound("entityTypeColorMap").get();
         }else{
             this.entityTypeColorMap = new NbtCompound();
         }
@@ -86,7 +86,7 @@ public class GlobalColorComponent implements ComponentV3, AutoSyncedComponent{
         List<String> keys = new ArrayList<>(this.entityTypeColorMap.getKeys());
         keys.forEach((key) -> {
             Optional<EntityType<?>> type = EntityType.get(key);
-            String color = this.entityTypeColorMap.getString(key);
+            String color = this.entityTypeColorMap.getString(key, "#ffffff");
             type.ifPresent(entityType -> map.put(entityType, color));
         });
         return map;
@@ -120,11 +120,11 @@ public class GlobalColorComponent implements ComponentV3, AutoSyncedComponent{
     }
 
     public String getEntityTypeColor(EntityType<?> type){
-        String color = entityTypeColorMap.getString(type.toString());
+        String color = entityTypeColorMap.getString(type.toString(), "#ffffff");
         if(color == null || color.equalsIgnoreCase("")){
             return ColorUtils.WHITE;
         }
-        return entityTypeColorMap.getString(type.toString());
+        return entityTypeColorMap.getString(type.toString(), "#ffffff");
     }
 
     public String getDefaultColor(){

@@ -103,6 +103,7 @@ public abstract class EntityColorMixin {
         return prev_random_color;
     }
 
+
     @Inject(method = "getTeamColorValue", at = @At("RETURN"), cancellable = true)
     public void injectChangeColorValue(CallbackInfoReturnable<Integer> cir){
         if(SHUTDOWN){
@@ -232,7 +233,6 @@ public abstract class EntityColorMixin {
                 //Checking if the enttiy has a custom color
                 if(getAPI().hasCustomColor(entity.getType())){
                     if(type_col.equalsIgnoreCase("rainbow")){
-                        //Checks if the entitytype is rainbow or random colored
                         cir.setReturnValue(getRainbowColor());
                         return;
                     }else if(type_col.equalsIgnoreCase("random")){
@@ -250,7 +250,7 @@ public abstract class EntityColorMixin {
                 }
 
                 //If nothing has been found, returns the default/global color.
-                if(cgl.getGlobalColor().equalsIgnoreCase("rainbow")){
+                if(cgl.getDefaultColor().equalsIgnoreCase("rainbow")){
                     cir.setReturnValue(getRainbowColor());
                     return;
                 }else if(cgl.getDefaultColor().equalsIgnoreCase("random")){
@@ -282,7 +282,6 @@ public abstract class EntityColorMixin {
                     return;
                 }
             }
-
 
             //TODO maybe set back to white if the color animation gets removed?
 

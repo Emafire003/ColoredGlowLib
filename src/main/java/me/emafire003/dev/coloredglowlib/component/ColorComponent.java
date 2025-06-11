@@ -30,12 +30,12 @@ public class ColorComponent implements ComponentV3, AutoSyncedComponent{
     @Override
     public void readFromNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
         if(tag.contains("color")){
-            this.color = tag.getString("color");
+            this.color = tag.getString("color", "#ffffff"); //means something is VERY wrong
         }else{
             this.color = ColorUtils.WHITE;
         }
         if(tag.contains("exclusiveTargetColorMap")){
-            this.exclusiveTargetColorMap = tag.getCompound("exclusiveTargetColorMap");
+            this.exclusiveTargetColorMap = tag.getCompound("exclusiveTargetColorMap").get();
         }else{
             this.exclusiveTargetColorMap = new NbtCompound();
         }
@@ -65,7 +65,7 @@ public class ColorComponent implements ComponentV3, AutoSyncedComponent{
         List<String> keys = new ArrayList<>(this.exclusiveTargetColorMap.getKeys());
         keys.forEach((key) -> {
             UUID uuid = UUID.fromString(key);
-            String color = this.exclusiveTargetColorMap.getString(key);
+            String color = this.exclusiveTargetColorMap.getString(key, "#ffffff");
             map.put(uuid, color);
         });
         return map;
@@ -99,11 +99,11 @@ public class ColorComponent implements ComponentV3, AutoSyncedComponent{
     }
 
     public String getExclusiveColorFor(UUID uuid){
-        String color = exclusiveTargetColorMap.getString(uuid.toString());
+        String color = exclusiveTargetColorMap.getString(uuid.toString(), "#ffffff");
         if(color == null || color.equalsIgnoreCase("")){
             return ColorUtils.WHITE;
         }
-        return exclusiveTargetColorMap.getString(uuid.toString());
+        return exclusiveTargetColorMap.getString(uuid.toString(), "#ffffff");
     }
 
     public void clear(){
