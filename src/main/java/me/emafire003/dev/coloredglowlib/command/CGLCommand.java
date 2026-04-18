@@ -1,11 +1,11 @@
 package me.emafire003.dev.coloredglowlib.command;
 
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandBuildContext;
+import net.minecraft.commands.CommandSourceStack;
 
 
 //Based on Factions' code https://github.com/ickerio/factions
 public interface CGLCommand {
-    LiteralCommandNode<ServerCommandSource> getNode(CommandRegistryAccess registryAccess);
+    LiteralCommandNode<CommandSourceStack> getNode(CommandBuildContext registryAccess);
 }

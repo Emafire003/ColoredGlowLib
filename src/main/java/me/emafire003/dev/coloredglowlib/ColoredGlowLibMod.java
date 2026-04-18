@@ -6,10 +6,10 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.entity.Entity;
-import net.minecraft.scoreboard.Scoreboard;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.Identifier;
 import org.ladysnake.cca.api.v3.entity.EntityComponentFactoryRegistry;
 import org.ladysnake.cca.api.v3.entity.EntityComponentInitializer;
 import org.ladysnake.cca.api.v3.entity.RespawnCopyStrategy;
@@ -99,7 +99,7 @@ public class ColoredGlowLibMod implements ModInitializer, EntityComponentInitial
 
     /**Used (internally) to get an identifier with this mod's namespace*/
     public static Identifier getIdentifier(String path){
-        return Identifier.of(MOD_ID, path);
+        return Identifier.fromNamespaceAndPath(MOD_ID, path);
     }
 
     /**Returns a server instance. Make sure you are getting this after the server has started!*/

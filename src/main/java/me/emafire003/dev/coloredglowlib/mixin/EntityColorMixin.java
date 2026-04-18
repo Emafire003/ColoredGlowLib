@@ -6,10 +6,10 @@ import me.emafire003.dev.coloredglowlib.custom_data_animations.CustomColorAnimat
 import me.emafire003.dev.coloredglowlib.util.ColorUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.util.RandomSource;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -93,10 +93,10 @@ public abstract class EntityColorMixin {
     @Unique
     private int randomColor(){
         Entity entity = ((Entity)(Object)this);
-        Random r = entity.getEntityWorld().getRandom();
+        RandomSource r = entity.level().getRandom();
         if(random_delay_counter == 10){
             random_delay_counter = 0;
-            prev_random_color = ColorUtils.toColorValue(r.nextBetween(0, 255), r.nextBetween(0, 255), r.nextBetween(0, 255));
+            prev_random_color = ColorUtils.toColorValue(r.nextIntBetweenInclusive(0, 255), r.nextIntBetweenInclusive(0, 255), r.nextIntBetweenInclusive(0, 255));
         }else{
             random_delay_counter++;
         }
@@ -104,13 +104,13 @@ public abstract class EntityColorMixin {
     }
 
 
-    @Inject(method = "getTeamColorValue", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "getTeamColor", at = @At("RETURN"), cancellable = true)
     public void injectChangeColorValue(CallbackInfoReturnable<Integer> cir){
         if(SHUTDOWN){
             return;
         }
 
-        PlayerEntity player = MinecraftClient.getInstance().player;
+        Player player = Minecraft.getInstance().player;
 
         if(player == null){
             //TODO remvoe?
@@ -123,7 +123,7 @@ public abstract class EntityColorMixin {
         if(cgl == null){
             LOGGER.warn("The ColoredGlowLib API instance is null! Trying to reinitialize it!");
             TRIES_BEFORE_SHUTDOWN = (short) (TRIES_BEFORE_SHUTDOWN + 1);
-            ColoredGlowLibMod.reInitAPIInstance(entity.getEntityWorld().getScoreboard());
+            ColoredGlowLibMod.reInitAPIInstance(entity.level().getScoreboard());
             if(TRIES_BEFORE_SHUTDOWN >= MAX_TRIES){
                 LOGGER.error("Disabling the mod, can't get the API instance to work!");
             }
@@ -140,7 +140,7 @@ public abstract class EntityColorMixin {
             return;
         }
 
-        if(entity.getScoreboardTeam() == null || cgl.getOverrideTeamColors()) {
+        if(entity.getTeam() == null || cgl.getOverrideTeamColors()) {
 
             /**Checks if it's april 1st for jokes*/
             if(isAp1){

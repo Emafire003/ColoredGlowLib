@@ -1,15 +1,15 @@
 package me.emafire003.dev.coloredglowlib.component;
 
 import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
-import net.minecraft.entity.Entity;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.ladysnake.cca.api.v3.component.Component;
 import org.ladysnake.cca.api.v3.component.ComponentKey;
 import org.ladysnake.cca.api.v3.component.ComponentRegistry;
 import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
 import me.emafire003.dev.coloredglowlib.util.ColorUtils;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.CompoundTag;
 
 import java.util.*;
 
@@ -21,7 +21,7 @@ public class ColorComponent implements Component, AutoSyncedComponent{
     private final Entity self;
 
     protected String color = ColorUtils.WHITE;
-    protected NbtCompound exclusiveTargetColorMap = new NbtCompound();
+    protected CompoundTag exclusiveTargetColorMap = new CompoundTag();
 
     public ColorComponent(Entity entity) {
         this.self = entity;
@@ -29,25 +29,25 @@ public class ColorComponent implements Component, AutoSyncedComponent{
 
 
     @Override
-    public void readData(ReadView tag) {
+    public void readData(ValueInput tag) {
 
         if(tag.contains("color")){
-            this.color = tag.getString("color", "#ffffff"); //means something is VERY wrong
+            this.color = tag.getStringOr("color", "#ffffff"); //means something is VERY wrong
         }else{
             this.color = ColorUtils.WHITE;
         }
         if(tag.contains("exclusiveTargetColorMap")){
             //TODO for now i like that it crashes
-            this.exclusiveTargetColorMap = tag.read("exclusiveTargetColorMap", NbtCompound.CODEC).get();//.orElse(new NbtCompound());
+            this.exclusiveTargetColorMap = tag.read("exclusiveTargetColorMap", CompoundTag.CODEC).get();//.orElse(new NbtCompound());
         }else{
-            this.exclusiveTargetColorMap = new NbtCompound();
+            this.exclusiveTargetColorMap = new CompoundTag();
         }
     }
 
     @Override
-    public void writeData(WriteView tag) {
+    public void writeData(ValueOutput tag) {
         tag.putString("color", this.color);
-        tag.put("exclusiveTargetColorMap", NbtCompound.CODEC, exclusiveTargetColorMap);
+        tag.store("exclusiveTargetColorMap", CompoundTag.CODEC, exclusiveTargetColorMap);
     }
 
     /**
@@ -65,10 +65,10 @@ public class ColorComponent implements Component, AutoSyncedComponent{
 
     public HashMap<UUID, String> getExclusiveTargetColorMap(){
         HashMap<UUID, String> map = new HashMap<>();
-        List<String> keys = new ArrayList<>(this.exclusiveTargetColorMap.getKeys());
+        List<String> keys = new ArrayList<>(this.exclusiveTargetColorMap.keySet());
         keys.forEach((key) -> {
             UUID uuid = UUID.fromString(key);
-            String color = this.exclusiveTargetColorMap.getString(key, "#ffffff");
+            String color = this.exclusiveTargetColorMap.getStringOr(key, "#ffffff");
             map.put(uuid, color);
         });
         return map;
@@ -102,16 +102,16 @@ public class ColorComponent implements Component, AutoSyncedComponent{
     }
 
     public String getExclusiveColorFor(UUID uuid){
-        String color = exclusiveTargetColorMap.getString(uuid.toString(), "#ffffff");
+        String color = exclusiveTargetColorMap.getStringOr(uuid.toString(), "#ffffff");
         if(color == null || color.equalsIgnoreCase("")){
             return ColorUtils.WHITE;
         }
-        return exclusiveTargetColorMap.getString(uuid.toString(), "#ffffff");
+        return exclusiveTargetColorMap.getStringOr(uuid.toString(), "#ffffff");
     }
 
     public void clear(){
         this.color = ColorUtils.WHITE;
-        this.exclusiveTargetColorMap = new NbtCompound();
+        this.exclusiveTargetColorMap = new CompoundTag();
         COLOR_COMPONENT.sync(self);
     }
 

@@ -12,11 +12,11 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.resource.Resource;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.resource.ResourceType;
+import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.PackType;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Reader;
@@ -30,7 +30,7 @@ public class CGLResourceManager {
     public static String RESOURCE_PATH = "color_animations";
 
     public static void register(){
-        ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
+        ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
 
             @Override
             public Identifier getFabricId() {
@@ -38,16 +38,16 @@ public class CGLResourceManager {
             }
 
             @Override
-            public void reload(ResourceManager manager) {
+            public void onResourceManagerReload(ResourceManager manager) {
                 // Clear Caches Here
                 getCustomColorAnimations().clear();
 
-                Map<Identifier, Resource> resources = manager.findResources(RESOURCE_PATH, identifier -> identifier.getPath().endsWith(".json"));
+                Map<Identifier, Resource> resources = manager.listResources(RESOURCE_PATH, identifier -> identifier.getPath().endsWith(".json"));
 
                 for(Identifier id : resources.keySet()) {
                     try {
 
-                        Reader reader = resources.get(id).getReader();//manager.getResource(id).get().getReader();
+                        Reader reader = resources.get(id).openAsReader();//manager.getResource(id).get().getReader();
                         JsonElement jsonElement = JsonParser.parseReader(reader);
 
                         DataResult<CustomColorAnimation> result = CustomColorAnimation.CODEC.parse(new Dynamic<>(JsonOps.INSTANCE, jsonElement));
@@ -71,7 +71,7 @@ public class CGLResourceManager {
                     if(server == null){
                         return;
                     }
-                    server.getPlayerManager().getPlayerList()
+                    server.getPlayerList().getPlayers()
                             .forEach(player -> ServerPlayNetworking.send(player, new ColorAnimationsPayloadS2C(getCustomColorAnimations())));
                 }
             }

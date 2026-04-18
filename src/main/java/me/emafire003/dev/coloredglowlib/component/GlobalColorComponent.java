@@ -1,16 +1,16 @@
 package me.emafire003.dev.coloredglowlib.component;
 
 import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.ladysnake.cca.api.v3.component.Component;
 import org.ladysnake.cca.api.v3.component.ComponentKey;
 import org.ladysnake.cca.api.v3.component.ComponentRegistry;
 import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
 import me.emafire003.dev.coloredglowlib.util.ColorUtils;
-import net.minecraft.entity.EntityType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.scoreboard.Scoreboard;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.server.MinecraftServer;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,7 +31,7 @@ public class GlobalColorComponent implements Component, AutoSyncedComponent{
     protected boolean defaultOverridesAll = false;
     protected boolean overrideTeamColors = false;
 
-    protected NbtCompound entityTypeColorMap = new NbtCompound();
+    protected CompoundTag entityTypeColorMap = new CompoundTag();
 
     public GlobalColorComponent(Scoreboard scoreboard, @Nullable MinecraftServer server) {
         this.scoreboard = scoreboard;
@@ -39,53 +39,53 @@ public class GlobalColorComponent implements Component, AutoSyncedComponent{
     }
 
     @Override
-    public void readData(ReadView tag) {
+    public void readData(ValueInput tag) {
         if(tag.contains("defaultColor")){
-            this.default_color = tag.getString("defaultColor", "#ffffff");
+            this.default_color = tag.getStringOr("defaultColor", "#ffffff");
         }else{
             this.default_color = ColorUtils.WHITE;
         }
 
         if(tag.contains("typeOverridesEntityColor")){
-            this.typeOverridesEntityColor = tag.getBoolean("typeOverridesEntityColor", false);
+            this.typeOverridesEntityColor = tag.getBooleanOr("typeOverridesEntityColor", false);
         }else{
             this.typeOverridesEntityColor = false;
         }
 
         if(tag.contains("defaultOverridesAll")){
-            this.defaultOverridesAll= tag.getBoolean("defaultOverridesAll", false);
+            this.defaultOverridesAll= tag.getBooleanOr("defaultOverridesAll", false);
         }else{
             this.defaultOverridesAll = false;
         }
 
         if(tag.contains("overrideTeamColors")){
-            this.overrideTeamColors = tag.getBoolean("overrideTeamColors", false);
+            this.overrideTeamColors = tag.getBooleanOr("overrideTeamColors", false);
         }else{
             this.overrideTeamColors = false;
         }
 
         if(tag.contains("entityTypeColorMap")){
-            this.entityTypeColorMap = tag.read("entityTypeColorMap", NbtCompound.CODEC).get(); //.orElse(new NbtCompound());
+            this.entityTypeColorMap = tag.read("entityTypeColorMap", CompoundTag.CODEC).get(); //.orElse(new NbtCompound());
         }else{
-            this.entityTypeColorMap = new NbtCompound();
+            this.entityTypeColorMap = new CompoundTag();
         }
     }
 
     @Override
-    public void writeData(WriteView tag) {
+    public void writeData(ValueOutput tag) {
         tag.putString("defaultColor", this.default_color);
         tag.putBoolean("typeOverridesEntityColor", this.typeOverridesEntityColor);
         tag.putBoolean("defaultOverridesAll", this.defaultOverridesAll);
         tag.putBoolean("overrideTeamColors", this.overrideTeamColors);
-        tag.put("entityTypeColorMap", NbtCompound.CODEC, this.entityTypeColorMap);
+        tag.store("entityTypeColorMap", CompoundTag.CODEC, this.entityTypeColorMap);
     }
 
     public HashMap<EntityType<?>, String> getEntityTypeColorMap(){
         HashMap<EntityType<?>, String> map = new HashMap<>();
-        List<String> keys = new ArrayList<>(this.entityTypeColorMap.getKeys());
+        List<String> keys = new ArrayList<>(this.entityTypeColorMap.keySet());
         keys.forEach((key) -> {
-            Optional<EntityType<?>> type = EntityType.get(key);
-            String color = this.entityTypeColorMap.getString(key, "#ffffff");
+            Optional<EntityType<?>> type = EntityType.byString(key);
+            String color = this.entityTypeColorMap.getStringOr(key, "#ffffff");
             type.ifPresent(entityType -> map.put(entityType, color));
         });
         return map;
@@ -119,11 +119,11 @@ public class GlobalColorComponent implements Component, AutoSyncedComponent{
     }
 
     public String getEntityTypeColor(EntityType<?> type){
-        String color = entityTypeColorMap.getString(type.toString(), "#ffffff");
+        String color = entityTypeColorMap.getStringOr(type.toString(), "#ffffff");
         if(color == null || color.equalsIgnoreCase("")){
             return ColorUtils.WHITE;
         }
-        return entityTypeColorMap.getString(type.toString(), "#ffffff");
+        return entityTypeColorMap.getStringOr(type.toString(), "#ffffff");
     }
 
     public String getDefaultColor(){
@@ -167,7 +167,7 @@ public class GlobalColorComponent implements Component, AutoSyncedComponent{
         this.typeOverridesEntityColor = false;
         this.defaultOverridesAll = false;
         this.overrideTeamColors = false;
-        this.entityTypeColorMap = new NbtCompound();
+        this.entityTypeColorMap = new CompoundTag();
         GLOBAL_COLOR_COMPONENT.sync(scoreboard);
     }
 }

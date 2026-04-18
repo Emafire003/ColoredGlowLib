@@ -3,8 +3,8 @@ package me.emafire003.dev.coloredglowlib.custom_data_animations;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.codec.ByteBufCodecs;
 
 public class ColorAnimationItem {
 
@@ -17,16 +17,16 @@ public class ColorAnimationItem {
                             )
                             .apply(instance, ColorAnimationItem::new));
 
-    public static final PacketCodec<ByteBuf, ColorAnimationItem> PACKET_CODEC = new PacketCodec<>() {
+    public static final StreamCodec<ByteBuf, ColorAnimationItem> PACKET_CODEC = new StreamCodec<>() {
         @Override
         public ColorAnimationItem decode(ByteBuf buf) {
-            return new ColorAnimationItem(PacketCodecs.STRING.decode(buf), PacketCodecs.INTEGER.decode(buf));
+            return new ColorAnimationItem(ByteBufCodecs.STRING_UTF8.decode(buf), ByteBufCodecs.INT.decode(buf));
         }
 
         @Override
         public void encode(ByteBuf buf, ColorAnimationItem value) {
-            PacketCodecs.STRING.encode(buf, value.color);
-            PacketCodecs.INTEGER.encode(buf, value.active_for);
+            ByteBufCodecs.STRING_UTF8.encode(buf, value.color);
+            ByteBufCodecs.INT.encode(buf, value.active_for);
         }
     };
 

@@ -2,8 +2,8 @@ package me.emafire003.dev.coloredglowlib.compat.permissions;
 
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.entity.Entity;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.commands.CommandSourceStack;
 
 import java.util.function.Predicate;
 
@@ -13,10 +13,10 @@ public class PermissionsChecker {
     public static final boolean permissions = FabricLoader.getInstance().isModLoaded("fabric-permissions-api-v0");
 
     @SafeVarargs
-    public static Predicate<ServerCommandSource> multiple(
-            Predicate<ServerCommandSource>... args) {
+    public static Predicate<CommandSourceStack> multiple(
+            Predicate<CommandSourceStack>... args) {
         return source -> {
-            for (Predicate<ServerCommandSource> predicate : args) {
+            for (Predicate<CommandSourceStack> predicate : args) {
                 if (!predicate.test(source))
                     return false;
             }
@@ -24,11 +24,10 @@ public class PermissionsChecker {
         };
     }
 
-    public static Predicate<ServerCommandSource> hasPerms(String permission, int defaultValue) {
+    public static Predicate<CommandSourceStack> hasPerms(String permission, int defaultValue) {
         return (source) -> {
             if(!permissions){
-                //return source.permissions().hasPermission(net.minecraft.server.permissions.Permissions.COMMANDS_ADMIN);
-                return true;
+                return source.permissions().hasPermission(net.minecraft.server.permissions.Permissions.COMMANDS_ADMIN);
             }else {
                 return Permissions.check(source, permission, defaultValue);
             }
