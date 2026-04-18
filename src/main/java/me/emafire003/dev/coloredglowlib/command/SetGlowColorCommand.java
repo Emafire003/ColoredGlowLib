@@ -254,7 +254,7 @@ public class SetGlowColorCommand implements CGLCommand {
                                 )
                 )
                 .then(
-                        CommandManager.argument("entity", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.ENTITY_TYPE)).suggests(SuggestionProviders.SUMMONABLE_ENTITIES)
+                        CommandManager.argument("entity", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.ENTITY_TYPE)).suggests(SuggestionProviders.cast(SuggestionProviders.SUMMONABLE_ENTITIES))
                                 .then(
                                         CommandManager.argument("color", StringArgumentType.string())
                                                 .executes(this::setTypeGlowColor)

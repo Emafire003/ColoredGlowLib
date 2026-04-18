@@ -27,7 +27,8 @@ public class PermissionsChecker {
     public static Predicate<ServerCommandSource> hasPerms(String permission, int defaultValue) {
         return (source) -> {
             if(!permissions){
-                return source.hasPermissionLevel(2);
+                //return source.permissions().hasPermission(net.minecraft.server.permissions.Permissions.COMMANDS_ADMIN);
+                return true;
             }else {
                 return Permissions.check(source, permission, defaultValue);
             }

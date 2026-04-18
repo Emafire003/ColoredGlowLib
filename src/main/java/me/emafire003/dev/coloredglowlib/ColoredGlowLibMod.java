@@ -1,15 +1,14 @@
 package me.emafire003.dev.coloredglowlib;
 
 import me.emafire003.dev.coloredglowlib.networking.ColorAnimationsPayloadS2C;
-import me.emafire003.dev.coloredglowlib.networking.PlayerJoinEvent;
 import net.fabricmc.api.EnvType;
+import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.Entity;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import org.ladysnake.cca.api.v3.entity.EntityComponentFactoryRegistry;
 import org.ladysnake.cca.api.v3.entity.EntityComponentInitializer;
@@ -79,12 +78,13 @@ public class ColoredGlowLibMod implements ModInitializer, EntityComponentInitial
         PayloadTypeRegistry.playS2C().register(ColorAnimationsPayloadS2C.ID, ColorAnimationsPayloadS2C.PACKET_CODEC);
         CGLResourceManager.register();
 
+
         //If this is a server only instance, it will send stuff to the player when they connect. If not it means it's singleplayer so no problem.
         if(FabricLoader.getInstance().getEnvironmentType().equals(EnvType.SERVER)){
-            PlayerJoinEvent.EVENT.register((player, server) -> {
-                ServerPlayNetworking.send(player, new ColorAnimationsPayloadS2C(getCustomColorAnimations()));
-                return ActionResult.PASS;
+            ServerPlayerEvents.JOIN.register(serverPlayerEntity -> {
+                ServerPlayNetworking.send(serverPlayerEntity, new ColorAnimationsPayloadS2C(getCustomColorAnimations()));
             });
+
         }
 
         CommandRegistrationCallback.EVENT.register(CGLCommands::registerCommands);

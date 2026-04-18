@@ -93,7 +93,7 @@ public abstract class EntityColorMixin {
     @Unique
     private int randomColor(){
         Entity entity = ((Entity)(Object)this);
-        Random r = entity.getWorld().getRandom();
+        Random r = entity.getEntityWorld().getRandom();
         if(random_delay_counter == 10){
             random_delay_counter = 0;
             prev_random_color = ColorUtils.toColorValue(r.nextBetween(0, 255), r.nextBetween(0, 255), r.nextBetween(0, 255));
@@ -123,7 +123,7 @@ public abstract class EntityColorMixin {
         if(cgl == null){
             LOGGER.warn("The ColoredGlowLib API instance is null! Trying to reinitialize it!");
             TRIES_BEFORE_SHUTDOWN = (short) (TRIES_BEFORE_SHUTDOWN + 1);
-            ColoredGlowLibMod.reInitAPIInstance(entity.getWorld().getScoreboard());
+            ColoredGlowLibMod.reInitAPIInstance(entity.getEntityWorld().getScoreboard());
             if(TRIES_BEFORE_SHUTDOWN >= MAX_TRIES){
                 LOGGER.error("Disabling the mod, can't get the API instance to work!");
             }

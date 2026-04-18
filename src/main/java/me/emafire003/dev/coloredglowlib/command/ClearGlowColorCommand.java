@@ -162,7 +162,7 @@ public class ClearGlowColorCommand implements CGLCommand {
                 )
 
                 .then(
-                        CommandManager.argument("entity", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.ENTITY_TYPE)).suggests(SuggestionProviders.SUMMONABLE_ENTITIES)
+                        CommandManager.argument("entity", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.ENTITY_TYPE)).suggests(SuggestionProviders.cast(SuggestionProviders.SUMMONABLE_ENTITIES))
                                 .executes(this::clearEntityTypeColor)
                                 .then(
                                         CommandManager.argument("useDefaultColor", BoolArgumentType.bool())

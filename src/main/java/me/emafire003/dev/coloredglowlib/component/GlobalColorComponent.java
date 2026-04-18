@@ -1,10 +1,11 @@
 package me.emafire003.dev.coloredglowlib.component;
 
 import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
-import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
+import org.ladysnake.cca.api.v3.component.Component;
 import org.ladysnake.cca.api.v3.component.ComponentKey;
 import org.ladysnake.cca.api.v3.component.ComponentRegistry;
-import org.ladysnake.cca.api.v3.component.ComponentV3;
 import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
 import me.emafire003.dev.coloredglowlib.util.ColorUtils;
 import net.minecraft.entity.EntityType;
@@ -18,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-public class GlobalColorComponent implements ComponentV3, AutoSyncedComponent{
+public class GlobalColorComponent implements Component, AutoSyncedComponent{
 
     public static final ComponentKey<GlobalColorComponent> GLOBAL_COLOR_COMPONENT =
             ComponentRegistry.getOrCreate(ColoredGlowLibMod.getIdentifier("global_color_component"), GlobalColorComponent.class);
@@ -38,8 +39,7 @@ public class GlobalColorComponent implements ComponentV3, AutoSyncedComponent{
     }
 
     @Override
-    public void readFromNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
-
+    public void readData(ReadView tag) {
         if(tag.contains("defaultColor")){
             this.default_color = tag.getString("defaultColor", "#ffffff");
         }else{
@@ -65,21 +65,20 @@ public class GlobalColorComponent implements ComponentV3, AutoSyncedComponent{
         }
 
         if(tag.contains("entityTypeColorMap")){
-            this.entityTypeColorMap = tag.getCompound("entityTypeColorMap").get();
+            this.entityTypeColorMap = tag.read("entityTypeColorMap", NbtCompound.CODEC).get(); //.orElse(new NbtCompound());
         }else{
             this.entityTypeColorMap = new NbtCompound();
         }
     }
 
     @Override
-    public void writeToNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
+    public void writeData(WriteView tag) {
         tag.putString("defaultColor", this.default_color);
         tag.putBoolean("typeOverridesEntityColor", this.typeOverridesEntityColor);
         tag.putBoolean("defaultOverridesAll", this.defaultOverridesAll);
         tag.putBoolean("overrideTeamColors", this.overrideTeamColors);
-        tag.put("entityTypeColorMap", this.entityTypeColorMap);
+        tag.put("entityTypeColorMap", NbtCompound.CODEC, this.entityTypeColorMap);
     }
-
 
     public HashMap<EntityType<?>, String> getEntityTypeColorMap(){
         HashMap<EntityType<?>, String> map = new HashMap<>();

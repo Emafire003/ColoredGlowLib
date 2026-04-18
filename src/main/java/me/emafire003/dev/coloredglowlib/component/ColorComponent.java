@@ -2,17 +2,18 @@ package me.emafire003.dev.coloredglowlib.component;
 
 import me.emafire003.dev.coloredglowlib.ColoredGlowLibMod;
 import net.minecraft.entity.Entity;
-import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
+import org.ladysnake.cca.api.v3.component.Component;
 import org.ladysnake.cca.api.v3.component.ComponentKey;
 import org.ladysnake.cca.api.v3.component.ComponentRegistry;
-import org.ladysnake.cca.api.v3.component.ComponentV3;
 import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
 import me.emafire003.dev.coloredglowlib.util.ColorUtils;
 import net.minecraft.nbt.NbtCompound;
 
 import java.util.*;
 
-public class ColorComponent implements ComponentV3, AutoSyncedComponent{
+public class ColorComponent implements Component, AutoSyncedComponent{
 
     public static final ComponentKey<ColorComponent> COLOR_COMPONENT =
             ComponentRegistry.getOrCreate(ColoredGlowLibMod.getIdentifier("color_component"), ColorComponent.class);
@@ -28,23 +29,25 @@ public class ColorComponent implements ComponentV3, AutoSyncedComponent{
 
 
     @Override
-    public void readFromNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
+    public void readData(ReadView tag) {
+
         if(tag.contains("color")){
             this.color = tag.getString("color", "#ffffff"); //means something is VERY wrong
         }else{
             this.color = ColorUtils.WHITE;
         }
         if(tag.contains("exclusiveTargetColorMap")){
-            this.exclusiveTargetColorMap = tag.getCompound("exclusiveTargetColorMap").get();
+            //TODO for now i like that it crashes
+            this.exclusiveTargetColorMap = tag.read("exclusiveTargetColorMap", NbtCompound.CODEC).get();//.orElse(new NbtCompound());
         }else{
             this.exclusiveTargetColorMap = new NbtCompound();
         }
     }
 
     @Override
-    public void writeToNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
+    public void writeData(WriteView tag) {
         tag.putString("color", this.color);
-        tag.put("exclusiveTargetColorMap", exclusiveTargetColorMap);
+        tag.put("exclusiveTargetColorMap", NbtCompound.CODEC, exclusiveTargetColorMap);
     }
 
     /**
@@ -111,4 +114,6 @@ public class ColorComponent implements ComponentV3, AutoSyncedComponent{
         this.exclusiveTargetColorMap = new NbtCompound();
         COLOR_COMPONENT.sync(self);
     }
+
+
 }
