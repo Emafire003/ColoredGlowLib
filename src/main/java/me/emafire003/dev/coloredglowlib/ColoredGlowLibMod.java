@@ -75,7 +75,7 @@ public class ColoredGlowLibMod implements ModInitializer, EntityComponentInitial
             isAp1 = true;
         }
 
-        PayloadTypeRegistry.playS2C().register(ColorAnimationsPayloadS2C.ID, ColorAnimationsPayloadS2C.PACKET_CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(ColorAnimationsPayloadS2C.ID, ColorAnimationsPayloadS2C.PACKET_CODEC);
         CGLResourceManager.register();
 
 
